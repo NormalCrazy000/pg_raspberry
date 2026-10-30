@@ -11,7 +11,8 @@ extends Reference
 #   game.balls                        paperelle in gioco
 #   game.get_pegs()                   pioli del campo (usa global_position: alcuni si muovono)
 #   game.spawn_ball(position, velocity)
-#   game.hit_peg(peg, ball)           accende un piolo e assegna i punti
+#   game.hit_peg(peg, ball, false)    accende un piolo e assegna i punti (false = acceso dal potere,
+#                                     non conta per la combo)
 #   game.add_effect(node)             aggiunge un effetto visivo al campo
 
 var game: Node
@@ -24,6 +25,11 @@ func setup(game_node: Node) -> void:
 # Il giocatore ha colpito una tazza di caffè: il potere si attiva.
 func activate(_ball: RigidBody2D, _peg: Node2D) -> void:
 	pass
+
+
+# Se false, colpire un caffè dà solo i punti (es. Refactoring: una sola onda per tiro).
+func can_activate() -> bool:
+	return true
 
 
 # Inizio di un tiro di questo giocatore (ogni giocatore ha la sua istanza del potere).

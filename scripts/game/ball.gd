@@ -10,6 +10,7 @@ const TRAIL_POINTS := 10
 const TRAIL_COLOR := Color(1.0, 0.85, 0.2, 0.35)
 
 var age := 0.0
+var hits := 0 # pioli toccati da questa paperella (per la combo)
 var slow_time := 0.0
 var portal_cooldown := 0.0
 var teleport_target = null # Vector2 oppure null

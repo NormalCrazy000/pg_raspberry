@@ -74,6 +74,13 @@ func _stats_text() -> String:
 	var lines := [tr("STATS_MATCHES") % data.matches, tr("STATS_BUGS") % data.bugs_fixed]
 	if data.best.score > 0:
 		lines.append(tr("STATS_BEST") % [Scoring.format(data.best.score), data.best.character])
+	if not data.top.empty():
+		lines.append("")
+		lines.append(tr("STATS_TOP_HEADER"))
+		for i in data.top.size():
+			var entry: Dictionary = data.top[i]
+			var mode: String = tr("MODE_2P") if entry.mode == "2p" else tr("MODE_CPU") % tr("CPU_" + entry.mode.to_upper())
+			lines.append("  %2d. %8s  %-7s %-16s %s" % [i + 1, Scoring.format(int(entry.score)), entry.character, mode, entry.date])
 	lines.append("")
 	lines.append(tr("STATS_CPU_HEADER"))
 	for level in ["easy", "normal", "hard"]:

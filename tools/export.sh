@@ -12,14 +12,14 @@ export_preset() {
 	mkdir -p "build/$dir"
 	"$GODOT" --path . --export "$preset" "build/$dir/$bin"
 	cp tools/rpi_bench.sh tools/install.sh icon.png "build/$dir/"
-	tar -czf "build/pg_raspberry-$dir.tar.gz" -C build "$dir"
-	echo "-> build/pg_raspberry-$dir.tar.gz"
+	tar -czf "build/$dir.tar.gz" -C build "$dir"
+	echo "-> build/$dir.tar.gz"
 }
 
 case "$target" in
-	x86_64) export_preset "Linux x86_64" linux-x86_64 pg_raspberry.x86_64 ;;
-	arm64) export_preset "Raspberry Pi arm64" rpi-arm64 pg_raspberry.arm64 ;;
-	arm32) export_preset "Raspberry Pi arm32" rpi-arm32 pg_raspberry.arm32 ;;
+	x86_64) export_preset "Linux x86_64" hotfix-friday-linux-x86_64 hotfix-friday.x86_64 ;;
+	arm64) export_preset "Raspberry Pi arm64" hotfix-friday-rpi-arm64 hotfix-friday.arm64 ;;
+	arm32) export_preset "Raspberry Pi arm32" hotfix-friday-rpi-arm32 hotfix-friday.arm32 ;;
 	all)
 		"$0" x86_64
 		"$0" arm64

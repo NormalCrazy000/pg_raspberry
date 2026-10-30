@@ -10,6 +10,7 @@ var balls_left := 0
 var extra_balls_won := 0
 var bonus_balls := 0
 var powers_used := 0
+var bonuses := 0
 
 
 func label() -> String:

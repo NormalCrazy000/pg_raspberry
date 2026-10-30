@@ -5,12 +5,15 @@ extends Reference
 #   easy     mira a un bug a caso con la parabola, molto impreciso
 #   normal   come easy, ma più preciso
 #   hard     calcola la mira per ogni bug e caffè, simula i rimbalzi di ciascun tiro
-#            e sceglie quello che promette di più (i primi urti contano di più: sono i più affidabili)
+#            e sceglie quello che promette di più (i primi urti contano di più: sono i più affidabili).
+#            Con la mira estesa di Sara attiva si fida anche dei rimbalzi successivi e prova più varianti.
 
 const Trajectory := preload("res://scripts/game/trajectory.gd")
 
 const NOISE := {"easy": 0.12, "normal": 0.035, "hard": 0.01}
 const HARD_OFFSETS := [-0.03, 0.0, 0.03] # varianti attorno alla mira esatta (radianti)
+const HARD_OFFSETS_EXTENDED_AIM := [-0.06, -0.03, 0.0, 0.03, 0.06]
+const HIT_DECAY_EXTENDED_AIM := 0.9
 const HARD_BOUNCES := 5
 const HARD_STEPS := 200
 const HIT_VALUE := {"target": 10.0, "power": 6.0, "normal": 1.0}
@@ -70,11 +73,15 @@ func _best_simulated_angle(game: Node, per_frame := 0):
 	var best_angle := 0.0
 	var best_value := -1.0
 	var simulations := 0
+	# Con la mira estesa (Sara) la CPU "vede" i rimbalzi come il giocatore: si fida di più della simulazione.
+	var extended_aim: bool = game.players[game.current].power.preview_bounces() > 0
+	var offsets: Array = HARD_OFFSETS_EXTENDED_AIM if extended_aim else HARD_OFFSETS
+	var decay: float = HIT_DECAY_EXTENDED_AIM if extended_aim else HIT_DECAY
 	for peg in _open_pegs(game, true):
 		var aim = aim_angle_to(launcher, peg.global_position)
 		if aim == null:
 			continue
-		for offset in HARD_OFFSETS:
+		for offset in offsets:
 			var angle: float = clamp(aim + offset, -launcher.MAX_AIM_ANGLE, launcher.MAX_AIM_ANGLE)
 			var dir := Vector2.DOWN.rotated(angle)
 			var result := Trajectory.simulate(space, launcher.global_position + dir * launcher.MUZZLE,
@@ -85,7 +92,7 @@ func _best_simulated_angle(game: Node, per_frame := 0):
 				if body.has_method("hit"):
 					if not body.lit:
 						value += HIT_VALUE[body.kind] * weight
-					weight *= HIT_DECAY
+					weight *= decay
 			if value > best_value:
 				best_value = value
 				best_angle = angle

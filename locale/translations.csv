@@ -65,6 +65,7 @@ HOW_TO_BODY,"Si gioca a turni: ognuno lancia una paperella alla volta sullo stes
 • Le puntine valgono 100 punti. Le tazze di caffè valgono 500 e attivano il potere del tuo personaggio.
 • I pioli colpiti spariscono a fine tiro.
 • Se la paperella cade nel cestino, la recuperi. Un tiro da 10.000 punti o più regala una paperella extra.
+• Bonus: ""Tiro lungo"" se colpisci due bug molto lontani nello stesso tiro, ""Combo"" se una paperella tocca 10 pioli o più.
 • Quando i bug finiscono, ogni paperella rimasta vale 10.000 punti.
 
 Vince chi ha più punti alla fine della sfida.","Players take turns: each throws one duck at a time on the same field.
@@ -74,6 +75,7 @@ Vince chi ha più punti alla fine della sfida.","Players take turns: each throws
 • Pins are worth 100 points. Coffee cups are worth 500 and trigger your character's power.
 • Hit pegs disappear at the end of the shot.
 • If the duck falls into the bin, you get it back. A shot worth 10,000 points or more gives an extra duck.
+• Bonuses: ""Long shot"" for hitting two distant bugs in the same shot, ""Combo"" when one duck touches 10 or more pegs.
 • When the bugs are gone, every remaining duck is worth 10,000 points.
 
 The player with the most points at the end wins."
@@ -101,7 +103,7 @@ Engine: Godot Engine, MIT license.
 Details in the LICENSE and ASSETS.md files of the repository.
 
 Godot Engine license:"
-CHAR_GIULIA_DESC,Riscrive tutto: un'onda d'urto accende i pioli attorno al caffè.,Rewrites everything: a shockwave lights up the pegs around the coffee.
+CHAR_GIULIA_DESC,Riscrive tutto: un'onda d'urto accende i pioli attorno al caffè (una per tiro).,Rewrites everything: a shockwave lights up the pegs around the coffee (one per shot).
 CHAR_MARCO_DESC,Apre tre thread: la paperella si divide in tre.,Spawns three threads: the duck splits into three.
 CHAR_SARA_DESC,Prevede tutto: per 2 tiri la mira mostra i rimbalzi.,Sees it coming: for 2 shots the aim shows the bounces.
 CHAR_DARIO_DESC,Va dritto al problema: per due tiri la paperella è attratta dai bug vicini.,Goes straight to the issue: for two shots the duck is drawn to nearby bugs.
@@ -109,3 +111,8 @@ OPT_GRAPHICS,Qualità grafica,Graphics quality
 GFX_AUTO,Automatica,Automatic
 GFX_HIGH,Alta,High
 GFX_LOW,Bassa,Low
+FLASH_LONG_SHOT,Tiro lungo!,Long shot!
+FLASH_COMBO,Combo da %d pioli!,%d-peg combo!
+STATS_TOP_HEADER,Migliori punteggi,Top scores
+MODE_2P,2 giocatori,2 players
+MODE_CPU,CPU %s,%s CPU

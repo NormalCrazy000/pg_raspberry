@@ -4,6 +4,7 @@ extends Node
 
 const JsonFile := preload("res://scripts/common/json_file.gd")
 const PATH := "user://stats.json"
+const TOP_SIZE := 10
 
 var data := {}
 
@@ -26,6 +27,8 @@ func _ensure_defaults() -> void:
 			data.cpu[level] = {"won": 0, "lost": 0, "draw": 0}
 	if not data.has("characters"):
 		data.characters = {}
+	if not data.has("top"):
+		data.top = [] # migliori punteggi: {score, character, mode, date}
 
 
 # Registra una sfida conclusa. `winner` è l'indice del vincitore, -1 in caso di pareggio.
@@ -44,10 +47,27 @@ func record_match(players: Array, winner: int, bugs_fixed: int, cpu_difficulty: 
 			data.characters[id].won += 1
 		if player.score > data.best.score:
 			data.best = {"score": player.score, "character": player.character.name}
+		_add_top_score(player, cpu_difficulty)
 		if cpu_difficulty and data.cpu.has(cpu_difficulty):
 			var result := "draw" if winner < 0 else ("won" if winner == i else "lost")
 			data.cpu[cpu_difficulty][result] += 1
 	JsonFile.save_dict(PATH, data)
+
+
+func _add_top_score(player, cpu_difficulty: String) -> void:
+	var date := OS.get_date()
+	data.top.append({
+		"score": player.score,
+		"character": player.character.name,
+		"mode": cpu_difficulty if cpu_difficulty else "2p",
+		"date": "%04d-%02d-%02d" % [date.year, date.month, date.day],
+	})
+	data.top.sort_custom(self, "_higher_first")
+	data.top.resize(min(data.top.size(), TOP_SIZE))
+
+
+func _higher_first(a: Dictionary, b: Dictionary) -> bool:
+	return a.score > b.score
 
 
 func reset() -> void:

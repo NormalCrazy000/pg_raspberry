@@ -9,6 +9,11 @@ const MULTIPLIER_STEPS := [[0.0, 1], [0.33, 2], [0.66, 3], [0.85, 5]]
 # Ogni soglia superata in un solo tiro vale una paperella extra.
 const SHOT_EXTRA_BALL_THRESHOLDS := [10000, 25000, 50000]
 const BALL_BONUS := 10000
+# Bonus per tiri particolari (moltiplicati come i pioli), al massimo uno per tipo per tiro.
+const LONG_SHOT_BONUS := 2500 # due bug colpiti molto lontani nello stesso tiro
+const LONG_SHOT_DISTANCE := 400.0
+const COMBO_BONUS := 5000 # tanti pioli toccati dalla stessa paperella
+const COMBO_PEGS := 10
 
 var shot := 0
 var targets_total := 0
@@ -37,6 +42,13 @@ func peg_hit(kind: String) -> int:
 	var points: int = POINTS[kind] * multiplier()
 	if kind == "target":
 		targets_hit += 1
+	shot += points
+	return points
+
+
+# Punti bonus del tiro corrente (moltiplicati); restituisce i punti assegnati.
+func bonus(base: int) -> int:
+	var points: int = base * multiplier()
 	shot += points
 	return points
 

@@ -2,6 +2,17 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
+## [Non rilasciato]
+
+### Gioco
+- Bonus "Tiro lungo" (due bug lontani nello stesso tiro) e "Combo" (10+ pioli toccati dalla stessa paperella).
+- Refactoring di Giulia: una sola onda d'urto per tiro.
+- La CPU difficile sfrutta la mira estesa di Sara.
+- Classifica dei 10 migliori punteggi nella schermata Statistiche.
+
+### Pacchetti
+- Archivi ed eseguibili rinominati: `hotfix-friday-<piattaforma>.tar.gz`, `hotfix-friday.<arch>`.
+
 ## [0.1.1] - 2026-10-30
 
 ### Prestazioni

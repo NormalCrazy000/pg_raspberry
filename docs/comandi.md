@@ -50,11 +50,11 @@ godot3 --path . --bench         # benchmark delle prestazioni
 
 ```bash
 tools/export.sh x86_64
-cd build/linux-x86_64
-./pg_raspberry.x86_64
+cd build/hotfix-friday-linux-x86_64
+./hotfix-friday.x86_64
 ```
 
-L'archivio `build/pg_raspberry-linux-x86_64.tar.gz` si può copiare su qualsiasi PC Linux a 64 bit.
+L'archivio `build/hotfix-friday-linux-x86_64.tar.gz` si può copiare su qualsiasi PC Linux a 64 bit.
 Dentro c'è `install.sh`, che aggiunge il gioco al menu delle applicazioni (vedi [raspberry-pi.md](raspberry-pi.md#installazione-menu-delle-applicazioni-e-avvio-automatico)).
 
 ### Build automatiche (GitHub Actions)
@@ -86,22 +86,22 @@ Sul PC:
 
 ```bash
 tools/export.sh arm64           # oppure arm32
-scp build/pg_raspberry-rpi-arm64.tar.gz pi@raspberrypi.local:~
+scp build/hotfix-friday-rpi-arm64.tar.gz pi@raspberrypi.local:~
 ```
 
 Sul Pi:
 
 ```bash
-tar -xzf pg_raspberry-rpi-arm64.tar.gz
-cd rpi-arm64
-./pg_raspberry.arm64            # gioca
+tar -xzf hotfix-friday-rpi-arm64.tar.gz
+cd hotfix-friday-rpi-arm64
+./hotfix-friday.arm64            # gioca
 ./rpi_bench.sh                  # benchmark completo
 ```
 
 Da SSH, per aprire il gioco sullo schermo del Pi:
 
 ```bash
-DISPLAY=:0 ./pg_raspberry.arm64
+DISPLAY=:0 ./hotfix-friday.arm64
 ```
 
 ### Opzione B: dal sorgente, direttamente sul Pi
@@ -119,8 +119,8 @@ unzip -o Godot_v3.6.3-stable_linux.arm64.zip
 ln -sf $PWD/Godot_v3.6.3-stable_linux.arm64 ~/.local/bin/godot3
 
 # Sorgente del gioco
-git clone <url-del-repo> pg_raspberry
-cd pg_raspberry
+git clone <url-del-repo> hotfix-friday
+cd hotfix-friday
 godot3 --path .                 # gioca
 godot3 --path . --bench         # benchmark
 ```

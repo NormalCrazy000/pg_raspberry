@@ -20,7 +20,7 @@ if [ "${1:-}" = "--uninstall" ]; then
 fi
 
 bin=""
-for candidate in pg_raspberry.x86_64 pg_raspberry.arm64 pg_raspberry.arm32; do
+for candidate in hotfix-friday.x86_64 hotfix-friday.arm64 hotfix-friday.arm32; do
 	if [ -x "$candidate" ]; then
 		bin="$candidate"
 		break

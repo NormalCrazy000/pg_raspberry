@@ -19,19 +19,19 @@
 Sul PC, dalla root del repo:
 ```bash
 tools/export.sh arm64            # oppure arm32
-scp build/pg_raspberry-rpi-arm64.tar.gz pi@raspberrypi.local:~
+scp build/hotfix-friday-rpi-arm64.tar.gz pi@raspberrypi.local:~
 ```
 
 Sul Pi:
 ```bash
-tar -xzf pg_raspberry-rpi-arm64.tar.gz
-cd rpi-arm64
-./pg_raspberry.arm64             # modalità interattiva
+tar -xzf hotfix-friday-rpi-arm64.tar.gz
+cd hotfix-friday-rpi-arm64
+./hotfix-friday.arm64             # modalità interattiva
 ```
 
 Se sei collegato via SSH, il gioco va aperto sullo schermo del Pi:
 ```bash
-DISPLAY=:0 ./pg_raspberry.arm64
+DISPLAY=:0 ./hotfix-friday.arm64
 ```
 
 ### Installazione (menu delle applicazioni e avvio automatico)
@@ -56,7 +56,7 @@ In Opzioni → Qualità grafica:
 | Alta | aloni sui pioli colpiti, particelle, scia della paperella |
 | Bassa | senza questi effetti: circa il 40% di draw call in meno |
 
-Per una prova senza cambiare le opzioni: `./pg_raspberry.arm64 --graphics=high` (oppure `low`).
+Per una prova senza cambiare le opzioni: `./hotfix-friday.arm64 --graphics=high` (oppure `low`).
 
 ## 3. Benchmark
 
@@ -80,7 +80,7 @@ Lo script stampa i risultati e li aggiunge a
 
 Lancio manuale di una singola configurazione:
 ```bash
-./pg_raspberry.arm64 --bench --pegs=150 --balls=3 --fx --duration=30
+./hotfix-friday.arm64 --bench --pegs=150 --balls=3 --fx --duration=30
 ```
 
 | Opzione | Significato |

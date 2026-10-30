@@ -7,7 +7,7 @@ cd "$(dirname "$0")"
 
 duration="${1:-20}"
 bin=""
-for candidate in pg_raspberry.arm64 pg_raspberry.arm32 pg_raspberry.x86_64; do
+for candidate in hotfix-friday.arm64 hotfix-friday.arm32 hotfix-friday.x86_64; do
 	if [ -x "$candidate" ]; then
 		bin="$candidate"
 		break

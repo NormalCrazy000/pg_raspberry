@@ -18,14 +18,14 @@ Dalla pagina [Releases](../../releases) scarica l'archivio per il tuo sistema:
 
 | Archivio | Per |
 |---|---|
-| `pg_raspberry-linux-x86_64.tar.gz` | PC Linux a 64 bit |
-| `pg_raspberry-rpi-arm64.tar.gz` | Raspberry Pi con sistema a 64 bit |
-| `pg_raspberry-rpi-arm32.tar.gz` | Raspberry Pi con sistema a 32 bit |
+| `hotfix-friday-linux-x86_64.tar.gz` | PC Linux a 64 bit |
+| `hotfix-friday-rpi-arm64.tar.gz` | Raspberry Pi con sistema a 64 bit |
+| `hotfix-friday-rpi-arm32.tar.gz` | Raspberry Pi con sistema a 32 bit |
 
 ```bash
-tar -xzf pg_raspberry-linux-x86_64.tar.gz
-cd linux-x86_64
-./pg_raspberry.x86_64        # gioca subito
+tar -xzf hotfix-friday-linux-x86_64.tar.gz
+cd hotfix-friday-linux-x86_64
+./hotfix-friday.x86_64        # gioca subito
 ./install.sh                 # oppure aggiungilo al menu delle applicazioni
 ```
 

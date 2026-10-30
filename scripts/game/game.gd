@@ -79,6 +79,8 @@ var level_path := ""
 var rng := RandomNumberGenerator.new()
 var textures := {}
 var shot_hits := 0
+var shot_bug_positions := [] # bug colpiti nel tiro corrente (per il bonus "tiro lungo")
+var shot_bonuses := [] # bonus già assegnati nel tiro corrente
 var bursts := []
 var next_burst := 0
 var measure := false
@@ -315,9 +317,12 @@ func spawn_ball(at: Vector2, velocity: Vector2) -> RigidBody2D:
 	return ball
 
 
-func hit_peg(peg: Node, ball: RigidBody2D) -> void:
+# `direct` è false quando il piolo è acceso da un potere (es. onda d'urto) e non toccato da una paperella.
+func hit_peg(peg: Node, ball: RigidBody2D, direct := true) -> void:
 	if not peg.hit():
 		return
+	if direct and ball:
+		ball.hits += 1
 	var player = _player()
 	var multiplier_before := scoring.multiplier()
 	var points := scoring.peg_hit(peg.kind)
@@ -334,6 +339,7 @@ func hit_peg(peg: Node, ball: RigidBody2D) -> void:
 		_:
 			Audio.play("peg", pitch)
 	_float_text(peg.global_position, Scoring.format(points), COLOR_TARGET_POINTS if peg.is_target else COLOR_POINTS)
+	_check_shot_bonuses(peg, ball if direct else null)
 	if peg.is_target:
 		targets_left -= 1
 		if targets_left == 0:
@@ -341,13 +347,37 @@ func hit_peg(peg: Node, ball: RigidBody2D) -> void:
 		elif scoring.multiplier() > multiplier_before:
 			hud.flash(tr("FLASH_MULTIPLIER") % scoring.multiplier())
 			Audio.play("multiplier")
-	if peg.kind == Peg.KIND_POWER or debug_hit_pending:
+	if (peg.kind == Peg.KIND_POWER and player.power.can_activate()) or debug_hit_pending:
 		debug_hit_pending = false
 		hud.flash("%s: %s!" % [player.character.name, player.character.power_name.to_upper()])
 		player.powers_used += 1
 		mark_perf("potere " + player.character.power)
 		player.power.activate(ball, peg)
 	_update_hud()
+
+
+# Bonus "tiro lungo" (due bug lontani nello stesso tiro) e "combo" (tanti pioli toccati da una paperella).
+func _check_shot_bonuses(peg: Node, ball: RigidBody2D) -> void:
+	if peg.is_target and not "long" in shot_bonuses:
+		for other in shot_bug_positions:
+			if other.distance_to(peg.global_position) >= Scoring.LONG_SHOT_DISTANCE:
+				_award_bonus("long", tr("FLASH_LONG_SHOT"), Scoring.LONG_SHOT_BONUS, peg.global_position)
+				break
+		shot_bug_positions.append(peg.global_position)
+	# La combo conta i pioli toccati da una stessa paperella (non quelli accesi dai poteri).
+	if ball and ball.hits >= Scoring.COMBO_PEGS and not "combo" in shot_bonuses:
+		_award_bonus("combo", tr("FLASH_COMBO") % ball.hits, Scoring.COMBO_BONUS, peg.global_position)
+
+
+func _award_bonus(id: String, text: String, base: int, at: Vector2) -> void:
+	shot_bonuses.append(id)
+	var points := scoring.bonus(base)
+	_player().score += points
+	_player().bonuses += 1
+	hud.flash("%s +%s" % [text, Scoring.format(points)])
+	_float_text(at + Vector2(0, -18), "+" + Scoring.format(points), COLOR_BONUS)
+	Audio.play("extra", 1.2)
+	mark_perf("bonus")
 
 
 func add_effect(node: Node) -> void:
@@ -370,6 +400,8 @@ func _fire(direction: Vector2) -> void:
 	stuck_count = 0
 	recovered_this_shot = false
 	shot_hits = 0
+	shot_bug_positions.clear()
+	shot_bonuses.clear()
 	debug_hit_pending = Session.debug_power
 	scoring.start_shot()
 	player.power.on_shot_start()
@@ -568,10 +600,10 @@ func _finish() -> void:
 	if measure:
 		_print_measure()
 	if autoplay:
-		print("AUTOPLAY vincitore %s | tiri %d | G1 %s %d poteri %d | G2 %s %d poteri %d | bug rimasti %d | campo %d | %s | portali usati %d" % [
+		print("AUTOPLAY vincitore %s | tiri %d | G1 %s %d poteri %d | G2 %s %d poteri %d | bonus %d | bug rimasti %d | campo %d | %s | portali usati %d" % [
 			"pari" if tie else "G%d" % (best + 1), shots,
 			players[0].character.id, players[0].score, players[0].powers_used,
-			players[1].character.id, players[1].score, players[1].powers_used,
+			players[1].character.id, players[1].score, players[1].powers_used, players[0].bonuses + players[1].bonuses,
 			targets_left, field_seed, field_info, portal_uses])
 		if not Session.screenshot_path:
 			get_tree().quit()

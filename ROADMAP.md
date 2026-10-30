@@ -28,8 +28,12 @@ niente campagna a livelli fissi.
 - [ ] Decidere i budget definitivi (pioli per campo, particelle, qualità grafica predefinita) in base ai risultati.
 
 ### Gioco
-- [ ] Applicare le risposte alle domande aperte (`docs/domande-aperte.md`).
-- [ ] Bonus per tiri particolari (tiro lungo, tanti pioli in un tiro...): da decidere (domanda 4).
+- [x] Applicate le risposte alle domande aperte (riepilogo in `docs/domande-aperte.md`).
+- [x] Bonus "Tiro lungo" e "Combo"; Refactoring con una sola onda per tiro; CPU difficile che sfrutta la mira estesa di Sara.
+- [x] Classifica dei 10 migliori punteggi nelle statistiche.
+- [x] Archivi ed eseguibili rinominati in `hotfix-friday`.
+- [ ] Rinominare il repository su GitHub in `hotfix-friday` (dalle impostazioni del repo).
+- [ ] Confermare giocando l'equilibrio dei personaggi con i nuovi bonus.
 
 ### Pubblicazione
 - [ ] Opzionale: pagina itch.io.

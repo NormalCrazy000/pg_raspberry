@@ -4,7 +4,7 @@ Ogni personaggio ha un potere. Il potere si attiva quando il giocatore colpisce 
 
 | Personaggio | Ruolo | Potere | Effetto | Script |
 |---|---|---|---|---|
-| Giulia | Senior Backend | Refactoring | onda d'urto: accende i pioli entro 110 px dal caffè | `scripts/powers/shockwave.gd` |
+| Giulia | Senior Backend | Refactoring | onda d'urto: accende i pioli entro 110 px dal caffè (una sola onda per tiro) | `scripts/powers/shockwave.gd` |
 | Marco | Junior Frontend | Fork | la paperella si divide in tre | `scripts/powers/multiball.gd` |
 | Sara | QA Tester | Test coverage | per 2 tiri la mira mostra fino a 3 rimbalzi | `scripts/powers/long_aim.gd` |
 | Dario | DevOps | Hotfix | per il resto del tiro e per il tiro successivo la paperella è attratta dai bug entro 200 px | `scripts/powers/magnet.gd` |
@@ -65,6 +65,7 @@ Tutti opzionali; li trovi documentati in `scripts/powers/power.gd`.
 | Metodo | Quando viene chiamato |
 |---|---|
 | `activate(ball, peg)` | il giocatore colpisce un caffè (con `--debug-power` anche a inizio partita, con `ball` e `peg` nulli) |
+| `can_activate()` | se restituisce `false`, il caffè dà solo i punti (Refactoring lo usa per l'onda singola) |
 | `on_shot_start()` | inizio di ogni tiro |
 | `on_ball_physics(ball, delta)` | a ogni passo di fisica, per ogni paperella in gioco |
 | `on_shot_end()` | tutte le paperelle del tiro sono uscite |
@@ -72,6 +73,7 @@ Tutti opzionali; li trovi documentati in `scripts/powers/power.gd`.
 | `status_text()` | testo nell'HUD accanto al nome del personaggio |
 
 Dalla partita il potere può usare `game.balls`, `game.get_pegs()`, `game.spawn_ball()`, `game.hit_peg()` e `game.add_effect()`.
+Se un potere accende pioli senza che la paperella li tocchi, usa `game.hit_peg(peg, ball, false)`: così non contano per il bonus "Combo".
 Alcuni pioli si muovono: usa sempre `global_position`.
 
 Nella sfida a due ogni giocatore ha la sua istanza del potere: `on_shot_start`, `on_ball_physics` e `on_shot_end` vengono chiamati solo durante i tiri di quel giocatore.
