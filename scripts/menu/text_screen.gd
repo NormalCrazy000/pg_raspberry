@@ -49,7 +49,8 @@ func _ready() -> void:
 			_add_button(buttons, tr("STATS_RESET"), "_reset_stats")
 		"credits":
 			title.text = tr("CREDITS_TITLE")
-			text.text = tr("CREDITS_BODY") + "\n\n" + Engine.get_license_text()
+			var version: String = ProjectSettings.get_setting("application/config/version")
+			text.text = "v%s\n\n%s\n\n%s" % [version, tr("CREDITS_BODY"), Engine.get_license_text()]
 		_:
 			title.text = tr("HOW_TO_TITLE")
 			text.text = tr("HOW_TO_BODY")

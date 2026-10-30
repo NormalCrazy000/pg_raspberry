@@ -17,6 +17,16 @@ func _ready() -> void:
 	MenuStyle.add_background(self)
 	Audio.play_music()
 	hint.text = tr("HINT_MENU")
+	var version := Label.new()
+	version.text = "v%s" % ProjectSettings.get_setting("application/config/version")
+	version.modulate = Color(0.45, 0.5, 0.6)
+	version.anchor_left = 1.0
+	version.anchor_right = 1.0
+	version.margin_left = -90
+	version.margin_right = -10
+	version.margin_top = 8
+	version.align = Label.ALIGN_RIGHT
+	add_child(version)
 	_show_page("main")
 
 

@@ -5,14 +5,36 @@ Gioco 2D originale del genere "peg shooter": si lanciano paperelle di gomma su u
 Ogni personaggio ha un potere che si attiva colpendo una tazza di caffè.
 Open source, pensato per Linux desktop e per **Raspberry Pi 3** (versione portatile).
 
-> **Stato:** Fase 7, gioco completo con build automatiche per Linux e Raspberry Pi, installazione nel menu delle applicazioni e grafica adattiva per il Pi 3. Vedi [ROADMAP.md](ROADMAP.md).
+> **Versione 0.1.0.** Gioco completo per Linux e Raspberry Pi; prestazioni sul Pi 3 ancora da verificare.
+> Novità in [CHANGELOG.md](CHANGELOG.md), piano di sviluppo in [ROADMAP.md](ROADMAP.md).
+
+| | | |
+|---|---|---|
+| ![Menu principale](docs/screenshots/menu.png) | ![Scelta del personaggio](docs/screenshots/personaggi.png) | ![Una sfida in corso](docs/screenshots/partita.png) |
+
+## Scaricare e giocare
+
+Dalla pagina [Releases](../../releases) scarica l'archivio per il tuo sistema:
+
+| Archivio | Per |
+|---|---|
+| `pg_raspberry-linux-x86_64.tar.gz` | PC Linux a 64 bit |
+| `pg_raspberry-rpi-arm64.tar.gz` | Raspberry Pi con sistema a 64 bit |
+| `pg_raspberry-rpi-arm32.tar.gz` | Raspberry Pi con sistema a 32 bit |
+
+```bash
+tar -xzf pg_raspberry-linux-x86_64.tar.gz
+cd linux-x86_64
+./pg_raspberry.x86_64        # gioca subito
+./install.sh                 # oppure aggiungilo al menu delle applicazioni
+```
 
 ## Requisiti
 
 - [Godot 3.6.3](https://godotengine.org/download/3.x/) (non Godot 4: il Pi 3 supporta solo OpenGL ES 2.0)
 - Export template di Godot 3.6.3 (servono solo per creare le build)
 
-## Avvio rapido
+## Dal sorgente
 
 ```bash
 godot3 --path . --editor --quit   # solo la prima volta dopo il clone: importa gli asset
@@ -42,6 +64,11 @@ locale/    traduzioni italiano/inglese (translations.csv)
 tools/     build, installazione, test, benchmark e generazione di sfondo e suoni
 docs/      documentazione
 ```
+
+## Contribuire
+
+Nuovi poteri, personaggi, lingue e figure dei campi sono pensati per essere aggiunti facilmente:
+vedi [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Licenza
 

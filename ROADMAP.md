@@ -157,10 +157,11 @@ Obiettivo: essere sicuri che la pipeline funzioni **prima** di scrivere il gioco
 - [ ] Profiling sul Pi 3 vero (in attesa del benchmark).
 
 ### Fase 8 — Release
-- [ ] Versioning semantico, `CHANGELOG.md`, tag git.
-- [ ] Release su GitHub con binari; opzionale pagina itch.io.
-- [ ] Screenshot/GIF nel README.
-- [ ] `CONTRIBUTING.md` per contributi esterni (livelli della community?).
+- [x] Versioning semantico: versione nel progetto (`application/config/version`), mostrata nel menu e nei crediti.
+- [x] `CHANGELOG.md` e `CONTRIBUTING.md`.
+- [x] Screenshot nel README e sezione "Scaricare e giocare".
+- [ ] Tag `v0.1.0` → GitHub Actions pubblica la release con i tre archivi.
+- [ ] Opzionale: pagina itch.io.
 
 ---
 
