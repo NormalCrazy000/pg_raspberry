@@ -8,35 +8,22 @@ Si lanciano paperelle di gomma (rubber duck debugging) su un campo di righe di c
 Il gioco è pensato per **sfide a due giocatori** (a turni sullo stesso dispositivo, o contro la CPU) su campi generati da codice:
 niente campagna a livelli fissi.
 
-> **Stato:** versione **0.1.2** pubblicata. Quello che è già stato fatto è in [CHANGELOG.md](CHANGELOG.md);
-> le decisioni ancora da confermare sono in [docs/domande-aperte.md](docs/domande-aperte.md).
+> **Stato:** versione **0.1.2** pubblicata. Quello che è già stato fatto è in [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
 ## Prossimi passi — 0.2.0
 
-### Prestazioni sul Raspberry Pi 3
-- [x] Primo benchmark sul Pi 3B+ (Debian 13): circa 20 FPS ovunque **a causa del vsync** (67 FPS senza vsync su una scena
-  più pesante); Pi in sottotensione e rallentato (`throttled=0xd0005`).
-- [x] Vsync spento in automatico sul Pi con limite a 60 FPS; CPU difficile limitata a 5 ms di calcolo per frame.
-- [x] Secondo benchmark con la v0.1.2: **60 FPS stabili** in tutte le prove (anche grafica alta e CPU difficile),
-  nessun frame oltre 50 ms; scena pesante senza limite a 80 FPS.
-- [ ] Verificare l'alimentazione (`sudo vcgencmd get_throttled` deve dare `0x0`) e la temperatura (64 °C sotto carico: dissipatore consigliato).
-- [x] Capire i blocchi ("freeze") segnalati sul Pi: erano il vsync (20 FPS fissi) e la CPU difficile; con la v0.1.2
-  `--measure` non registra più nessun picco.
-- [x] Misurati i sospetti sul PC: la CPU "difficile" bloccava un frame (12 ms sul PC, circa 120–250 ms stimati sul Pi);
-  la mira estesa di Sara è trascurabile (meno di 0,1 ms).
-- [x] La CPU "difficile" ora distribuisce i calcoli su più frame (6 simulazioni per frame), con la stessa forza di gioco.
-- [x] I caratteri dei font vengono preparati all'avvio, così non costano la prima volta che compaiono in partita.
-- [x] Budget confermati dal benchmark: pioli per campo, particelle ed effetti reggono i 60 FPS sul Pi 3B+.
-- [ ] Decidere la qualità grafica automatica sul Pi (ora bassa; anche l'alta regge i 60 FPS).
+### Da decidere
+- [ ] **Livello di grafica.** Si sceglie già in Opzioni → Qualità grafica (Automatica, Alta, Bassa).
+  Da decidere cosa usa "Automatica" sul Raspberry Pi: ora Bassa, ma anche Alta regge i 60 FPS sul Pi 3B+
+  (Bassa consuma e scalda un po' meno). Valutare anche un livello intermedio (es. alone sì, particelle no).
 
-### Gioco
-- [x] Applicate le risposte alle domande aperte (riepilogo in `docs/domande-aperte.md`).
-- [x] Bonus "Tiro lungo" e "Combo"; Refactoring con una sola onda per tiro; CPU difficile che sfrutta la mira estesa di Sara.
-- [x] Classifica dei 10 migliori punteggi nelle statistiche.
-- [x] Archivi ed eseguibili rinominati in `hotfix-friday`.
-- [ ] Confermare giocando l'equilibrio dei personaggi con i nuovi bonus.
+### Da verificare
+- [ ] Alimentazione del Pi: `sudo vcgencmd get_throttled` deve dare `throttled=0x0` (con 5,1 V 2,5 A e cavo corto).
+- [ ] Temperatura del Pi: 64 °C sotto carico, sopra la soglia dei 60 °C a cui il 3B+ rallenta: dissipatore consigliato.
+- [ ] Equilibrio dei personaggi con i nuovi bonus, giocando: nelle sfide automatiche Giulia vince il 49%, Marco il 55%,
+  Dario il 45%; Sara non è misurabile così (la sua mira estesa aiuta soprattutto le persone).
 
 ### Pubblicazione
 - [ ] Opzionale: pagina itch.io.
