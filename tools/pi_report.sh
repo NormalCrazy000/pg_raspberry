@@ -51,16 +51,29 @@ bench() {
 	echo "-- $*"
 	"$bin" --bench --duration="$DURATION" "$@" 2>&1 | grep -E "Renderer|RISULTATO"
 }
+# Temperatura e throttling: prima dai file del kernel (leggibili da tutti), poi da vcgencmd
+# (che senza il gruppo "video" non ha i permessi). Se nessuno funziona si va avanti senza.
 system_state() {
-	if ! command -v vcgencmd >/dev/null; then
-		echo "vcgencmd non disponibile"
-		return
+	local temp_file="/sys/class/thermal/thermal_zone0/temp"
+	local throttled_file="/sys/devices/platform/soc/soc:firmware/get_throttled"
+	local raw="" value
+	if [ -r "$temp_file" ]; then
+		echo "temp=$(awk '{printf "%.1f", $1 / 1000}' "$temp_file")'C"
+	elif command -v vcgencmd >/dev/null; then
+		vcgencmd measure_temp 2>&1
 	fi
-	vcgencmd measure_temp
-	local raw value
-	raw="$(vcgencmd get_throttled)"
-	echo "$raw"
-	value=$((${raw#*=}))
+	if [ -r "$throttled_file" ]; then
+		raw="0x$(cat "$throttled_file")"
+	elif command -v vcgencmd >/dev/null; then
+		raw="$(vcgencmd get_throttled 2>/dev/null)"
+		raw="${raw#*=}"
+	fi
+	if ! [[ "$raw" =~ ^0x[0-9a-fA-F]+$ ]]; then
+		echo "stato di alimentazione non disponibile"
+		return 0
+	fi
+	echo "throttled=$raw"
+	value=$((raw))
 	[ "$value" -eq 0 ] && echo "  ok: nessun problema di alimentazione o temperatura"
 	(( value & 0x1 )) && echo "  ATTENZIONE: tensione troppo bassa adesso (alimentatore o cavo insufficiente)"
 	(( value & 0x4 )) && echo "  ATTENZIONE: processore rallentato adesso"
