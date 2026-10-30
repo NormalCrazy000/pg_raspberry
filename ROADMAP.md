@@ -8,7 +8,7 @@ Si lanciano paperelle di gomma (rubber duck debugging) su un campo di righe di c
 Il gioco è pensato per **sfide a due giocatori** (a turni sullo stesso dispositivo, o contro la CPU) su campi generati da codice:
 niente campagna a livelli fissi.
 
-> **Stato:** versione **0.1.1** pubblicata. Quello che è già stato fatto è in [CHANGELOG.md](CHANGELOG.md);
+> **Stato:** versione **0.1.2** pubblicata. Quello che è già stato fatto è in [CHANGELOG.md](CHANGELOG.md);
 > le decisioni ancora da confermare sono in [docs/domande-aperte.md](docs/domande-aperte.md).
 
 ---

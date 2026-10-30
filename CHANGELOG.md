@@ -2,7 +2,7 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
-## [Non rilasciato]
+## [0.1.2] - 2026-10-30
 
 ### Raspberry Pi (dal primo benchmark su Pi 3B+)
 - Vsync spento in automatico sul Pi, con limite a 60 FPS: con il vsync il Pi 3 restava bloccato a circa 20 FPS.
