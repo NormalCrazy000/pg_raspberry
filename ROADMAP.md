@@ -32,7 +32,6 @@ niente campagna a livelli fissi.
 - [x] Bonus "Tiro lungo" e "Combo"; Refactoring con una sola onda per tiro; CPU difficile che sfrutta la mira estesa di Sara.
 - [x] Classifica dei 10 migliori punteggi nelle statistiche.
 - [x] Archivi ed eseguibili rinominati in `hotfix-friday`.
-- [ ] Rinominare il repository su GitHub in `hotfix-friday` (dalle impostazioni del repo).
 - [ ] Confermare giocando l'equilibrio dei personaggi con i nuovi bonus.
 
 ### Pubblicazione
@@ -41,6 +40,7 @@ niente campagna a livelli fissi.
 ---
 
 ## Idee per dopo (backlog)
+- Rinominare il repository su GitHub in `hotfix-friday` (Settings → General → Repository name) e poi aggiornare il remote locale.
 - Modalità sfida giornaliera con seed condiviso.
 - Campi creati dagli utenti caricabili da file.
 - Modalità allenamento in singolo.
