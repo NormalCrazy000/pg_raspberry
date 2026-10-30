@@ -15,6 +15,9 @@ const HARD_BOUNCES := 5
 const HARD_STEPS := 200
 const HIT_VALUE := {"target": 10.0, "power": 6.0, "normal": 1.0}
 const HIT_DECAY := 0.7 # peso dell'urto n-esimo = HIT_DECAY^n
+# Simulazioni per frame quando la CPU decide durante la partita: sul Pi 3 tutte insieme
+# bloccherebbero un frame per 100-250 ms.
+const HARD_SIMULATIONS_PER_FRAME := 6
 
 var difficulty := "normal"
 var rng: RandomNumberGenerator
@@ -25,6 +28,18 @@ func _init(level: String, random: RandomNumberGenerator) -> void:
 	rng = random
 
 
+# Decisione distribuita su più frame, da usare in partita: `angle = yield(cpu.decide(game), "completed")`.
+func decide(game: Node):
+	yield(game.get_tree(), "physics_frame") # sempre almeno una pausa: così è sempre una coroutine
+	if difficulty != "hard":
+		return choose_angle(game)
+	var result = _best_simulated_angle(game, HARD_SIMULATIONS_PER_FRAME)
+	if result is GDScriptFunctionState:
+		result = yield(result, "completed")
+	return result + rng.randf_range(-NOISE.hard, NOISE.hard)
+
+
+# Decisione immediata (tutto nello stesso frame).
 func choose_angle(game: Node) -> float:
 	var launcher = game.launcher
 	match difficulty:
@@ -48,11 +63,13 @@ func _parabola_angle(game: Node) -> float:
 
 
 # Prova la mira esatta su ogni bug e caffè (più piccole varianti), simulando i rimbalzi.
-func _best_simulated_angle(game: Node) -> float:
+# Con per_frame > 0 si ferma ogni per_frame simulazioni fino al frame di fisica successivo.
+func _best_simulated_angle(game: Node, per_frame := 0):
 	var launcher = game.launcher
 	var space: Physics2DDirectSpaceState = game.get_world_2d().direct_space_state
 	var best_angle := 0.0
 	var best_value := -1.0
+	var simulations := 0
 	for peg in _open_pegs(game, true):
 		var aim = aim_angle_to(launcher, peg.global_position)
 		if aim == null:
@@ -72,6 +89,10 @@ func _best_simulated_angle(game: Node) -> float:
 			if value > best_value:
 				best_value = value
 				best_angle = angle
+			simulations += 1
+			if per_frame > 0 and simulations % per_frame == 0:
+				game.mark_perf("cpu")
+				yield(game.get_tree(), "physics_frame")
 	return best_angle
 
 

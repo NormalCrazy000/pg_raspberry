@@ -2,6 +2,13 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
+## [Non rilasciato]
+
+### Prestazioni
+- La CPU "difficile" distribuisce i calcoli su più frame: niente più blocco di un frame a ogni suo turno sul Raspberry Pi.
+- I caratteri dei font vengono preparati all'avvio invece che alla prima comparsa in partita.
+- `--measure` stampa anche i frame più lenti (`PICCHI`) con gli eventi in corso, per diagnosticare i blocchi.
+
 ## [0.1.0] - 2026-10-30
 
 Prima versione pubblica.

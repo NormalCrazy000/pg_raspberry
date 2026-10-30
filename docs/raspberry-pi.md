@@ -67,6 +67,13 @@ Per una prova senza cambiare le opzioni: `./pg_raspberry.arm64 --graphics=high` 
 
 L'ultima prova (`--autoplay=normal --measure`) gioca una sfida CPU contro CPU con grafica, effetti e audio
 e stampa una riga `PRESTAZIONI`: è il dato più vicino all'esperienza reale.
+Subito dopo, `PICCHI` elenca i frame più lenti (oltre 50 ms, cioè i blocchi visibili) con quello che stava succedendo:
+
+```
+PICCHI 3 frame oltre 50 ms
+   180 ms  cpu
+    75 ms  pioli via, cambio turno
+```
 
 Lo script stampa i risultati e li aggiunge a
 `~/.local/share/hotfix_friday/bench_results.csv`.

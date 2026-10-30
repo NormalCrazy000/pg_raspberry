@@ -59,6 +59,7 @@ func update_field(targets_left: int, multiplier: int) -> void:
 
 
 func flash(text: String) -> void:
+	get_parent().mark_perf("messaggio")
 	message.text = text
 	message.modulate.a = 1.0
 	if flash_tween and flash_tween.is_valid():

@@ -56,6 +56,7 @@ const COLOR_POINTS := Color(1, 1, 1)
 const COLOR_TARGET_POINTS := Color(1.0, 0.6, 0.65)
 const COLOR_BONUS := Color(1.0, 0.85, 0.3)
 const BURSTS := 8 # sistemi di particelle riutilizzati (budget contenuto per il Pi)
+const SPIKE_THRESHOLD := 0.05 # s: un frame più lungo di così si nota come un blocco
 # Intonazione dei colpi nello stesso tiro: scala pentatonica in semitoni.
 const HIT_STEPS := [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24]
 
@@ -82,6 +83,8 @@ var bursts := []
 var next_burst := 0
 var measure := false
 var low_graphics := false
+var frame_tags := [] # cosa è successo dall'ultimo frame (solo con --measure)
+var spikes := [] # [durata, eventi] dei frame più lenti
 var frame_times := []
 var draw_calls_max := 0
 
@@ -282,7 +285,8 @@ func _cpu_turn() -> void:
 	var fast := autoplay != ""
 	if not fast:
 		yield(get_tree().create_timer(CPU_THINK_TIME, false), "timeout")
-	var angle: float = player.cpu.choose_angle(self)
+	mark_perf("cpu")
+	var angle: float = yield(player.cpu.decide(self), "completed")
 	if not fast:
 		var tween := create_tween()
 		tween.tween_property(launcher, "aim_angle", angle, CPU_AIM_TIME).set_trans(Tween.TRANS_SINE)
@@ -299,6 +303,7 @@ func get_pegs() -> Array:
 
 
 func spawn_ball(at: Vector2, velocity: Vector2) -> RigidBody2D:
+	mark_perf("paperella")
 	var ball := Ball.new()
 	ball.setup(textures.duck, bounce_material, not low_graphics)
 	ball.position = at
@@ -340,6 +345,7 @@ func hit_peg(peg: Node, ball: RigidBody2D) -> void:
 		debug_hit_pending = false
 		hud.flash("%s: %s!" % [player.character.name, player.character.power_name.to_upper()])
 		player.powers_used += 1
+		mark_perf("potere " + player.character.power)
 		player.power.activate(ball, peg)
 	_update_hud()
 
@@ -374,6 +380,7 @@ func _fire(direction: Vector2) -> void:
 
 func _on_portal_used(_ball: Node) -> void:
 	portal_uses += 1
+	mark_perf("portale")
 	Audio.play("portal")
 
 
@@ -383,6 +390,7 @@ func _on_ball_touched(body: Node, ball: RigidBody2D) -> void:
 
 
 func _start_slowmo() -> void:
+	mark_perf("rallentatore")
 	Engine.time_scale = SLOWMO_SCALE
 	yield(get_tree().create_timer(SLOWMO_TIME, false), "timeout")
 	Engine.time_scale = 1.0
@@ -418,10 +426,19 @@ func _physics_process(delta: float) -> void:
 				ball.apply_central_impulse(Vector2(rng.randf_range(-80, 80), -120))
 
 
+# Annota un evento del frame corrente: con --measure i frame più lenti vengono stampati con i loro eventi.
+func mark_perf(tag: String) -> void:
+	if measure and not tag in frame_tags:
+		frame_tags.append(tag)
+
+
 func _process(delta: float) -> void:
 	if measure and state != State.FINISHED:
 		frame_times.append(delta)
 		draw_calls_max = int(max(draw_calls_max, Performance.get_monitor(Performance.RENDER_2D_DRAW_CALLS_IN_FRAME)))
+		if delta > SPIKE_THRESHOLD:
+			spikes.append([delta, PoolStringArray(frame_tags).join(", ") if frame_tags else "-"])
+		frame_tags.clear()
 
 
 func _print_measure() -> void:
@@ -437,6 +454,15 @@ func _print_measure() -> void:
 	print("PRESTAZIONI fps medi %.1f | 1%% low %.1f | min %.1f | draw call max %d | durata %.0fs | grafica %s | %s" % [
 		n / total, low1, 1.0 / sorted[n - 1], draw_calls_max, total, "bassa" if low_graphics else "alta",
 		VisualServer.get_video_adapter_name()])
+	# I frame più lenti, con quello che stava succedendo: servono a capire i blocchi.
+	spikes.sort_custom(self, "_slower_first")
+	print("PICCHI %d frame oltre %d ms" % [spikes.size(), SPIKE_THRESHOLD * 1000])
+	for spike in spikes.slice(0, min(spikes.size(), 8) - 1):
+		print("  %4.0f ms  %s" % [spike[0] * 1000.0, spike[1]])
+
+
+func _slower_first(a: Array, b: Array) -> bool:
+	return a[0] > b[0]
 
 
 func _remove_ball(ball: RigidBody2D) -> void:
@@ -456,6 +482,7 @@ func _end_shot() -> void:
 func _clear_lit_pegs() -> void:
 	for peg in get_pegs():
 		if is_instance_valid(peg) and peg.lit and not peg.popping:
+			mark_perf("pioli via")
 			peg.pop()
 			yield(get_tree().create_timer(POP_INTERVAL, false), "timeout")
 	var player = _player()
@@ -482,6 +509,7 @@ func _total_balls_left() -> int:
 
 # Il turno passa all'altro giocatore, se ha ancora paperelle.
 func _next_turn() -> void:
+	mark_perf("cambio turno")
 	var other := (current + 1) % players.size()
 	if players[other].balls_left > 0 and other != current:
 		current = other
@@ -531,6 +559,7 @@ func _finish() -> void:
 		lines.append(tr("RESULT_OPEN_BUGS") % targets_left)
 	lines.append("")
 	lines.append(tr("RESULT_FIELD") % field_seed)
+	mark_perf("fine sfida")
 	hud.show_result(title, lines)
 	Audio.play("win")
 	if not autoplay:
