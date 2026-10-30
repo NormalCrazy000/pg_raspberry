@@ -3,7 +3,7 @@
 Gioco 2D originale del genere "peg shooter": si lancia una palla dall'alto e la si fa rimbalzare su un campo di pioli.
 Open source, pensato per Linux desktop e per **Raspberry Pi 3** (versione portatile).
 
-> **Stato:** Fase 1, prototipo giocabile con un livello e grafica provvisoria. Vedi [ROADMAP.md](ROADMAP.md).
+> **Stato:** Fase 2, un livello giocabile con punteggio, moltiplicatore e stelle; grafica provvisoria. Vedi [ROADMAP.md](ROADMAP.md).
 
 ## Requisiti
 

@@ -114,15 +114,23 @@ Valgono sia con `godot3 --path .` sia con l'eseguibile esportato.
 |---|---|
 | `--level=res://levels/level_01.json` | carica un livello specifico |
 | `--autoplay` | partita automatica con tiri casuali, stampa il risultato ed esce |
+| `--autoplay=smart` | come sopra, ma mira agli obiettivi (simula un giocatore, utile per tarare i livelli) |
 | `--seed=N` | rende ripetibili obiettivi e tiri automatici |
-| `--screenshot=FILE.png` | salva uno screenshot dopo `--screenshot-delay=S` secondi (default 2) |
+| `--screenshot=FILE.png` | salva uno screenshot dopo `--screenshot-delay=S` secondi (default 2); con `--autoplay` esce dopo lo screenshot |
+| `--novsync` | disattiva il vsync (con `--fixed-fps 60` la partita va più veloce del tempo reale) |
 | `--bench` | benchmark: opzioni in [raspberry-pi.md](raspberry-pi.md#3-benchmark) |
 | `--fullscreen` | schermo intero (opzione standard di Godot) |
 
 Test veloce senza finestra (solo dal sorgente su Linux desktop):
 
 ```bash
-godot3-headless --path . --fixed-fps 60 --autoplay --seed=1
+godot3-headless --path . --fixed-fps 60 --autoplay=smart --seed=1
+```
+
+Statistiche su molte partite (vittorie, punteggi, stelle), utili per bilanciare un livello:
+
+```bash
+seq 1 60 | xargs -P 8 -I{} godot3-headless --path . --fixed-fps 60 --autoplay=smart --seed={} 2>/dev/null | grep AUTOPLAY
 ```
 
 ## Controlli

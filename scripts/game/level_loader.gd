@@ -1,7 +1,8 @@
 extends Reference
 # Carica un livello JSON ed espande i pattern in una lista di pioli.
 #
-# Formato: { "name", "balls", "targets", "pegs": [ <elemento>, ... ] }
+# Formato: { "name", "balls", "targets", "stars": [s1, s2, s3], "pegs": [ <elemento>, ... ] }
+# "stars" sono le soglie di punteggio per 1, 2 e 3 stelle (solo se il livello è vinto).
 # Ogni elemento ha "shape" ("round" di default, oppure "rect") e un "pattern":
 #   single: "at": [x, y], "rotation": gradi
 #   line:   "from": [x, y], "to": [x, y], "count"  (i pioli rect seguono la linea)
@@ -27,6 +28,7 @@ static func load_level(path: String) -> Dictionary:
 		"name": data.get("name", ""),
 		"balls": int(data.get("balls", 10)),
 		"targets": int(data.get("targets", 10)),
+		"stars": data.get("stars", []),
 		"pegs": pegs,
 	}
 

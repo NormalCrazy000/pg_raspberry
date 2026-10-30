@@ -69,8 +69,6 @@ func _parse_args() -> void:
 			bench = true
 		elif arg == "--fx":
 			fx = true
-		elif arg == "--novsync":
-			OS.vsync_enabled = false
 		elif arg.begins_with("--pegs="):
 			peg_count = int(arg.split("=")[1])
 		elif arg.begins_with("--balls="):

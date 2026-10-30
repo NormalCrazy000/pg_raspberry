@@ -84,11 +84,12 @@ Obiettivo: essere sicuri che la pipeline funzioni **prima** di scrivere il gioco
 **Uscita:** un livello giocabile dall'inizio alla fine, con grafica placeholder.
 
 ### Fase 2 — Punteggio e game loop
-- [ ] Sistema punti per tipo di piolo + moltiplicatore che cresce man mano che si eliminano gli obiettivi.
-- [ ] Bonus per tiri lunghi / combo / rimbalzi.
-- [ ] Palla extra al raggiungimento di soglie di punteggio.
-- [ ] Rallentatore sull'ultimo obiettivo e celebrazione di fine livello (con un design nostro).
-- [ ] Schermata di risultato, stelle/valutazione per livello.
+- [x] Punti per piolo (normale 100, obiettivo 1.000) × moltiplicatore che cresce con gli obiettivi eliminati (x2 al 33%, x3 al 66%, x5 all'85%).
+- [x] Punti a comparsa sui pioli colpiti, avviso quando sale il moltiplicatore.
+- [x] Palla extra per ogni soglia superata in un singolo tiro (10.000 / 25.000 / 50.000).
+- [x] Rallentatore sull'ultimo obiettivo; a fine livello ogni palla rimasta vale 10.000 punti.
+- [x] Schermata di risultato con stelle (soglie di punteggio nel JSON del livello, tarate con `--autoplay=smart`).
+- [ ] Bonus per tiri particolari (tiro lungo, tanti pioli in un tiro...): rimandato, da decidere.
 
 ### Fase 3 — Identità originale
 Qui il gioco diventa "nostro". Da decidere insieme:
