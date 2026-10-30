@@ -20,10 +20,10 @@ Rispondi quando vuoi: basta il numero e la risposta.
 
 ## Grafica e leggibilità
 
-6. **Dimensione della paperella.** È grande 14 px, quasi irriconoscibile sul 7" del Pi. La ingrandisco subito (es. 20 px, cambia un po' fisica e difficoltà) o nella Fase 5 con la grafica vera?
-   - Per ora: 14 px, si decide nella Fase 5.
-7. **Font.** Il font di base di Godot è piccolo. Anticipo un font libero (licenza OFL) più leggibile, o aspettiamo la Fase 5?
-   - Per ora: font di base.
+6. **Dimensione della paperella.** Ora l'immagine è grande 22 px, ma la collisione resta di 14 px (così fisica e bilanciamento non cambiano). Si vede abbastanza sul 7"?
+   - Per ora: ✅ immagine 22 px, collisione 14 px.
+7. **Font.** Ho scelto JetBrains Mono (licenza OFL), un font monospazio da programmatori. Ti piace o preferisci un font non monospazio?
+   - Per ora: ✅ JetBrains Mono.
 
 ## Sfida a due
 
@@ -46,3 +46,11 @@ Rispondi quando vuoi: basta il numero e la risposta.
 15. **Campi generati.** Ti piace l'equilibrio tra figure fisse, in movimento e portali? Vuoi più o meno simmetria (ora 80%)?
 16. **Nome del repository.** Il repo si chiama ancora `pg_raspberry` mentre il gioco è *Hotfix Friday*. Vuoi rinominarlo (anche su GitHub) e rinominare gli eseguibili esportati?
     - Per ora: invariato.
+
+## Grafica e audio (Fase 5)
+
+17. **Suoni e musica.** Sono sintetizzati da codice e io non posso ascoltarli: ho verificato solo volumi e assenza di distorsioni. Come suonano? In particolare lo squittio al lancio, il "tic" dei pioli e la musica lo-fi.
+    - Per ora: ✅ come generati da `tools/assets/make_audio.py`.
+18. **Volume.** Musica a -8 dB rispetto agli effetti. Le regolazioni di volume arrivano nella Fase 6 (opzioni).
+19. **Stile grafico.** Ti piacciono puntine, bug, tazze, righe di codice e ritratti? C'è qualcosa da cambiare (colori, forme, sfondo troppo o troppo poco visibile)?
+20. **Bug sulle righe di codice.** I bug rettangolari sono righe di codice rosse con la sottolineatura ondulata degli errori. Si capisce che sono obiettivi?

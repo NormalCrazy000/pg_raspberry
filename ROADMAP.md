@@ -129,11 +129,14 @@ Obiettivo: essere sicuri che la pipeline funzioni **prima** di scrivere il gioco
 - [x] Bilanciamento con partite automatiche: vantaggio di chi inizia ~52%; Giulia, Marco e Dario tra 49% e 51% di vittorie dopo aver rafforzato Hotfix (Sara non è misurabile: la CPU non sfrutta la mira estesa); difficoltà difficile > normale > facile (~62% negli scontri diretti).
 
 ### Fase 5 — Arte e audio
-- [ ] Sprite pioli, palla, cannone, cestino, sfondi (originali o CC0).
-- [ ] Effetti: illuminazione pioli, scie, particelle leggere (nel budget del Pi 3).
-- [ ] Effetti sonori (colpo piolo con pitch crescente, lancio, cestino, vittoria) — formato OGG.
-- [ ] Musica originale o CC0/CC BY.
-- [ ] `ASSETS.md` aggiornato per ogni asset aggiunto.
+- [x] Grafica vettoriale originale (SVG): paperella, puntine, bug, tazze di caffè, righe di codice, cannone, cestino, ritratti dei personaggi.
+- [x] Sfondo "editor di codice" generato da script (`tools/assets/make_background.py`).
+- [x] Effetti: alone sui pioli colpiti, scia della paperella, particelle su bug e caffè (8 sistemi riutilizzati, budget contenuto per il Pi).
+- [x] Effetti sonori sintetizzati da codice (`tools/assets/make_audio.py`): colpi con intonazione crescente in scala pentatonica, squittio della paperella al lancio, cestino, portali, caffè, moltiplicatore, vittoria, clic dei menu.
+- [x] Musica lo-fi originale in loop (OGG, 23 s, senza salti al punto di loop).
+- [x] Font JetBrains Mono (OFL) per tutta l'interfaccia.
+- [x] `ASSETS.md` aggiornato.
+- [x] `--measure`: benchmark della sfida vera (incluso in `rpi_bench.sh`).
 
 ### Fase 6 — UI, UX e salvataggi
 - [ ] Menu principale, pausa, opzioni (volume, schermo intero, sensibilità).

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="20" viewBox="0 0 60 20">
+  <!-- Riga di codice (piolo rettangolare) -->
+  <rect x="0.5" y="1.5" width="59" height="18" rx="5" fill="#4d1220"/>
+  <rect x="0.5" y="0.5" width="59" height="17" rx="5" fill="#8a2236"/>
+  <rect x="6" y="6" width="10" height="5" rx="2" fill="#ffcb6b"/>
+  <rect x="19" y="6" width="16" height="5" rx="2" fill="#ff8a9a"/>
+  <rect x="38" y="6" width="15" height="5" rx="2" fill="#ffd0d6"/>
+  <path d="M6 14.5 Q8 12.5 10 14.5 T14 14.5 T18 14.5 T22 14.5 T26 14.5 T30 14.5 T34 14.5 T38 14.5 T42 14.5 T46 14.5 T50 14.5 T54 14.5" fill="none" stroke="#ff3355" stroke-width="1.6"/>
+</svg>

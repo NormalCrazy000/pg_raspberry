@@ -10,6 +10,8 @@ extends Node2D
 #   --p1=ID (oppure --character=ID), --p2=ID   personaggi (id in data/characters.json)
 #   --seed=N                               campo e tiri della CPU riproducibili
 #   --level=res://levels/level_01.json     campo fisso da JSON invece che generato
+#   --measure                              misura FPS e draw call durante la sfida e li stampa alla fine
+#                                          (da usare con --autoplay, a tempo reale: è il benchmark della partita vera)
 # Altre opzioni globali (--screenshot, --debug-power) in scripts/session.gd.
 
 enum State { AIMING, BALL_IN_PLAY, CLEARING, BONUS, FINISHED }
@@ -26,6 +28,16 @@ const Peg := preload("res://scripts/game/peg.gd")
 const PegGroup := preload("res://scripts/game/peg_group.gd")
 const PortalScript := preload("res://scripts/game/portal.gd")
 const Ball := preload("res://scripts/game/ball.gd")
+const SPRITES := {
+	"round_normal": preload("res://assets/sprites/tack.svg"),
+	"round_target": preload("res://assets/sprites/bug.svg"),
+	"round_power": preload("res://assets/sprites/coffee.svg"),
+	"rect_normal": preload("res://assets/sprites/code_line.svg"),
+	"rect_target": preload("res://assets/sprites/code_bug.svg"),
+	"rect_power": preload("res://assets/sprites/code_coffee.svg"),
+	"duck": preload("res://assets/sprites/duck.svg"),
+}
+const BACKGROUND := preload("res://assets/sprites/background.svg")
 
 const MENU_SCENE := "res://scenes/menu/main_menu.tscn"
 const FIELD_BOTTOM := 500.0 # sotto questa y la paperella è persa
@@ -43,6 +55,9 @@ const PORTAL_COLORS := [Color(0.7, 0.4, 1.0), Color(0.3, 0.85, 0.95)]
 const COLOR_POINTS := Color(1, 1, 1)
 const COLOR_TARGET_POINTS := Color(1.0, 0.6, 0.65)
 const COLOR_BONUS := Color(1.0, 0.85, 0.3)
+const BURSTS := 8 # sistemi di particelle riutilizzati (budget contenuto per il Pi)
+# Intonazione dei colpi nello stesso tiro: scala pentatonica in semitoni.
+const HIT_STEPS := [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24]
 
 var state: int = State.AIMING
 var players := []
@@ -62,6 +77,12 @@ var autoplay := ""
 var level_path := ""
 var rng := RandomNumberGenerator.new()
 var textures := {}
+var shot_hits := 0
+var bursts := []
+var next_burst := 0
+var measure := false
+var frame_times := []
+var draw_calls_max := 0
 
 onready var launcher = $Launcher
 onready var bucket = $Bucket
@@ -78,11 +99,13 @@ func _ready() -> void:
 	_parse_args()
 	if field_seed == 0:
 		field_seed = rng.randi_range(1, 999999)
-	textures = {
-		"disc": Textures.make_disc(32),
-		"rect": Textures.make_rounded_rect(Peg.RECT_SIZE, 4.0),
-		"duck": Textures.make_duck(32),
-	}
+	textures = SPRITES.duplicate()
+	textures.glow = Textures.make_glow(64)
+	textures.glow_material = CanvasItemMaterial.new()
+	textures.glow_material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	_build_background()
+	_build_bursts()
+	Audio.play_music()
 	var level: Dictionary = LevelLoader.load_level(level_path) if level_path else FieldGenerator.generate(field_seed)
 	_create_players(level.balls)
 	_build_field(level)
@@ -118,6 +141,41 @@ func _parse_args() -> void:
 			rng.seed = field_seed
 		elif arg.begins_with("--level="):
 			level_path = value
+		elif arg == "--measure":
+			measure = true
+
+
+func _build_background() -> void:
+	var background := Sprite.new()
+	background.texture = BACKGROUND
+	background.centered = false
+	add_child(background)
+	move_child(background, 0)
+
+
+func _build_bursts() -> void:
+	for i in BURSTS:
+		var p := CPUParticles2D.new()
+		p.emitting = false
+		p.one_shot = true
+		p.amount = 10
+		p.lifetime = 0.45
+		p.explosiveness = 1.0
+		p.spread = 180.0
+		p.initial_velocity = 110.0
+		p.initial_velocity_random = 0.5
+		p.gravity = Vector2(0, 260)
+		p.scale_amount = 3.0
+		effects_root.add_child(p)
+		bursts.append(p)
+
+
+func _burst(at: Vector2, color: Color) -> void:
+	var p: CPUParticles2D = bursts[next_burst]
+	next_burst = (next_burst + 1) % bursts.size()
+	p.position = at
+	p.color = color
+	p.restart()
 
 
 func _create_players(balls_each: int) -> void:
@@ -252,6 +310,17 @@ func hit_peg(peg: Node, ball: RigidBody2D) -> void:
 	var multiplier_before := scoring.multiplier()
 	var points := scoring.peg_hit(peg.kind)
 	player.score += points
+	var pitch: float = pow(2.0, HIT_STEPS[min(shot_hits, HIT_STEPS.size() - 1)] / 12.0)
+	shot_hits += 1
+	match peg.kind:
+		Peg.KIND_TARGET:
+			Audio.play("bug", pitch)
+			_burst(peg.global_position, Peg.COLORS[peg.kind])
+		Peg.KIND_POWER:
+			Audio.play("coffee")
+			_burst(peg.global_position, Peg.COLORS[peg.kind])
+		_:
+			Audio.play("peg", pitch)
 	_float_text(peg.global_position, Scoring.format(points), COLOR_TARGET_POINTS if peg.is_target else COLOR_POINTS)
 	if peg.is_target:
 		targets_left -= 1
@@ -259,6 +328,7 @@ func hit_peg(peg: Node, ball: RigidBody2D) -> void:
 			_start_slowmo()
 		elif scoring.multiplier() > multiplier_before:
 			hud.flash("Moltiplicatore x%d!" % scoring.multiplier())
+			Audio.play("multiplier")
 	if peg.kind == Peg.KIND_POWER or debug_hit_pending:
 		debug_hit_pending = false
 		hud.flash("%s: %s!" % [player.character.name, player.character.power_name.to_upper()])
@@ -286,15 +356,18 @@ func _fire(direction: Vector2) -> void:
 	shots += 1
 	stuck_count = 0
 	recovered_this_shot = false
+	shot_hits = 0
 	debug_hit_pending = Session.debug_power
 	scoring.start_shot()
 	player.power.on_shot_start()
 	spawn_ball(launcher.position + direction * launcher.MUZZLE, direction * launcher.launch_speed)
+	Audio.play("launch", rng.randf_range(0.95, 1.08))
 	_set_state(State.BALL_IN_PLAY)
 
 
 func _on_portal_used(_ball: Node) -> void:
 	portal_uses += 1
+	Audio.play("portal")
 
 
 func _on_ball_touched(body: Node, ball: RigidBody2D) -> void:
@@ -316,6 +389,7 @@ func _on_ball_caught(ball: Node) -> void:
 		recovered_this_shot = true
 		_player().balls_left += 1
 		hud.flash("Paperella recuperata!")
+		Audio.play("bucket")
 	_remove_ball(ball)
 
 
@@ -335,6 +409,26 @@ func _physics_process(delta: float) -> void:
 					peg.pop()
 			if stuck_count >= NUDGE_AFTER:
 				ball.apply_central_impulse(Vector2(rng.randf_range(-80, 80), -120))
+
+
+func _process(delta: float) -> void:
+	if measure and state != State.FINISHED:
+		frame_times.append(delta)
+		draw_calls_max = int(max(draw_calls_max, Performance.get_monitor(Performance.RENDER_2D_DRAW_CALLS_IN_FRAME)))
+
+
+func _print_measure() -> void:
+	if frame_times.size() < 10:
+		return
+	var sorted := frame_times.duplicate()
+	sorted.sort()
+	var total := 0.0
+	for t in sorted:
+		total += t
+	var n := sorted.size()
+	var low1: float = 1.0 / sorted[int(n * 0.99)]
+	print("PRESTAZIONI fps medi %.1f | 1%% low %.1f | min %.1f | draw call max %d | durata %.0fs | %s" % [
+		n / total, low1, 1.0 / sorted[n - 1], draw_calls_max, total, VisualServer.get_video_adapter_name()])
 
 
 func _remove_ball(ball: RigidBody2D) -> void:
@@ -361,6 +455,7 @@ func _clear_lit_pegs() -> void:
 	if extra > 0:
 		player.balls_left += extra
 		player.extra_balls_won += extra
+		Audio.play("extra")
 		hud.flash("Paperella extra per %s!" % player.character.name if extra == 1 else "%d paperelle extra per %s!" % [extra, player.character.name])
 	if targets_left <= 0:
 		_ball_bonus()
@@ -383,6 +478,7 @@ func _next_turn() -> void:
 	if players[other].balls_left > 0 and other != current:
 		current = other
 		hud.flash("Tocca a %s" % _player().label())
+		Audio.play("click")
 	_start_turn()
 
 
@@ -397,6 +493,7 @@ func _ball_bonus() -> void:
 			yield(get_tree().create_timer(BALL_BONUS_INTERVAL), "timeout")
 			player.balls_left -= 1
 			player.score += Scoring.BALL_BONUS
+			Audio.play("extra", 1.0 + 0.05 * player.balls_left)
 			_float_text(launcher.position + Vector2(0, 40), "+" + Scoring.format(Scoring.BALL_BONUS), COLOR_BONUS)
 			_update_hud()
 	yield(get_tree().create_timer(BALL_BONUS_INTERVAL), "timeout")
@@ -429,6 +526,9 @@ func _finish() -> void:
 	lines.append("")
 	lines.append("A / click: nuovo campo · R: rivincita · Esc: menu")
 	hud.show_result(title, lines)
+	Audio.play("win")
+	if measure:
+		_print_measure()
 	if autoplay:
 		print("AUTOPLAY vincitore %s | tiri %d | G1 %s %d poteri %d | G2 %s %d poteri %d | bug rimasti %d | campo %d | %s | portali usati %d" % [
 			"pari" if tie else "G%d" % (best + 1), shots,

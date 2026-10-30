@@ -10,10 +10,16 @@ Regole:
 
 | File | Autore | Fonte | Licenza |
 |---|---|---|---|
-| _(nessun asset per ora: la grafica è disegnata da codice)_ | | | |
+| `assets/sprites/*.svg`, `assets/sprites/characters/*.svg` | progetto Hotfix Friday | disegnati a mano per questo gioco | CC BY 4.0 |
+| `assets/sprites/background.svg` | progetto Hotfix Friday | generato da `tools/assets/make_background.py` | CC BY 4.0 |
+| `assets/audio/*.wav`, `assets/audio/music.ogg` | progetto Hotfix Friday | sintetizzati da `tools/assets/make_audio.py` (nessun campione esterno) | CC BY 4.0 |
+| `assets/fonts/JetBrainsMono-Regular.ttf`, `assets/fonts/JetBrainsMono-Bold.ttf` | The JetBrains Mono Project Authors | [github.com/JetBrains/JetBrainsMono](https://github.com/JetBrains/JetBrainsMono) v2.304 | SIL OFL 1.1 (`assets/fonts/OFL.txt`) |
+
+Per rigenerare sfondo e suoni: `python3 tools/assets/make_background.py` e `python3 tools/assets/make_audio.py` (servono numpy e ffmpeg).
 
 ## Software di terzi
 
 | Componente | Licenza |
 |---|---|
 | [Godot Engine](https://godotengine.org/license) 3.6.3 | MIT |
+| JetBrains Mono (font) | SIL OFL 1.1 |

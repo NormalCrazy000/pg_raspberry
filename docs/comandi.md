@@ -120,7 +120,8 @@ Valgono sia con `godot3 --path .` sia con l'eseguibile esportato. Senza opzioni 
 | `--autoplay[=random\|easy\|normal\|hard]` | entrambi i giocatori sono CPU (default `normal`); stampa il risultato ed esce. Con due valori separati da virgola (es. `hard,easy`) uno per giocatore |
 | `--screenshot=FILE.png` | salva uno screenshot dopo `--screenshot-delay=S` secondi (default 2) ed esce |
 | `--novsync` | disattiva il vsync (con `--fixed-fps 60` la partita va più veloce del tempo reale) |
-| `--bench` | benchmark: opzioni in [raspberry-pi.md](raspberry-pi.md#3-benchmark) |
+| `--bench` | benchmark della scena di prova: opzioni in [raspberry-pi.md](raspberry-pi.md#3-benchmark) |
+| `--measure` | con `--autoplay`: misura FPS e draw call di una sfida vera, a tempo reale e con l'audio |
 | `--fullscreen` | schermo intero (opzione standard di Godot) |
 
 Esempi:

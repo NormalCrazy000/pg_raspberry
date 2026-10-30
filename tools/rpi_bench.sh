@@ -30,5 +30,8 @@ run --pegs=200 --balls=5 --fx
 run --pegs=100 --balls=1 --novsync
 run --pegs=200 --balls=10 --fx --novsync
 
+echo "== sfida vera: CPU contro CPU a tempo reale, con grafica e audio (circa 1-2 minuti) =="
+"./$bin" --autoplay=normal --measure --seed=1 2>&1 | grep -E "PRESTAZIONI|AUTOPLAY"
+
 echo
 echo "Risultati completi (CSV): ~/.local/share/hotfix_friday/bench_results.csv"

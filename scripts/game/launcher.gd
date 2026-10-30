@@ -9,6 +9,8 @@ const AIM_SPEED := 1.6 # rad/s con tastiera o gamepad
 const PREVIEW_DOTS := 12
 const PREVIEW_STEP := 0.04 # secondi tra un punto e l'altro
 const Trajectory := preload("res://scripts/game/trajectory.gd")
+const BASE_TEXTURE := preload("res://assets/sprites/launcher_base.svg")
+const BARREL_TEXTURE := preload("res://assets/sprites/launcher_barrel.svg")
 
 const MUZZLE := 30.0 # distanza dal centro a cui nasce la paperella
 const PATH_STEPS := 240
@@ -23,11 +25,28 @@ var preview_bounces := 0 setget set_preview_bounces
 var path := PoolVector2Array()
 var path_dirty := true
 var frames := 0
+var barrel: Sprite
+
+
+func _ready() -> void:
+	# La canna è sotto la base e ruota attorno al centro del cannone.
+	barrel = Sprite.new()
+	barrel.texture = BARREL_TEXTURE
+	barrel.centered = false
+	barrel.offset = Vector2(-BARREL_TEXTURE.get_width() / 2.0, 0)
+	barrel.scale = Vector2.ONE * 0.8
+	add_child(barrel)
+	var base := Sprite.new()
+	base.texture = BASE_TEXTURE
+	base.scale = Vector2.ONE * 0.75
+	add_child(base)
 
 
 func set_aim_angle(value: float) -> void:
 	aim_angle = clamp(value, -MAX_AIM_ANGLE, MAX_AIM_ANGLE)
 	path_dirty = true
+	if barrel:
+		barrel.rotation = aim_angle
 	update()
 
 
@@ -106,8 +125,6 @@ func _compute_path() -> void:
 
 func _draw() -> void:
 	var dir := direction()
-	draw_line(Vector2.ZERO, dir * 28.0, Color(0.9, 0.9, 1.0), 6.0)
-	draw_circle(Vector2.ZERO, 12.0, Color(0.5, 0.5, 0.65))
 	if not enabled:
 		return
 	if preview_bounces > 0:

@@ -1,12 +1,15 @@
 extends Control
 # Menu principale: sfida a due giocatori o contro la CPU.
 
+const MenuStyle := preload("res://scripts/menu/menu_style.gd")
 const CHARACTER_SCENE := "res://scenes/menu/character_select.tscn"
 
 onready var buttons := $Buttons
 
 
 func _ready() -> void:
+	MenuStyle.add_background(self)
+	Audio.play_music()
 	_add_button("Sfida a 2 giocatori", "_start", [Session.MODE_TWO_PLAYERS, ""])
 	_add_button("Contro la CPU · facile", "_start", [Session.MODE_CPU, "easy"])
 	_add_button("Contro la CPU · normale", "_start", [Session.MODE_CPU, "normal"])
@@ -20,6 +23,7 @@ func _add_button(text: String, method: String, binds: Array) -> void:
 	button.text = text
 	button.rect_min_size = Vector2(280, 36)
 	button.connect("pressed", self, method, binds)
+	MenuStyle.add_sounds(button)
 	buttons.add_child(button)
 
 

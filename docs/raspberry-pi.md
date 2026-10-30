@@ -37,9 +37,12 @@ DISPLAY=:0 ./pg_raspberry.arm64
 ## 3. Benchmark
 
 ```bash
-./rpi_bench.sh          # 6 configurazioni da 20 s (circa 2,5 minuti)
+./rpi_bench.sh          # 6 configurazioni da 20 s + una sfida vera (circa 4 minuti)
 ./rpi_bench.sh 10       # più veloce
 ```
+
+L'ultima prova (`--autoplay=normal --measure`) gioca una sfida CPU contro CPU con grafica, effetti e audio
+e stampa una riga `PRESTAZIONI`: è il dato più vicino all'esperienza reale.
 
 Lo script stampa i risultati e li aggiunge a
 `~/.local/share/hotfix_friday/bench_results.csv`.

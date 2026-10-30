@@ -4,12 +4,16 @@ extends RigidBody2D
 signal touched(body, ball)
 
 const RADIUS := 7.0
+const VISUAL_SIZE := 22.0 # px: l'immagine è più grande della collisione per essere riconoscibile
 const SLOW_SPEED := 40.0
+const TRAIL_POINTS := 10
+const TRAIL_COLOR := Color(1.0, 0.85, 0.2, 0.35)
 
 var age := 0.0
 var slow_time := 0.0
 var portal_cooldown := 0.0
 var teleport_target = null # Vector2 oppure null
+var trail: Line2D
 
 
 func setup(texture: Texture, material: PhysicsMaterial) -> void:
@@ -25,8 +29,20 @@ func setup(texture: Texture, material: PhysicsMaterial) -> void:
 	add_child(collision)
 	var sprite := Sprite.new()
 	sprite.texture = texture
-	sprite.scale = Vector2.ONE * (RADIUS * 2.0 / texture.get_width())
+	sprite.scale = Vector2.ONE * (VISUAL_SIZE / texture.get_width())
 	add_child(sprite)
+	# Scia: una linea in coordinate globali che segue la paperella.
+	trail = Line2D.new()
+	trail.set_as_toplevel(true)
+	trail.width = 6.0
+	var fade := Gradient.new()
+	fade.set_color(0, Color(TRAIL_COLOR.r, TRAIL_COLOR.g, TRAIL_COLOR.b, 0.0))
+	fade.set_color(1, TRAIL_COLOR)
+	trail.gradient = fade
+	trail.joint_mode = Line2D.LINE_JOINT_ROUND
+	trail.begin_cap_mode = Line2D.LINE_CAP_ROUND
+	trail.show_behind_parent = true
+	add_child(trail)
 	connect("body_entered", self, "_on_body_entered")
 
 
@@ -44,6 +60,12 @@ func _integrate_forces(state: Physics2DDirectBodyState) -> void:
 func _physics_process(delta: float) -> void:
 	age += delta
 	portal_cooldown = max(0.0, portal_cooldown - delta)
+	if teleport_target == null and portal_cooldown < 0.45:
+		trail.add_point(global_position)
+	else:
+		trail.clear_points() # niente scia attraverso i portali
+	while trail.get_point_count() > TRAIL_POINTS:
+		trail.remove_point(0)
 	if linear_velocity.length() < SLOW_SPEED:
 		slow_time += delta
 	else:
