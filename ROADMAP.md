@@ -40,6 +40,7 @@ niente campagna a livelli fissi.
 ---
 
 ## Idee per dopo (backlog)
+- Se si aggiungono funzioni online (classifica globale, multiplayer in rete): passare da GPL-3.0 ad **AGPL-3.0**, che obbliga a pubblicare il codice anche di chi gestisce un server modificato.
 - Rinominare il repository su GitHub in `hotfix-friday` (Settings → General → Repository name) e poi aggiornare il remote locale.
 - Modalità sfida giornaliera con seed condiviso.
 - Campi creati dagli utenti caricabili da file.
