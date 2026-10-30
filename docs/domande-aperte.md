@@ -2,9 +2,9 @@
 
 ## Ancora aperte
 
-1. **Benchmark sul Raspberry Pi 3.** Con `./rpi_bench.sh` (dentro l'archivio arm64/arm32, dalla versione 0.1.1)
-   servono le righe `RISULTATO`, `PRESTAZIONI` e `PICCHI`, più temperatura e throttling (istruzioni in `docs/raspberry-pi.md`).
-   Da questi dati dipendono le prossime ottimizzazioni e la qualità grafica predefinita sul Pi.
+1. **Grafica automatica sul Pi.** Con la v0.1.2 il Pi 3B+ fa 60 FPS stabili sia con la grafica bassa sia con quella alta.
+   In automatico sul Pi la impostiamo alta (più effetti) o la lasciamo bassa (consuma e scalda un po' meno)?
+   - Per ora: bassa.
 2. **Equilibrio dei personaggi con i nuovi bonus.** Nelle sfide automatiche (CPU normale) Giulia vince il 49%, Marco il 55%,
    Dario il 45%; Sara non è misurabile così (la sua mira estesa aiuta soprattutto le persone). Da confermare giocando.
 

@@ -19,16 +19,17 @@ niente campagna a livelli fissi.
 - [x] Primo benchmark sul Pi 3B+ (Debian 13): circa 20 FPS ovunque **a causa del vsync** (67 FPS senza vsync su una scena
   più pesante); Pi in sottotensione e rallentato (`throttled=0xd0005`).
 - [x] Vsync spento in automatico sul Pi con limite a 60 FPS; CPU difficile limitata a 5 ms di calcolo per frame.
-- [ ] Secondo benchmark con la nuova versione e un alimentatore adeguato (5,1 V 2,5 A).
-- [ ] Capire i blocchi ("freeze") segnalati sul Pi: con `--measure` il gioco ora stampa i frame più lenti
-  (`PICCHI`) con quello che stava succedendo (CPU, pioli che spariscono, poteri, portali, messaggi...).
+- [x] Secondo benchmark con la v0.1.2: **60 FPS stabili** in tutte le prove (anche grafica alta e CPU difficile),
+  nessun frame oltre 50 ms; scena pesante senza limite a 80 FPS.
+- [ ] Verificare l'alimentazione (`sudo vcgencmd get_throttled` deve dare `0x0`) e la temperatura (64 °C sotto carico: dissipatore consigliato).
+- [x] Capire i blocchi ("freeze") segnalati sul Pi: erano il vsync (20 FPS fissi) e la CPU difficile; con la v0.1.2
+  `--measure` non registra più nessun picco.
 - [x] Misurati i sospetti sul PC: la CPU "difficile" bloccava un frame (12 ms sul PC, circa 120–250 ms stimati sul Pi);
   la mira estesa di Sara è trascurabile (meno di 0,1 ms).
 - [x] La CPU "difficile" ora distribuisce i calcoli su più frame (6 simulazioni per frame), con la stessa forza di gioco.
 - [x] I caratteri dei font vengono preparati all'avvio, così non costano la prima volta che compaiono in partita.
-- [ ] Da valutare dopo il benchmark: generazione del campo (11–23 ms sul PC, all'inizio della sfida) e rallentatore
-  sull'ultimo bug (voluto, ma potrebbe sembrare un blocco).
-- [ ] Decidere i budget definitivi (pioli per campo, particelle, qualità grafica predefinita) in base ai risultati.
+- [x] Budget confermati dal benchmark: pioli per campo, particelle ed effetti reggono i 60 FPS sul Pi 3B+.
+- [ ] Decidere la qualità grafica automatica sul Pi (ora bassa; anche l'alta regge i 60 FPS).
 
 ### Gioco
 - [x] Applicate le risposte alle domande aperte (riepilogo in `docs/domande-aperte.md`).
