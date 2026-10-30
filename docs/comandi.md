@@ -55,6 +55,19 @@ cd build/linux-x86_64
 ```
 
 L'archivio `build/pg_raspberry-linux-x86_64.tar.gz` si può copiare su qualsiasi PC Linux a 64 bit.
+Dentro c'è `install.sh`, che aggiunge il gioco al menu delle applicazioni (vedi [raspberry-pi.md](raspberry-pi.md#installazione-menu-delle-applicazioni-e-avvio-automatico)).
+
+### Build automatiche (GitHub Actions)
+
+A ogni push su `main` GitHub esporta le tre build e gioca 5 sfide automatiche di prova
+(`.github/workflows/build.yml`). Gli archivi si scaricano dalla pagina della run, sezione *Artifacts*.
+Quando si pubblica un tag `v*` (es. `v1.0.0`) il workflow crea anche una release con gli archivi allegati.
+
+Test rapido in locale (dopo aver importato il progetto):
+
+```bash
+tools/smoke_test.sh 10
+```
 
 ---
 
@@ -133,6 +146,7 @@ Valgono sia con `godot3 --path .` sia con l'eseguibile esportato. Senza opzioni 
 | `--bench` | benchmark della scena di prova: opzioni in [raspberry-pi.md](raspberry-pi.md#3-benchmark) |
 | `--measure` | con `--autoplay`: misura FPS e draw call di una sfida vera, a tempo reale e con l'audio |
 | `--lang=it\|en` | forza la lingua per questa esecuzione (senza salvarla nelle opzioni) |
+| `--graphics=auto\|high\|low` | forza la qualità grafica per questa esecuzione |
 | `--fullscreen` | schermo intero (opzione standard di Godot) |
 
 Esempi:

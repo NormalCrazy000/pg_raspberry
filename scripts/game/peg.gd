@@ -47,14 +47,15 @@ func setup(shape_kind: String, peg_kind: String, textures: Dictionary, material:
 		circle.radius = ROUND_RADIUS
 		collision.shape = circle
 		sprite.scale = Vector2.ONE * (ROUND_VISUAL / sprite.texture.get_width())
-	halo = Sprite.new()
-	halo.texture = textures.glow
-	halo.material = textures.glow_material
-	halo.modulate = COLORS[kind]
-	halo.scale = Vector2.ONE * (GLOW_SIZE / halo.texture.get_width())
-	halo.visible = false
 	add_child(collision)
-	add_child(halo)
+	if textures.has("glow"): # assente con la grafica ridotta
+		halo = Sprite.new()
+		halo.texture = textures.glow
+		halo.material = textures.glow_material
+		halo.modulate = COLORS[kind]
+		halo.scale = Vector2.ONE * (GLOW_SIZE / halo.texture.get_width())
+		halo.visible = false
+		add_child(halo)
 	add_child(sprite)
 	_update_color()
 
@@ -75,10 +76,12 @@ func pop() -> void:
 	var tween := create_tween()
 	tween.tween_property(sprite, "scale", sprite.scale * 1.6, POP_TIME)
 	tween.parallel().tween_property(sprite, "modulate:a", 0.0, POP_TIME)
-	tween.parallel().tween_property(halo, "modulate:a", 0.0, POP_TIME)
+	if halo:
+		tween.parallel().tween_property(halo, "modulate:a", 0.0, POP_TIME)
 	tween.tween_callback(self, "queue_free")
 
 
 func _update_color() -> void:
 	sprite.modulate = LIT_BRIGHTNESS if lit else Color.white
-	halo.visible = lit
+	if halo:
+		halo.visible = lit

@@ -1,4 +1,4 @@
-# Raspberry Pi 3: setup e benchmark
+# Raspberry Pi 3: setup, installazione e benchmark
 
 ## 1. Sistema operativo
 
@@ -33,6 +33,30 @@ Se sei collegato via SSH, il gioco va aperto sullo schermo del Pi:
 ```bash
 DISPLAY=:0 ./pg_raspberry.arm64
 ```
+
+### Installazione (menu delle applicazioni e avvio automatico)
+
+Dalla cartella estratta:
+
+```bash
+./install.sh               # aggiunge Hotfix Friday al menu delle applicazioni (Giochi)
+./install.sh --autostart   # in più lo avvia a schermo intero all'accensione: ideale per il Pi portatile
+./install.sh --uninstall   # rimuove tutto (statistiche e opzioni restano)
+```
+
+Non servono permessi di amministratore: tutto va in `~/.local` e `~/.config/autostart`.
+
+### Qualità grafica
+
+In Opzioni → Qualità grafica:
+
+| Modalità | Effetto |
+|---|---|
+| Automatica (predefinita) | bassa se rileva la GPU del Raspberry Pi (VideoCore) o un processore ARM, altrimenti alta |
+| Alta | aloni sui pioli colpiti, particelle, scia della paperella |
+| Bassa | senza questi effetti: circa il 40% di draw call in meno |
+
+Per una prova senza cambiare le opzioni: `./pg_raspberry.arm64 --graphics=high` (oppure `low`).
 
 ## 3. Benchmark
 
@@ -72,6 +96,21 @@ Il caso di riferimento è `--pegs=100 --balls=1` con vsync (una partita normale)
 | < 30 | ❌ Si rivaluta lo stack prima di andare avanti |
 
 I test con `--novsync` dicono quanto margine resta: più è alto, più spazio c'è per grafica ed effetti.
+
+## 5. Versione portatile
+
+Configurazione pensata per giocare in giro:
+
+| Componente | Note |
+|---|---|
+| Raspberry Pi 3 (B o B+) | con dissipatore: evita il throttling durante le sessioni lunghe |
+| Display touch ufficiale 7" (800×480) | è la risoluzione nativa del gioco; con il touch si gioca senza altro |
+| Powerbank USB da almeno 2,5 A | sotto questa soglia il Pi rallenta (vedi `vcgencmd get_throttled`) |
+| Gamepad USB o Bluetooth (opzionale) | stick o d-pad per mirare, A per lanciare, Start per la pausa |
+| Case per Pi + display | meglio se lascia accesso alle porte USB per il gamepad |
+
+Con `./install.sh --autostart` il Pi avvia direttamente il gioco a schermo intero: accendi e giochi.
+Nella sfida a due ci si passa il Pi (touch) o il gamepad; l'HUD evidenzia di chi è il turno.
 
 ## Problemi comuni
 

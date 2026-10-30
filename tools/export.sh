@@ -11,7 +11,7 @@ export_preset() {
 	local preset="$1" dir="$2" bin="$3"
 	mkdir -p "build/$dir"
 	"$GODOT" --path . --export "$preset" "build/$dir/$bin"
-	cp tools/rpi_bench.sh "build/$dir/"
+	cp tools/rpi_bench.sh tools/install.sh icon.png "build/$dir/"
 	tar -czf "build/pg_raspberry-$dir.tar.gz" -C build "$dir"
 	echo "-> build/pg_raspberry-$dir.tar.gz"
 }

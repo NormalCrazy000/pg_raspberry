@@ -1,0 +1,71 @@
+# Esporta il gioco per Linux x86_64 e Raspberry Pi (arm64, arm32) a ogni push.
+# Su un tag v* (es. v1.0.0) pubblica anche una release su GitHub con gli archivi.
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write # serve solo per creare la release sui tag
+
+env:
+  GODOT_VERSION: "3.6.3"
+
+jobs:
+  export:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache di Godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot
+            ~/.local/share/godot/templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Installa Godot ${{ env.GODOT_VERSION }} e i template di export
+        run: |
+          set -euo pipefail
+          B="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          T="$HOME/.local/share/godot/templates/${GODOT_VERSION}.stable"
+          mkdir -p ~/godot "$T"
+          cd ~/godot
+          curl -sSLO "$B/SHA512-SUMS.txt"
+          if [ ! -x "Godot_v${GODOT_VERSION}-stable_linux_headless.64" ]; then
+            curl -sSLO "$B/Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip"
+            grep "linux_headless.64.zip" SHA512-SUMS.txt | grep -v mono | sha512sum -c
+            unzip -q "Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip"
+            rm "Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip"
+          fi
+          if [ ! -f "$T/version.txt" ]; then
+            curl -sSLO "$B/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+            grep "export_templates.tpz" SHA512-SUMS.txt | grep -v mono | sha512sum -c
+            unzip -q "Godot_v${GODOT_VERSION}-stable_export_templates.tpz" "templates/linux_x11_*" "templates/version.txt" -d tpz
+            mv tpz/templates/* "$T/"
+            rm -rf tpz "Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          fi
+          echo "GODOT=$HOME/godot/Godot_v${GODOT_VERSION}-stable_linux_headless.64" >> "$GITHUB_ENV"
+
+      - name: Export (importa anche gli asset)
+        run: tools/export.sh
+
+      - name: Test rapido (sfide automatiche)
+        run: tools/smoke_test.sh 5
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hotfix-friday-${{ github.sha }}
+          path: build/*.tar.gz
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/*.tar.gz
+          generate_release_notes: true

@@ -16,7 +16,7 @@ var teleport_target = null # Vector2 oppure null
 var trail: Line2D
 
 
-func setup(texture: Texture, material: PhysicsMaterial) -> void:
+func setup(texture: Texture, material: PhysicsMaterial, with_trail := true) -> void:
 	add_to_group("balls")
 	physics_material_override = material
 	continuous_cd = RigidBody2D.CCD_MODE_CAST_SHAPE
@@ -31,7 +31,13 @@ func setup(texture: Texture, material: PhysicsMaterial) -> void:
 	sprite.texture = texture
 	sprite.scale = Vector2.ONE * (VISUAL_SIZE / texture.get_width())
 	add_child(sprite)
-	# Scia: una linea in coordinate globali che segue la paperella.
+	if with_trail:
+		_add_trail()
+	connect("body_entered", self, "_on_body_entered")
+
+
+# Scia: una linea in coordinate globali che segue la paperella.
+func _add_trail() -> void:
 	trail = Line2D.new()
 	trail.set_as_toplevel(true)
 	trail.width = 6.0
@@ -43,7 +49,6 @@ func setup(texture: Texture, material: PhysicsMaterial) -> void:
 	trail.begin_cap_mode = Line2D.LINE_CAP_ROUND
 	trail.show_behind_parent = true
 	add_child(trail)
-	connect("body_entered", self, "_on_body_entered")
 
 
 # I corpi rigidi si spostano in modo affidabile solo dentro _integrate_forces.
@@ -60,11 +65,13 @@ func _integrate_forces(state: Physics2DDirectBodyState) -> void:
 func _physics_process(delta: float) -> void:
 	age += delta
 	portal_cooldown = max(0.0, portal_cooldown - delta)
-	if teleport_target == null and portal_cooldown < 0.45:
+	if not trail:
+		pass
+	elif teleport_target == null and portal_cooldown < 0.45:
 		trail.add_point(global_position)
 	else:
 		trail.clear_points() # niente scia attraverso i portali
-	while trail.get_point_count() > TRAIL_POINTS:
+	while trail and trail.get_point_count() > TRAIL_POINTS:
 		trail.remove_point(0)
 	if linear_velocity.length() < SLOW_SPEED:
 		slow_time += delta

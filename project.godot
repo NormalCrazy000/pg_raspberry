@@ -14,6 +14,7 @@ config/name="Hotfix Friday"
 run/main_scene="res://scenes/boot.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="hotfix_friday"
+config/icon="res://icon.png"
 
 [autoload]
 

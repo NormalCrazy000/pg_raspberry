@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- Icona del gioco: paperella su un riquadro scuro con un bug -->
+  <rect x="4" y="4" width="120" height="120" rx="26" fill="#12141c"/>
+  <rect x="4" y="4" width="120" height="120" rx="26" fill="none" stroke="#ffd21f" stroke-width="5"/>
+  <g transform="translate(18 26) scale(2.1)">
+    <ellipse cx="18" cy="26" rx="15" ry="10" fill="#e8a800"/>
+    <ellipse cx="18" cy="25" rx="14" ry="9" fill="#ffd21f"/>
+    <path d="M5 22 Q2 16 7 17 Q9 20 8 23 Z" fill="#ffd21f"/>
+    <circle cx="24" cy="13" r="8.5" fill="#ffd21f"/>
+    <path d="M31 13 Q38 13 37 16 Q34 18 30 17 Z" fill="#ff8a1c"/>
+    <circle cx="26.5" cy="11" r="1.8" fill="#1d1d1d"/>
+    <path d="M11 24 Q17 20 23 25 Q17 29 11 24 Z" fill="#f2b900"/>
+  </g>
+  <g transform="translate(86 84)">
+    <circle cx="0" cy="-8" r="5" fill="#2a0c12"/>
+    <ellipse cx="0" cy="4" rx="11" ry="12" fill="#e5384f"/>
+    <path d="M0 -6 L0 16" stroke="#2a0c12" stroke-width="1.6"/>
+    <circle cx="-5" cy="1" r="2.4" fill="#2a0c12"/>
+    <circle cx="5" cy="1" r="2.4" fill="#2a0c12"/>
+    <circle cx="-4" cy="9" r="2" fill="#2a0c12"/>
+    <circle cx="4" cy="9" r="2" fill="#2a0c12"/>
+  </g>
+</svg>

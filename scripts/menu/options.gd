@@ -35,6 +35,11 @@ func _ready() -> void:
 	fullscreen.connect("toggled", self, "_on_fullscreen_toggled")
 	MenuStyle.add_sounds(fullscreen)
 	rows.add_child(fullscreen)
+	var graphics := Button.new()
+	graphics.text = _graphics_text()
+	graphics.connect("pressed", self, "_on_graphics_pressed", [graphics])
+	MenuStyle.add_sounds(graphics)
+	rows.add_child(graphics)
 	var language := Button.new()
 	language.text = "%s: %s" % [tr("OPT_LANGUAGE"), LANGUAGE_NAMES[Settings.language()]]
 	language.connect("pressed", self, "_on_language_pressed")
@@ -76,6 +81,20 @@ func _on_slider_changed(value: float, key: String) -> void:
 
 func _on_fullscreen_toggled(pressed: bool) -> void:
 	Settings.set_value("fullscreen", pressed)
+
+
+func _graphics_text() -> String:
+	var mode: String = Settings.value("graphics")
+	var text: String = tr("GFX_" + mode.to_upper())
+	if mode == "auto":
+		text += " (%s)" % tr("GFX_LOW" if Settings.low_graphics() else "GFX_HIGH")
+	return "%s: %s" % [tr("OPT_GRAPHICS"), text]
+
+
+func _on_graphics_pressed(button: Button) -> void:
+	var index: int = Settings.GRAPHICS.find(Settings.value("graphics"))
+	Settings.set_value("graphics", Settings.GRAPHICS[(index + 1) % Settings.GRAPHICS.size()])
+	button.text = _graphics_text()
 
 
 func _on_language_pressed() -> void:

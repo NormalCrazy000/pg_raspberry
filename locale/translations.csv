@@ -105,3 +105,7 @@ CHAR_GIULIA_DESC,Riscrive tutto: un'onda d'urto accende i pioli attorno al caff�
 CHAR_MARCO_DESC,Apre tre thread: la paperella si divide in tre.,Spawns three threads: the duck splits into three.
 CHAR_SARA_DESC,Prevede tutto: per 2 tiri la mira mostra i rimbalzi.,Sees it coming: for 2 shots the aim shows the bounces.
 CHAR_DARIO_DESC,Va dritto al problema: per due tiri la paperella è attratta dai bug vicini.,Goes straight to the issue: for two shots the duck is drawn to nearby bugs.
+OPT_GRAPHICS,Qualità grafica,Graphics quality
+GFX_AUTO,Automatica,Automatic
+GFX_HIGH,Alta,High
+GFX_LOW,Bassa,Low

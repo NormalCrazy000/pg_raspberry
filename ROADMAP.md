@@ -148,10 +148,13 @@ Obiettivo: essere sicuri che la pipeline funzioni **prima** di scrivere il gioco
 - [x] Italiano e inglese (`locale/translations.csv`), lingua iniziale da sistema operativo.
 
 ### Fase 7 — Ottimizzazione e packaging
-- [ ] Profiling sul Pi 3: fisica, draw call, memoria; impostazioni qualità (bassa/alta).
-- [ ] Export Linux x86_64 (desktop) e ARM (Pi), possibilmente via **GitHub Actions** (build automatiche).
-- [ ] Pacchettizzazione: archivio `.tar.gz` / AppImage per desktop; script di installazione + avvio automatico in modalità kiosk per il Pi.
-- [ ] Guida hardware per la versione portatile (Pi 3 + display 7" + powerbank + gamepad).
+- [x] Qualità grafica automatica/alta/bassa: in automatico bassa su GPU VideoCore o ARM (circa -40% di draw call).
+- [x] `--measure` e `rpi_bench.sh` per misurare la sfida vera sul Pi.
+- [x] Build automatiche con **GitHub Actions** per x86_64, arm64 e arm32, con 5 sfide di prova; release automatica sui tag `v*`.
+- [x] `tools/smoke_test.sh`: test rapido locale con sfide automatiche.
+- [x] Icona del gioco; `install.sh` negli archivi: menu delle applicazioni e avvio automatico a schermo intero (Pi in modalità kiosk).
+- [x] Guida hardware per la versione portatile (`docs/raspberry-pi.md`).
+- [ ] Profiling sul Pi 3 vero (in attesa del benchmark).
 
 ### Fase 8 — Release
 - [ ] Versioning semantico, `CHANGELOG.md`, tag git.

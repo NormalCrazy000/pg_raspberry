@@ -81,6 +81,7 @@ var shot_hits := 0
 var bursts := []
 var next_burst := 0
 var measure := false
+var low_graphics := false
 var frame_times := []
 var draw_calls_max := 0
 
@@ -99,12 +100,15 @@ func _ready() -> void:
 	_parse_args()
 	if field_seed == 0:
 		field_seed = rng.randi_range(1, 999999)
+	low_graphics = Settings.low_graphics()
 	textures = SPRITES.duplicate()
-	textures.glow = Textures.make_glow(64)
-	textures.glow_material = CanvasItemMaterial.new()
-	textures.glow_material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	if not low_graphics:
+		textures.glow = Textures.make_glow(64)
+		textures.glow_material = CanvasItemMaterial.new()
+		textures.glow_material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	_build_background()
-	_build_bursts()
+	if not low_graphics:
+		_build_bursts()
 	Audio.play_music()
 	var level: Dictionary = LevelLoader.load_level(level_path) if level_path else FieldGenerator.generate(field_seed)
 	_create_players(level.balls)
@@ -172,6 +176,8 @@ func _build_bursts() -> void:
 
 
 func _burst(at: Vector2, color: Color) -> void:
+	if bursts.empty():
+		return
 	var p: CPUParticles2D = bursts[next_burst]
 	next_burst = (next_burst + 1) % bursts.size()
 	p.position = at
@@ -294,7 +300,7 @@ func get_pegs() -> Array:
 
 func spawn_ball(at: Vector2, velocity: Vector2) -> RigidBody2D:
 	var ball := Ball.new()
-	ball.setup(textures.duck, bounce_material)
+	ball.setup(textures.duck, bounce_material, not low_graphics)
 	ball.position = at
 	ball.linear_velocity = velocity
 	ball.connect("touched", self, "_on_ball_touched")
@@ -428,8 +434,9 @@ func _print_measure() -> void:
 		total += t
 	var n := sorted.size()
 	var low1: float = 1.0 / sorted[int(n * 0.99)]
-	print("PRESTAZIONI fps medi %.1f | 1%% low %.1f | min %.1f | draw call max %d | durata %.0fs | %s" % [
-		n / total, low1, 1.0 / sorted[n - 1], draw_calls_max, total, VisualServer.get_video_adapter_name()])
+	print("PRESTAZIONI fps medi %.1f | 1%% low %.1f | min %.1f | draw call max %d | durata %.0fs | grafica %s | %s" % [
+		n / total, low1, 1.0 / sorted[n - 1], draw_calls_max, total, "bassa" if low_graphics else "alta",
+		VisualServer.get_video_adapter_name()])
 
 
 func _remove_ball(ball: RigidBody2D) -> void:

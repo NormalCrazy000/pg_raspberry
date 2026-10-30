@@ -62,3 +62,11 @@ Rispondi quando vuoi: basta il numero e la risposta.
 22. **Statistiche.** Ora registro sfide giocate, bug eliminati, miglior punteggio, record contro la CPU e sfide/vittorie per personaggio. Vuoi altro (es. classifica dei migliori punteggi, statistiche per giocatore con nome)?
 23. **Pulsante di pausa a schermo.** È un piccolo "II" a sinistra del cannone, pensato per il touch. Posizione e dimensione vanno bene sul 7"?
 24. **Altre lingue.** Basta aggiungere una colonna a `locale/translations.csv`. Ne vuoi altre?
+
+## Ottimizzazione e pacchetti (Fase 7)
+
+25. **Benchmark sul Pi 3.** È l'informazione che manca di più: con `./rpi_bench.sh` (dentro l'archivio arm64/arm32) mi dici FPS della scena di prova e della sfida vera (riga `PRESTAZIONI`). Da lì decido se servono altre ottimizzazioni.
+26. **Grafica automatica.** Sul Pi la qualità passa a "bassa" da sola. Preferisci che resti alta finché il benchmark non dice il contrario?
+    - Per ora: ✅ automatica.
+27. **Formato dei pacchetti.** Ora sono archivi `.tar.gz` con `install.sh`. Vuoi anche un AppImage per il desktop o un pacchetto `.deb`?
+    - Per ora: solo `.tar.gz`.
