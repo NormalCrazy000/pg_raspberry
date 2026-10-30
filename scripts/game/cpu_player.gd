@@ -18,9 +18,9 @@ const HARD_BOUNCES := 5
 const HARD_STEPS := 200
 const HIT_VALUE := {"target": 10.0, "power": 6.0, "normal": 1.0}
 const HIT_DECAY := 0.7 # peso dell'urto n-esimo = HIT_DECAY^n
-# Simulazioni per frame quando la CPU decide durante la partita: sul Pi 3 tutte insieme
-# bloccherebbero un frame per 100-250 ms.
-const HARD_SIMULATIONS_PER_FRAME := 6
+# Tempo di calcolo massimo per frame quando la CPU decide durante la partita: tutte le simulazioni
+# insieme sul Pi 3 bloccherebbero un frame per 100-250 ms. A tempo, si adatta a qualsiasi processore.
+const HARD_BUDGET_USEC := 5000
 
 var difficulty := "normal"
 var rng: RandomNumberGenerator
@@ -36,7 +36,7 @@ func decide(game: Node):
 	yield(game.get_tree(), "physics_frame") # sempre almeno una pausa: così è sempre una coroutine
 	if difficulty != "hard":
 		return choose_angle(game)
-	var result = _best_simulated_angle(game, HARD_SIMULATIONS_PER_FRAME)
+	var result = _best_simulated_angle(game, HARD_BUDGET_USEC)
 	if result is GDScriptFunctionState:
 		result = yield(result, "completed")
 	return result + rng.randf_range(-NOISE.hard, NOISE.hard)
@@ -66,13 +66,13 @@ func _parabola_angle(game: Node) -> float:
 
 
 # Prova la mira esatta su ogni bug e caffè (più piccole varianti), simulando i rimbalzi.
-# Con per_frame > 0 si ferma ogni per_frame simulazioni fino al frame di fisica successivo.
-func _best_simulated_angle(game: Node, per_frame := 0):
+# Con budget_usec > 0, quando il calcolo del frame supera quel tempo si ferma fino al frame di fisica successivo.
+func _best_simulated_angle(game: Node, budget_usec := 0):
 	var launcher = game.launcher
 	var space: Physics2DDirectSpaceState = game.get_world_2d().direct_space_state
 	var best_angle := 0.0
 	var best_value := -1.0
-	var simulations := 0
+	var slice_start := OS.get_ticks_usec()
 	# Con la mira estesa (Sara) la CPU "vede" i rimbalzi come il giocatore: si fida di più della simulazione.
 	var extended_aim: bool = game.players[game.current].power.preview_bounces() > 0
 	var offsets: Array = HARD_OFFSETS_EXTENDED_AIM if extended_aim else HARD_OFFSETS
@@ -96,10 +96,10 @@ func _best_simulated_angle(game: Node, per_frame := 0):
 			if value > best_value:
 				best_value = value
 				best_angle = angle
-			simulations += 1
-			if per_frame > 0 and simulations % per_frame == 0:
+			if budget_usec > 0 and OS.get_ticks_usec() - slice_start > budget_usec:
 				game.mark_perf("cpu")
 				yield(game.get_tree(), "physics_frame")
+				slice_start = OS.get_ticks_usec()
 	return best_angle
 
 

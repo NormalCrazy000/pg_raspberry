@@ -1,5 +1,5 @@
 extends Node
-# Sceglie la scena iniziale e applica le opzioni globali (--novsync disattiva il vsync):
+# Sceglie la scena iniziale (il vsync, anche --novsync, è gestito da Settings):
 #   --bench                        benchmark
 #   --autoplay[=...] o --character  direttamente in partita
 #   altrimenti                      menu principale
@@ -17,8 +17,6 @@ const FONTS := [
 
 func _ready() -> void:
 	var args := Array(OS.get_cmdline_args())
-	if args.has("--novsync"):
-		OS.vsync_enabled = false
 	var scene := MENU_SCENE
 	if args.has("--bench"):
 		scene = BENCH_SCENE

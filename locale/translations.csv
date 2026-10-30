@@ -120,3 +120,7 @@ FLASH_COMBO,Combo da %d pioli!,%d-peg combo!
 STATS_TOP_HEADER,Migliori punteggi,Top scores
 MODE_2P,2 giocatori,2 players
 MODE_CPU,CPU %s,%s CPU
+OPT_VSYNC,Sincronia verticale (V-Sync),Vertical sync (V-Sync)
+VSYNC_AUTO,Automatica,Automatic
+VSYNC_ON,Attiva,On
+VSYNC_OFF,Spenta,Off

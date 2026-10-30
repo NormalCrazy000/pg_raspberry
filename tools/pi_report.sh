@@ -52,12 +52,23 @@ bench() {
 	"$bin" --bench --duration="$DURATION" "$@" 2>&1 | grep -E "Renderer|RISULTATO"
 }
 system_state() {
-	if command -v vcgencmd >/dev/null; then
-		vcgencmd measure_temp
-		vcgencmd get_throttled
-	else
+	if ! command -v vcgencmd >/dev/null; then
 		echo "vcgencmd non disponibile"
+		return
 	fi
+	vcgencmd measure_temp
+	local raw value
+	raw="$(vcgencmd get_throttled)"
+	echo "$raw"
+	value=$((${raw#*=}))
+	[ "$value" -eq 0 ] && echo "  ok: nessun problema di alimentazione o temperatura"
+	(( value & 0x1 )) && echo "  ATTENZIONE: tensione troppo bassa adesso (alimentatore o cavo insufficiente)"
+	(( value & 0x4 )) && echo "  ATTENZIONE: processore rallentato adesso"
+	(( value & 0x8 )) && echo "  ATTENZIONE: limite di temperatura raggiunto adesso"
+	(( value & 0x10000 )) && echo "  tensione bassa avvenuta dall'accensione"
+	(( value & 0x40000 )) && echo "  rallentamento avvenuto dall'accensione"
+	(( value & 0x80000 )) && echo "  limite di temperatura (60 gradi) raggiunto dall'accensione"
+	return 0
 }
 
 echo "Avvio delle prove: il gioco si aprirà più volte sullo schermo. Non toccare nulla per circa 5 minuti."

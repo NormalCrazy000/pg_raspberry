@@ -132,6 +132,26 @@ Configurazione pensata per giocare in giro:
 Con `./install.sh --autostart` il Pi avvia direttamente il gioco a schermo intero: accendi e giochi.
 Nella sfida a due ci si passa il Pi (touch) o il gamepad; l'HUD evidenzia di chi è il turno.
 
+## Alimentazione e temperatura
+
+Il Pi rallenta da solo se la tensione è bassa o se scalda troppo: `vcgencmd get_throttled` deve dare `0x0`.
+
+| Bit | Significato | Cosa fare |
+|---|---|---|
+| `0x1` / `0x10000` | tensione troppo bassa (adesso / dall'accensione) | alimentatore da **5,1 V 2,5 A** (meglio quello ufficiale), cavo corto e spesso |
+| `0x4` / `0x40000` | processore rallentato (adesso / dall'accensione) | di solito è conseguenza dei problemi qui sopra |
+| `0x8` / `0x80000` | limite di temperatura (adesso / dall'accensione); sul Pi 3B+ a 60 °C | dissipatore, case aerato o piccola ventola |
+
+Esempio misurato: `0xd0005` = tensione bassa e rallentamento in corso, più limite di temperatura raggiunto.
+In quella condizione il Pi 3B+ lavora a circa 600 MHz invece di 1,4 GHz.
+
+## Vsync
+
+Sul Pi 3 con Debian 13 il vsync blocca il gioco a circa 20 FPS anche quando potrebbe andare molto più veloce
+(misurato: 19 FPS con vsync, 67 FPS senza vsync su una scena più pesante). Per questo in Opzioni →
+Sincronia verticale l'impostazione predefinita "Automatica" lo spegne sul Raspberry Pi e limita il gioco a 60 FPS.
+Se noti "strappi" orizzontali nell'immagine puoi riattivarlo.
+
 ## Problemi comuni
 
 - **"Your video card driver does not support any of the supported OpenGL versions"**: driver KMS non attivo, vedi punto 1.

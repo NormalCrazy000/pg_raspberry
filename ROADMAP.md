@@ -16,7 +16,10 @@ niente campagna a livelli fissi.
 ## Prossimi passi — 0.2.0
 
 ### Prestazioni sul Raspberry Pi 3
-- [ ] Benchmark sul Pi 3 vero (`rpi_bench.sh` + sfida con `--measure`, vedi `docs/raspberry-pi.md`).
+- [x] Primo benchmark sul Pi 3B+ (Debian 13): circa 20 FPS ovunque **a causa del vsync** (67 FPS senza vsync su una scena
+  più pesante); Pi in sottotensione e rallentato (`throttled=0xd0005`).
+- [x] Vsync spento in automatico sul Pi con limite a 60 FPS; CPU difficile limitata a 5 ms di calcolo per frame.
+- [ ] Secondo benchmark con la nuova versione e un alimentatore adeguato (5,1 V 2,5 A).
 - [ ] Capire i blocchi ("freeze") segnalati sul Pi: con `--measure` il gioco ora stampa i frame più lenti
   (`PICCHI`) con quello che stava succedendo (CPU, pioli che spariscono, poteri, portali, messaggi...).
 - [x] Misurati i sospetti sul PC: la CPU "difficile" bloccava un frame (12 ms sul PC, circa 120–250 ms stimati sul Pi);

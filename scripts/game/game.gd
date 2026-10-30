@@ -56,7 +56,9 @@ const COLOR_POINTS := Color(1, 1, 1)
 const COLOR_TARGET_POINTS := Color(1.0, 0.6, 0.65)
 const COLOR_BONUS := Color(1.0, 0.85, 0.3)
 const BURSTS := 8 # sistemi di particelle riutilizzati (budget contenuto per il Pi)
-const SPIKE_THRESHOLD := 0.05 # s: un frame più lungo di così si nota come un blocco
+const SPIKE_MIN := 0.05 # s: un frame più lungo di così si nota come un blocco...
+const SPIKE_FACTOR := 2.5 # ...se dura anche almeno 2,5 volte un frame tipico
+const MEASURE_WARMUP := 1.0 # s: il primo secondo (caricamento della scena) non conta
 # Intonazione dei colpi nello stesso tiro: scala pentatonica in semitoni.
 const HIT_STEPS := [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24]
 
@@ -86,7 +88,8 @@ var next_burst := 0
 var measure := false
 var low_graphics := false
 var frame_tags := [] # cosa è successo dall'ultimo frame (solo con --measure)
-var spikes := [] # [durata, eventi] dei frame più lenti
+var spikes := [] # [durata, eventi] dei frame (possibili picchi; filtrati alla fine)
+var measure_time := 0.0
 var frame_times := []
 var draw_calls_max := 0
 
@@ -466,10 +469,12 @@ func mark_perf(tag: String) -> void:
 
 func _process(delta: float) -> void:
 	if measure and state != State.FINISHED:
-		frame_times.append(delta)
-		draw_calls_max = int(max(draw_calls_max, Performance.get_monitor(Performance.RENDER_2D_DRAW_CALLS_IN_FRAME)))
-		if delta > SPIKE_THRESHOLD:
-			spikes.append([delta, PoolStringArray(frame_tags).join(", ") if frame_tags else "-"])
+		measure_time += delta
+		if measure_time > MEASURE_WARMUP:
+			frame_times.append(delta)
+			draw_calls_max = int(max(draw_calls_max, Performance.get_monitor(Performance.RENDER_2D_DRAW_CALLS_IN_FRAME)))
+			if delta > SPIKE_MIN:
+				spikes.append([delta, PoolStringArray(frame_tags).join(", ") if frame_tags else "-"])
 		frame_tags.clear()
 
 
@@ -483,12 +488,20 @@ func _print_measure() -> void:
 		total += t
 	var n := sorted.size()
 	var low1: float = 1.0 / sorted[int(n * 0.99)]
+	var typical: float = sorted[n / 2]
 	print("PRESTAZIONI fps medi %.1f | 1%% low %.1f | min %.1f | draw call max %d | durata %.0fs | grafica %s | %s" % [
 		n / total, low1, 1.0 / sorted[n - 1], draw_calls_max, total, "bassa" if low_graphics else "alta",
 		VisualServer.get_video_adapter_name()])
 	# I frame più lenti, con quello che stava succedendo: servono a capire i blocchi.
+	var threshold: float = max(SPIKE_MIN, typical * SPIKE_FACTOR)
+	var real_spikes := []
+	for spike in spikes:
+		if spike[0] > threshold:
+			real_spikes.append(spike)
+	spikes = real_spikes
 	spikes.sort_custom(self, "_slower_first")
-	print("PICCHI %d frame oltre %d ms" % [spikes.size(), SPIKE_THRESHOLD * 1000])
+	print("PICCHI %d frame oltre %d ms (frame tipico %.0f ms) | vsync %s" % [
+		spikes.size(), threshold * 1000, typical * 1000, "sì" if OS.vsync_enabled else "no"])
 	for spike in spikes.slice(0, min(spikes.size(), 8) - 1):
 		print("  %4.0f ms  %s" % [spike[0] * 1000.0, spike[1]])
 

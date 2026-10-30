@@ -40,6 +40,11 @@ func _ready() -> void:
 	graphics.connect("pressed", self, "_on_graphics_pressed", [graphics])
 	MenuStyle.add_sounds(graphics)
 	rows.add_child(graphics)
+	var vsync := Button.new()
+	vsync.text = _vsync_text()
+	vsync.connect("pressed", self, "_on_vsync_pressed", [vsync])
+	MenuStyle.add_sounds(vsync)
+	rows.add_child(vsync)
 	var language := Button.new()
 	language.text = "%s: %s" % [tr("OPT_LANGUAGE"), LANGUAGE_NAMES[Settings.language()]]
 	language.connect("pressed", self, "_on_language_pressed")
@@ -95,6 +100,20 @@ func _on_graphics_pressed(button: Button) -> void:
 	var index: int = Settings.GRAPHICS.find(Settings.value("graphics"))
 	Settings.set_value("graphics", Settings.GRAPHICS[(index + 1) % Settings.GRAPHICS.size()])
 	button.text = _graphics_text()
+
+
+func _vsync_text() -> String:
+	var mode: String = Settings.value("vsync")
+	var text: String = tr("VSYNC_" + mode.to_upper())
+	if mode == "auto":
+		text += " (%s)" % tr("VSYNC_ON" if Settings.vsync() else "VSYNC_OFF")
+	return "%s: %s" % [tr("OPT_VSYNC"), text]
+
+
+func _on_vsync_pressed(button: Button) -> void:
+	var index: int = Settings.VSYNC.find(Settings.value("vsync"))
+	Settings.set_value("vsync", Settings.VSYNC[(index + 1) % Settings.VSYNC.size()])
+	button.text = _vsync_text()
 
 
 func _on_language_pressed() -> void:

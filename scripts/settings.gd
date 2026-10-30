@@ -13,11 +13,15 @@ const DEFAULTS := {
 	"aim_speed": 1.0, # moltiplicatore della mira con tastiera e gamepad
 	"language": "", # vuoto = lingua del sistema (italiano se è italiano, altrimenti inglese)
 	"graphics": "auto", # auto, high, low
+	"vsync": "auto", # auto (spento sul Raspberry Pi), on, off
 }
 const GRAPHICS := ["auto", "high", "low"]
+const VSYNC := ["auto", "on", "off"]
+const MAX_FPS := 60 # limite quando il vsync è spento, per non scaldare il processore
 
 var values := DEFAULTS.duplicate()
 var forced_language := ""
+var forced_novsync := false
 
 
 func _ready() -> void:
@@ -32,6 +36,8 @@ func _ready() -> void:
 			forced_language = arg.split("=")[1]
 		elif arg.begins_with("--graphics="):
 			values.graphics = arg.split("=")[1]
+		elif arg == "--novsync":
+			forced_novsync = true
 	apply()
 
 
@@ -53,21 +59,39 @@ func language() -> String:
 	return "it" if OS.get_locale().begins_with("it") else "en"
 
 
-# Effetti grafici ridotti (niente aloni, particelle e scia). In automatico si riducono
-# sul Raspberry Pi (GPU VideoCore) e sui processori ARM.
+# Raspberry Pi (GPU VideoCore) o comunque processore ARM.
+func is_raspberry_pi() -> bool:
+	var gpu := VisualServer.get_video_adapter_name().to_upper()
+	return "VC4" in gpu or "V3D" in gpu or OS.has_feature("arm") or OS.has_feature("arm64") or OS.has_feature("arm32")
+
+
+# Effetti grafici ridotti (niente aloni, particelle e scia). In automatico si riducono sul Raspberry Pi.
 func low_graphics() -> bool:
 	match values.graphics:
 		"low":
 			return true
 		"high":
 			return false
-	var gpu := VisualServer.get_video_adapter_name().to_upper()
-	return "VC4" in gpu or "V3D" in gpu or OS.has_feature("arm") or OS.has_feature("arm64") or OS.has_feature("arm32")
+	return is_raspberry_pi()
+
+
+# Sul Raspberry Pi 3 il vsync blocca il gioco a circa 20 FPS (misurato con Debian 13): in automatico è spento.
+func vsync() -> bool:
+	if forced_novsync:
+		return false
+	match values.vsync:
+		"on":
+			return true
+		"off":
+			return false
+	return not is_raspberry_pi()
 
 
 func apply() -> void:
 	TranslationServer.set_locale(language())
 	OS.window_fullscreen = values.fullscreen
+	OS.vsync_enabled = vsync()
+	Engine.target_fps = 0 if OS.vsync_enabled or forced_novsync else MAX_FPS
 	Audio.set_volumes(values.music_volume, values.sfx_volume)
 
 

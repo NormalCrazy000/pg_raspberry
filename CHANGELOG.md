@@ -4,6 +4,13 @@ Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), 
 
 ## [Non rilasciato]
 
+### Raspberry Pi (dal primo benchmark su Pi 3B+)
+- Vsync spento in automatico sul Pi, con limite a 60 FPS: con il vsync il Pi 3 restava bloccato a circa 20 FPS.
+  Nuova opzione "Sincronia verticale" (automatica, attiva, spenta).
+- La CPU difficile calcola al massimo 5 ms per frame, qualunque sia la velocità del processore.
+- `--measure` ignora il primo secondo (caricamento) e considera picchi i frame lunghi almeno 2,5 volte un frame tipico.
+- `tools/pi_report.sh`: benchmark completo in un solo comando, con spiegazione dei codici di throttling.
+
 ### Gioco
 - Bonus "Tiro lungo" (due bug lontani nello stesso tiro) e "Combo" (10+ pioli toccati dalla stessa paperella).
 - Refactoring di Giulia: una sola onda d'urto per tiro.
