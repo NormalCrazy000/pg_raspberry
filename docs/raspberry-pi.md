@@ -60,6 +60,19 @@ Per una prova senza cambiare le opzioni: `./hotfix-friday.arm64 --graphics=high`
 
 ## 3. Benchmark
 
+### Il modo più semplice: un solo comando
+
+Con il desktop del Pi acceso e collegato a internet, apri un terminale (o collegati via SSH) e lancia:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/NormalCrazy000/pg_raspberry/main/tools/pi_report.sh | bash
+```
+
+Lo script scarica l'ultima release, apre il gioco più volte per le prove (non toccare nulla per circa 5 minuti)
+e salva tutto in `~/risultati_pi.txt`. Per leggerlo: `cat ~/risultati_pi.txt`.
+
+### Prove singole
+
 ```bash
 ./rpi_bench.sh          # 6 configurazioni da 20 s + una sfida vera (circa 4 minuti)
 ./rpi_bench.sh 10       # più veloce
