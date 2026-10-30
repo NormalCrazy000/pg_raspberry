@@ -2,7 +2,7 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
-## [Non rilasciato]
+## [0.1.1] - 2026-10-30
 
 ### Prestazioni
 - La CPU "difficile" distribuisce i calcoli su più frame: niente più blocco di un frame a ogni suo turno sul Raspberry Pi.

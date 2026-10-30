@@ -5,7 +5,7 @@ Gioco 2D originale del genere "peg shooter": si lanciano paperelle di gomma su u
 Ogni personaggio ha un potere che si attiva colpendo una tazza di caffè.
 Open source, pensato per Linux desktop e per **Raspberry Pi 3** (versione portatile).
 
-> **Versione 0.1.0.** Gioco completo per Linux e Raspberry Pi; prestazioni sul Pi 3 ancora da verificare.
+> **Versione 0.1.1.** Gioco completo per Linux e Raspberry Pi; prestazioni sul Pi 3 ancora da verificare.
 > Novità in [CHANGELOG.md](CHANGELOG.md), piano di sviluppo in [ROADMAP.md](ROADMAP.md).
 
 | | | |
