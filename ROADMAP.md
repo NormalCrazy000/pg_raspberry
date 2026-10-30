@@ -70,8 +70,9 @@ Se in futuro si abbandona il Pi 3, il porting a Godot 4 è fattibile (esiste un 
 Le meccaniche di gioco non sono protette da copyright: il genere esiste da decenni (pachinko, bagatelle, flipper).
 Nomi, loghi, grafica, suoni, musiche, personaggi e layout di livelli di altri giochi invece sì, e non vanno usati né imitati.
 
-- Codice: licenza **MIT** (`LICENSE`).
-- Asset originali: **CC BY 4.0**; asset di terzi solo **CC0 / CC BY**, sempre registrati in `ASSETS.md`.
+- Codice: licenza **GNU GPL v3** (`LICENSE`): chi distribuisce o vende il gioco deve rendere pubblico il codice con la stessa licenza.
+- Asset originali: **CC BY-SA 4.0**; asset di terzi solo **CC0 / CC BY / CC BY-SA**, sempre registrati in `ASSETS.md`.
+- Fino alla 0.1.1 il codice era MIT e gli asset CC BY 4.0: quelle versioni restano disponibili con quelle licenze.
 - La licenza di Godot (MIT) e quella del font (OFL) sono mostrate nella schermata crediti.
 
 Regole pratiche per chi contribuisce in [CONTRIBUTING.md](CONTRIBUTING.md). _Linee guida pratiche, non consulenza legale._

@@ -30,10 +30,10 @@ Per i bilanciamenti usa le sfide automatiche: `docs/comandi.md` spiega come racc
 
 ## Regole
 
-- **Niente asset di terzi senza licenza chiara.** Solo opere originali o CC0/CC BY, registrate in [ASSETS.md](ASSETS.md) nello stesso commit.
+- **Niente asset di terzi senza licenza chiara.** Solo opere originali o CC0/CC BY/CC BY-SA, registrate in [ASSETS.md](ASSETS.md) nello stesso commit.
 - Niente nomi, grafica, suoni o livelli presi da altri giochi.
 - I testi visibili vanno in `locale/translations.csv` (italiano e inglese).
 - Pensa al Raspberry Pi 3: pochi draw call, niente shader pesanti, effetti disattivabili con la grafica "bassa".
 - Stile del codice: quello dei file vicini (tab, commenti in italiano, nomi in inglese).
 
-Il codice è sotto licenza MIT, gli asset originali sotto CC BY 4.0: contribuendo accetti di rilasciare il tuo lavoro con le stesse licenze.
+Il codice è sotto licenza GNU GPL v3, gli asset originali sotto CC BY-SA 4.0: contribuendo accetti di rilasciare il tuo lavoro con le stesse licenze.

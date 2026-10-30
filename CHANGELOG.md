@@ -10,6 +10,11 @@ Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), 
 - La CPU difficile sfrutta la mira estesa di Sara.
 - Classifica dei 10 migliori punteggi nella schermata Statistiche.
 
+### Licenza
+- Il codice passa da MIT a **GNU GPL v3** e gli asset originali da CC BY 4.0 a **CC BY-SA 4.0**:
+  chi distribuisce o vende il gioco deve farlo con la stessa licenza e con il codice sorgente.
+  Le versioni 0.1.0 e 0.1.1 restano disponibili con le licenze con cui sono state pubblicate.
+
 ### Pacchetti
 - Archivi ed eseguibili rinominati: `hotfix-friday-<piattaforma>.tar.gz`, `hotfix-friday.<arch>`.
 

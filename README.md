@@ -72,4 +72,12 @@ vedi [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Licenza
 
-Codice sotto licenza [MIT](LICENSE). Asset e attribuzioni in [ASSETS.md](ASSETS.md).
+Copyright © 2026 normalcrazy.
+
+- **Codice:** [GNU GPL v3](LICENSE). Puoi usare, modificare, distribuire e anche vendere il gioco,
+  ma chi lo distribuisce (modificato o no) deve farlo con la stessa licenza e rendere disponibile il codice sorgente.
+- **Grafica, suoni e musica originali:** [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.it):
+  stesse regole, chi li modifica deve condividerli con la stessa licenza.
+- Componenti di terzi con le loro licenze (Godot Engine MIT, font JetBrains Mono OFL): dettagli in [ASSETS.md](ASSETS.md).
+
+Le versioni fino alla 0.1.1 sono state pubblicate con licenza MIT (codice) e CC BY 4.0 (asset) e restano disponibili con quelle licenze.

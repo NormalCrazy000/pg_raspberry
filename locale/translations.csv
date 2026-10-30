@@ -84,8 +84,10 @@ CREDITS_BODY,"Hotfix Friday
 Un gioco open source per Linux e Raspberry Pi.
 
 Sviluppo: normalcrazy
-Codice: licenza MIT.
-Grafica, suoni e musica: originali, licenza CC BY 4.0.
+Copyright © 2026 normalcrazy.
+Codice: licenza GNU GPL v3. Chi distribuisce il gioco deve rendere disponibile il codice sorgente con la stessa licenza.
+Codice sorgente: https://github.com/NormalCrazy000/pg_raspberry
+Grafica, suoni e musica: originali, licenza CC BY-SA 4.0.
 Font: JetBrains Mono, © The JetBrains Mono Project Authors, licenza SIL Open Font License 1.1.
 Motore: Godot Engine, licenza MIT.
 
@@ -95,8 +97,10 @@ Licenza di Godot Engine:","Hotfix Friday
 An open source game for Linux and Raspberry Pi.
 
 Development: normalcrazy
-Code: MIT license.
-Graphics, sounds and music: original, CC BY 4.0 license.
+Copyright © 2026 normalcrazy.
+Code: GNU GPL v3 license. Anyone distributing the game must make the source code available under the same license.
+Source code: https://github.com/NormalCrazy000/pg_raspberry
+Graphics, sounds and music: original, CC BY-SA 4.0 license.
 Font: JetBrains Mono, © The JetBrains Mono Project Authors, SIL Open Font License 1.1.
 Engine: Godot Engine, MIT license.
 
