@@ -23,6 +23,7 @@ var players := []
 var next_player := 0
 var music_player: AudioStreamPlayer
 var muted := false
+var sfx_db := 0.0
 
 
 func _ready() -> void:
@@ -48,7 +49,7 @@ func play(sound: String, pitch := 1.0, volume_db := 0.0) -> void:
 	next_player = (next_player + 1) % players.size()
 	player.stream = SOUNDS[sound]
 	player.pitch_scale = pitch
-	player.volume_db = volume_db
+	player.volume_db = volume_db + sfx_db
 	player.play()
 
 
@@ -59,3 +60,10 @@ func play_music() -> void:
 	stream.loop = true
 	music_player.stream = stream
 	music_player.play()
+
+
+# Volumi lineari 0..1 (dalle impostazioni).
+func set_volumes(music: float, sfx: float) -> void:
+	sfx_db = linear2db(max(sfx, 0.001))
+	music_player.volume_db = MUSIC_DB + linear2db(max(music, 0.001))
+	music_player.stream_paused = music <= 0.0

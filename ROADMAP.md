@@ -139,11 +139,13 @@ Obiettivo: essere sicuri che la pipeline funzioni **prima** di scrivere il gioco
 - [x] `--measure`: benchmark della sfida vera (incluso in `rpi_bench.sh`).
 
 ### Fase 6 — UI, UX e salvataggi
-- [ ] Menu principale, pausa, opzioni (volume, schermo intero, sensibilità).
-- [ ] Navigazione completa con **gamepad e touch**, non solo mouse.
-- [ ] Salvataggio progressi e record in `user://` (JSON).
-- [ ] Schermata crediti con licenze.
-- [ ] Localizzazione IT/EN (Godot `TranslationServer` + CSV).
+- [x] Menu principale a pagine: sfida a 2, contro la CPU (scelta difficoltà), come si gioca, statistiche, opzioni, crediti.
+- [x] Pausa (Esc, Start del gamepad o pulsante "II" a schermo per il touch): riprendi, ricomincia la sfida, torna al menu.
+- [x] Fine sfida con pulsanti (nuovo campo, rivincita, menu): tutto usabile con solo touch o solo gamepad.
+- [x] Opzioni salvate in `user://settings.json`: volume musica ed effetti, schermo intero, velocità di mira, lingua.
+- [x] Statistiche in `user://stats.json`: sfide giocate, bug eliminati, miglior punteggio, record contro la CPU per difficoltà, sfide e vittorie per personaggio.
+- [x] Schermata crediti con le licenze (gioco, asset, font e licenza di Godot).
+- [x] Italiano e inglese (`locale/translations.csv`), lingua iniziale da sistema operativo.
 
 ### Fase 7 — Ottimizzazione e packaging
 - [ ] Profiling sul Pi 3: fisica, draw call, memoria; impostazioni qualità (bassa/alta).

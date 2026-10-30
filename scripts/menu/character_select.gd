@@ -18,7 +18,8 @@ onready var subtitle = $Subtitle
 func _ready() -> void:
 	MenuStyle.add_background(self)
 	Audio.play_music()
-	subtitle.text = "Giocatore %d: scegli chi lancia le paperelle" % (Session.selecting_player + 1)
+	subtitle.text = tr("CHOOSE_CHARACTER") % (Session.selecting_player + 1)
+	$Hint.text = tr("HINT_MENU")
 	for character in Characters.load_all():
 		cards.add_child(_make_card(character))
 	if cards.get_child_count() > 0:
@@ -53,7 +54,7 @@ func _make_card(character: Dictionary) -> Button:
 	var power_label := _card_label(character.power_name.to_upper(), 140, 18)
 	power_label.add_color_override("font_color", Color(character.color))
 	card.add_child(power_label)
-	var description := _card_label(character.description, 164, CARD_SIZE.y - 170)
+	var description := _card_label(tr(character.description), 164, CARD_SIZE.y - 170)
 	description.add_font_override("font", FONT_SMALL)
 	description.modulate = Color(0.8, 0.84, 0.92)
 	card.add_child(description)
@@ -85,5 +86,6 @@ func _on_card_pressed(id: String) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause"):
+		get_tree().set_input_as_handled()
 		get_tree().change_scene(MENU_SCENE)

@@ -41,7 +41,7 @@ func on_shot_end() -> void:
 
 func status_text() -> String:
 	if active:
-		return "magnete attivo"
+		return tr("POWER_MAGNET_ACTIVE")
 	if shots_left > 0:
-		return "magnete al prossimo tiro"
+		return tr("POWER_MAGNET_NEXT")
 	return ""

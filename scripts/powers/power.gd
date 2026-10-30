@@ -46,6 +46,6 @@ func preview_bounces() -> int:
 	return 0
 
 
-# Stato del potere per l'HUD ("" se non è attivo).
+# Stato del potere per l'HUD ("" se non è attivo). Usa tr() con una chiave di locale/translations.csv.
 func status_text() -> String:
 	return ""

@@ -54,3 +54,11 @@ Rispondi quando vuoi: basta il numero e la risposta.
 18. **Volume.** Musica a -8 dB rispetto agli effetti. Le regolazioni di volume arrivano nella Fase 6 (opzioni).
 19. **Stile grafico.** Ti piacciono puntine, bug, tazze, righe di codice e ritratti? C'è qualcosa da cambiare (colori, forme, sfondo troppo o troppo poco visibile)?
 20. **Bug sulle righe di codice.** I bug rettangolari sono righe di codice rosse con la sottolineatura ondulata degli errori. Si capisce che sono obiettivi?
+
+## Interfaccia e salvataggi (Fase 6)
+
+21. **Lingua iniziale.** Al primo avvio il gioco usa la lingua del sistema operativo (italiano se il sistema è in italiano, altrimenti inglese). Il tuo sistema è in inglese, quindi lo vedrai in inglese finché non cambi in Opzioni → Lingua. Preferisci che parta sempre in italiano?
+    - Per ora: ✅ lingua del sistema.
+22. **Statistiche.** Ora registro sfide giocate, bug eliminati, miglior punteggio, record contro la CPU e sfide/vittorie per personaggio. Vuoi altro (es. classifica dei migliori punteggi, statistiche per giocatore con nome)?
+23. **Pulsante di pausa a schermo.** È un piccolo "II" a sinistra del cannone, pensato per il touch. Posizione e dimensione vanno bene sul 7"?
+24. **Altre lingue.** Basta aggiungere una colonna a `locale/translations.csv`. Ne vuoi altre?

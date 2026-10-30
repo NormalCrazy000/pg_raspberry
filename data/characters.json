@@ -5,7 +5,7 @@
 		"role": "Senior Backend",
 		"power": "shockwave",
 		"power_name": "Refactoring",
-		"description": "Riscrive tutto: un'onda d'urto accende i pioli attorno al caffè.",
+		"description": "CHAR_GIULIA_DESC",
 		"color": "#e8a33d"
 	},
 	{
@@ -14,7 +14,7 @@
 		"role": "Junior Frontend",
 		"power": "multiball",
 		"power_name": "Fork",
-		"description": "Apre tre thread: la paperella si divide in tre.",
+		"description": "CHAR_MARCO_DESC",
 		"color": "#4fb3e8"
 	},
 	{
@@ -23,7 +23,7 @@
 		"role": "QA Tester",
 		"power": "long_aim",
 		"power_name": "Test coverage",
-		"description": "Prevede tutto: per 2 tiri la mira mostra i rimbalzi.",
+		"description": "CHAR_SARA_DESC",
 		"color": "#b07be0"
 	},
 	{
@@ -32,7 +32,7 @@
 		"role": "DevOps",
 		"power": "magnet",
 		"power_name": "Hotfix",
-		"description": "Va dritto al problema: per due tiri la paperella è attratta dai bug vicini.",
+		"description": "CHAR_DARIO_DESC",
 		"color": "#5fd08a"
 	}
 ]

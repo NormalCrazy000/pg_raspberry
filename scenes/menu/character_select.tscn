@@ -21,7 +21,7 @@ modulate = Color( 0.75, 0.8, 0.9, 1 )
 anchor_right = 1.0
 margin_top = 64.0
 margin_bottom = 100.0
-text = "Giocatore 1: scegli chi lancia le paperelle"
+text = ""
 align = 1
 
 [node name="Cards" type="HBoxContainer" parent="."]
@@ -38,5 +38,5 @@ modulate = Color( 0.55, 0.6, 0.7, 1 )
 anchor_right = 1.0
 margin_top = 430.0
 margin_bottom = 450.0
-text = "Frecce/stick per scegliere · Invio/A/click per confermare · Esc per tornare indietro"
+text = ""
 align = 1

@@ -11,20 +11,21 @@ config_version=4
 [application]
 
 config/name="Hotfix Friday"
+run/main_scene="res://scenes/boot.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="hotfix_friday"
-run/main_scene="res://scenes/boot.tscn"
 
 [autoload]
 
 Session="*res://scripts/session.gd"
 Audio="*res://scripts/audio.gd"
+Settings="*res://scripts/settings.gd"
+Stats="*res://scripts/stats.gd"
 
 [display]
 
 window/size/width=800
 window/size/height=480
-window/vsync/use_vsync=true
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 
@@ -32,9 +33,12 @@ window/stretch/aspect="keep"
 
 theme/custom="res://assets/theme.tres"
 
+[locale]
+
+translations=PoolStringArray( "res://locale/translations.it.translation", "res://locale/translations.en.translation" )
+
 [physics]
 
-common/physics_fps=60
 2d/default_gravity=900
 
 [rendering]

@@ -111,6 +111,7 @@ func _ready() -> void:
 	_build_field(level)
 	launcher.connect("fire", self, "_on_launcher_fire")
 	bucket.connect("ball_caught", self, "_on_ball_caught")
+	hud.connect("menu_choice", self, "_on_menu_choice")
 	if Session.debug_power:
 		for player in players:
 			player.power.activate(null, null)
@@ -274,7 +275,7 @@ func _cpu_turn() -> void:
 	var player = _player()
 	var fast := autoplay != ""
 	if not fast:
-		yield(get_tree().create_timer(CPU_THINK_TIME), "timeout")
+		yield(get_tree().create_timer(CPU_THINK_TIME, false), "timeout")
 	var angle: float = player.cpu.choose_angle(self)
 	if not fast:
 		var tween := create_tween()
@@ -327,7 +328,7 @@ func hit_peg(peg: Node, ball: RigidBody2D) -> void:
 		if targets_left == 0:
 			_start_slowmo()
 		elif scoring.multiplier() > multiplier_before:
-			hud.flash("Moltiplicatore x%d!" % scoring.multiplier())
+			hud.flash(tr("FLASH_MULTIPLIER") % scoring.multiplier())
 			Audio.play("multiplier")
 	if peg.kind == Peg.KIND_POWER or debug_hit_pending:
 		debug_hit_pending = false
@@ -377,7 +378,7 @@ func _on_ball_touched(body: Node, ball: RigidBody2D) -> void:
 
 func _start_slowmo() -> void:
 	Engine.time_scale = SLOWMO_SCALE
-	yield(get_tree().create_timer(SLOWMO_TIME), "timeout")
+	yield(get_tree().create_timer(SLOWMO_TIME, false), "timeout")
 	Engine.time_scale = 1.0
 
 
@@ -388,7 +389,7 @@ func _on_ball_caught(ball: Node) -> void:
 		# Al massimo una paperella recuperata per tiro, anche con Fork.
 		recovered_this_shot = true
 		_player().balls_left += 1
-		hud.flash("Paperella recuperata!")
+		hud.flash(tr("FLASH_RECOVERED"))
 		Audio.play("bucket")
 	_remove_ball(ball)
 
@@ -449,14 +450,14 @@ func _clear_lit_pegs() -> void:
 	for peg in get_pegs():
 		if is_instance_valid(peg) and peg.lit and not peg.popping:
 			peg.pop()
-			yield(get_tree().create_timer(POP_INTERVAL), "timeout")
+			yield(get_tree().create_timer(POP_INTERVAL, false), "timeout")
 	var player = _player()
 	var extra := scoring.extra_balls_for_shot()
 	if extra > 0:
 		player.balls_left += extra
 		player.extra_balls_won += extra
 		Audio.play("extra")
-		hud.flash("Paperella extra per %s!" % player.character.name if extra == 1 else "%d paperelle extra per %s!" % [extra, player.character.name])
+		hud.flash(tr("FLASH_EXTRA_ONE") % player.character.name if extra == 1 else tr("FLASH_EXTRA_MANY") % [extra, player.character.name])
 	if targets_left <= 0:
 		_ball_bonus()
 	elif _total_balls_left() <= 0:
@@ -477,7 +478,7 @@ func _next_turn() -> void:
 	var other := (current + 1) % players.size()
 	if players[other].balls_left > 0 and other != current:
 		current = other
-		hud.flash("Tocca a %s" % _player().label())
+		hud.flash(tr("FLASH_TURN") % _player().label())
 		Audio.play("click")
 	_start_turn()
 
@@ -490,13 +491,13 @@ func _ball_bonus() -> void:
 		current = i
 		player.bonus_balls = player.balls_left
 		while player.balls_left > 0:
-			yield(get_tree().create_timer(BALL_BONUS_INTERVAL), "timeout")
+			yield(get_tree().create_timer(BALL_BONUS_INTERVAL, false), "timeout")
 			player.balls_left -= 1
 			player.score += Scoring.BALL_BONUS
 			Audio.play("extra", 1.0 + 0.05 * player.balls_left)
 			_float_text(launcher.position + Vector2(0, 40), "+" + Scoring.format(Scoring.BALL_BONUS), COLOR_BONUS)
 			_update_hud()
-	yield(get_tree().create_timer(BALL_BONUS_INTERVAL), "timeout")
+	yield(get_tree().create_timer(BALL_BONUS_INTERVAL, false), "timeout")
 	_finish()
 
 
@@ -512,21 +513,22 @@ func _finish() -> void:
 			tie = false
 		elif players[i].score == players[best].score:
 			tie = true
-	var title: String = "Pareggio!" if tie else "Vince %s!" % players[best].label()
+	var title: String = tr("RESULT_TIE") if tie else tr("RESULT_WINNER") % players[best].label()
 	var lines := []
 	for player in players:
 		var line: String = "%s: %s" % [player.label(), Scoring.format(player.score)]
 		if player.bonus_balls > 0:
-			line += "  (bonus %d × %s)" % [player.bonus_balls, Scoring.format(Scoring.BALL_BONUS)]
+			line += "  " + tr("RESULT_BONUS") % [player.bonus_balls, Scoring.format(Scoring.BALL_BONUS)]
 		lines.append(line)
 	if targets_left > 0:
-		lines.append("Paperelle finite con %d bug ancora aperti" % targets_left)
+		lines.append(tr("RESULT_OPEN_BUGS") % targets_left)
 	lines.append("")
-	lines.append("Campo #%d" % field_seed)
-	lines.append("")
-	lines.append("A / click: nuovo campo · R: rivincita · Esc: menu")
+	lines.append(tr("RESULT_FIELD") % field_seed)
 	hud.show_result(title, lines)
 	Audio.play("win")
+	if not autoplay:
+		var cpu_difficulty: String = Session.cpu_difficulty if Session.mode == Session.MODE_CPU else ""
+		Stats.record_match(players, -1 if tie else best, scoring.targets_hit, cpu_difficulty)
 	if measure:
 		_print_measure()
 	if autoplay:
@@ -540,23 +542,33 @@ func _finish() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		get_tree().change_scene(MENU_SCENE)
+	if event.is_action_pressed("pause") and state != State.FINISHED:
+		get_tree().set_input_as_handled()
+		hud.show_pause()
 	elif state == State.FINISHED and OS.get_ticks_msec() / 1000.0 - result_time > RESTART_DELAY:
 		if event is InputEventKey and event.pressed and event.scancode == KEY_R:
-			# Rivincita sullo stesso campo, inizia l'altro giocatore.
+			_on_menu_choice("rematch")
+		elif event.is_action_pressed("pause"):
+			_on_menu_choice("menu")
+
+
+# Scelte dal menu di pausa e dalla schermata finale.
+func _on_menu_choice(choice: String) -> void:
+	get_tree().paused = false
+	match choice:
+		"new":
+			Session.field_seed = 0
+			get_tree().reload_current_scene()
+		"rematch":
+			# Stesso campo, inizia l'altro giocatore.
 			Session.field_seed = field_seed
 			Session.first_player = (Session.first_player + 1) % 2
 			get_tree().reload_current_scene()
-		elif _is_confirm(event):
-			Session.field_seed = 0
+		"restart":
+			Session.field_seed = field_seed
 			get_tree().reload_current_scene()
-
-
-func _is_confirm(event: InputEvent) -> bool:
-	if event is InputEventMouseButton:
-		return not event.pressed and event.button_index == BUTTON_LEFT
-	return event.is_action_pressed("ui_accept")
+		"menu":
+			get_tree().change_scene(MENU_SCENE)
 
 
 func _update_hud() -> void:

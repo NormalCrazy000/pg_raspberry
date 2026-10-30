@@ -25,4 +25,4 @@ func preview_bounces() -> int:
 func status_text() -> String:
 	if shots_left <= 0:
 		return ""
-	return "%d tir%s con mira estesa" % [shots_left, "o" if shots_left == 1 else "i"]
+	return tr("POWER_LONG_AIM_ONE") if shots_left == 1 else tr("POWER_LONG_AIM_MANY") % shots_left

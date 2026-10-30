@@ -13,4 +13,4 @@ var powers_used := 0
 
 
 func label() -> String:
-	return "%s (%s)" % [character.name, "CPU" if cpu else "G%d" % (index + 1)]
+	return "%s (%s)" % [character.name, "CPU" if cpu else tr("PLAYER_SHORT") % (index + 1)]

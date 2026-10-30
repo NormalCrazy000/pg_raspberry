@@ -49,11 +49,13 @@ func extra_balls_for_shot() -> int:
 	return count
 
 
+# Numero con il separatore delle migliaia della lingua corrente (12.300 / 12,300).
 static func format(value: int) -> String:
+	var separator := TranslationServer.translate("THOUSANDS_SEP")
 	var digits := str(value)
 	var out := ""
 	for i in digits.length():
 		if i > 0 and (digits.length() - i) % 3 == 0:
-			out += "."
+			out += separator
 		out += digits[i]
 	return out

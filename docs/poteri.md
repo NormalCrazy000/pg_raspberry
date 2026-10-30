@@ -54,6 +54,9 @@ Ogni personaggio ha un potere. Il potere si attiva quando il giocatore colpisce 
    ```
 
 Il menu mostra automaticamente tutti i personaggi del file JSON.
+La descrizione può essere un testo o una chiave di `locale/translations.csv` (come `CHAR_GIULIA_DESC`) per averla in italiano e in inglese;
+lo stesso vale per i testi restituiti da `status_text()` (usa `tr("CHIAVE")`).
+Se aggiungi un ritratto, salvalo come `assets/sprites/characters/<id>.svg` (64×64).
 
 ## Metodi disponibili
 

@@ -5,7 +5,7 @@ Gioco 2D originale del genere "peg shooter": si lanciano paperelle di gomma su u
 Ogni personaggio ha un potere che si attiva colpendo una tazza di caffè.
 Open source, pensato per Linux desktop e per **Raspberry Pi 3** (versione portatile).
 
-> **Stato:** Fase 5, sfida a 2 giocatori o contro la CPU su campi generati, con grafica vettoriale, effetti, suoni e musica originali. Vedi [ROADMAP.md](ROADMAP.md).
+> **Stato:** Fase 6, gioco completo: sfida a 2 giocatori o contro la CPU, campi generati, grafica e audio originali, opzioni, statistiche, pausa, italiano e inglese. Vedi [ROADMAP.md](ROADMAP.md).
 
 ## Requisiti
 
@@ -15,6 +15,7 @@ Open source, pensato per Linux desktop e per **Raspberry Pi 3** (versione portat
 ## Avvio rapido
 
 ```bash
+godot3 --path . --editor --quit   # solo la prima volta dopo il clone: importa gli asset
 godot3 --path .             # Linux, dal sorgente
 tools/export.sh arm64       # build per Raspberry Pi (anche: x86_64, arm32, oppure tutte senza argomenti)
 ```
@@ -37,6 +38,7 @@ scripts/   script GDScript
 levels/    campi fissi in JSON (opzionali, formato in scripts/game/level_loader.gd)
 assets/    grafica (SVG), suoni, musica e font
 data/      dati di gioco (personaggi)
+locale/    traduzioni italiano/inglese (translations.csv)
 tools/     script di build, benchmark e generazione di sfondo e suoni
 docs/      documentazione
 ```

@@ -21,23 +21,22 @@ modulate = Color( 0.75, 0.8, 0.9, 1 )
 anchor_right = 1.0
 margin_top = 84.0
 margin_bottom = 124.0
-text = "Venerdì, ore 17:42. Bisogna chiudere i bug prima del rilascio.
-Chi ne chiude di più vince."
+text = ""
 align = 1
 
 [node name="Buttons" type="VBoxContainer" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -140.0
-margin_top = 150.0
+margin_top = 138.0
 margin_right = 140.0
-margin_bottom = 400.0
-custom_constants/separation = 10
+margin_bottom = 420.0
+custom_constants/separation = 8
 
 [node name="Hint" type="Label" parent="."]
 modulate = Color( 0.55, 0.6, 0.7, 1 )
 anchor_right = 1.0
-margin_top = 430.0
-margin_bottom = 450.0
-text = "Frecce/stick per scegliere · Invio/A/click per confermare · Esc per uscire"
+margin_top = 446.0
+margin_bottom = 466.0
+text = ""
 align = 1

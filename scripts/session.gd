@@ -12,6 +12,7 @@ var characters := ["giulia", "marco"] # uno per giocatore
 var field_seed := 0 # 0 = nuovo campo casuale
 var first_player := 0
 var selecting_player := 0 # usato dal menu dei personaggi
+var text_screen := "how_to" # how_to, stats o credits
 var screenshot_path := ""
 var screenshot_delay := 2.0
 var debug_power := false

@@ -93,7 +93,7 @@ func _process(delta: float) -> void:
 		axis = 0.0
 	axis += Input.get_action_strength("ui_left") - Input.get_action_strength("ui_right")
 	if axis != 0.0:
-		self.aim_angle = aim_angle + axis * AIM_SPEED * delta
+		self.aim_angle = aim_angle + axis * AIM_SPEED * Settings.value("aim_speed") * delta
 
 
 func _physics_process(_delta: float) -> void:

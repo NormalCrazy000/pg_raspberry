@@ -28,7 +28,17 @@ _Editor → Manage Export Templates → Download_.
 
 ### Giocare dal sorgente
 
-Dalla cartella del repo:
+La prima volta dopo un `git clone`, Godot deve importare grafica, suoni e traduzioni
+(si apre una finestra per qualche secondo e si chiude da sola):
+
+```bash
+godot3 --path . --editor --quit
+```
+
+> La versione headless (`godot3-headless --editor --quit`) importa ma non si chiude da sola a causa dei font:
+> usa quella con finestra. Gli export (`tools/export.sh`) importano da soli e non hanno questo problema.
+
+Poi, dalla cartella del repo:
 
 ```bash
 godot3 --path .                 # gioca (parte dal menu dei personaggi)
@@ -122,6 +132,7 @@ Valgono sia con `godot3 --path .` sia con l'eseguibile esportato. Senza opzioni 
 | `--novsync` | disattiva il vsync (con `--fixed-fps 60` la partita va più veloce del tempo reale) |
 | `--bench` | benchmark della scena di prova: opzioni in [raspberry-pi.md](raspberry-pi.md#3-benchmark) |
 | `--measure` | con `--autoplay`: misura FPS e draw call di una sfida vera, a tempo reale e con l'audio |
+| `--lang=it\|en` | forza la lingua per questa esecuzione (senza salvarla nelle opzioni) |
 | `--fullscreen` | schermo intero (opzione standard di Godot) |
 
 Esempi:
@@ -150,9 +161,18 @@ seq 1 100 | xargs -P 8 -I{} godot3-headless --path . --fixed-fps 60 --autoplay=h
 |---|---|---|---|
 | Mirare | muovi il mouse | trascina | frecce / stick / d-pad |
 | Lanciare | rilascia il click | rilascia il dito | spazio / A |
-| Nuovo campo (a fine sfida) | click | tocco | Invio / A |
-| Rivincita sullo stesso campo (a fine sfida) | | | `R` |
-| Tornare al menu | | | `Esc` |
+| Pausa | pulsante "II" in alto | pulsante "II" in alto | `Esc` / Start |
+| Rivincita sullo stesso campo (a fine sfida) | pulsante | pulsante | pulsante oppure `R` |
 
-Nei menu: frecce/stick per scegliere, Invio/A/click per confermare, Esc per tornare indietro.
+Nei menu: frecce/stick per scegliere, Invio/A/click per confermare, Esc/B per tornare indietro.
+A fine sfida e in pausa le scelte sono pulsanti, utilizzabili anche solo con il touch o il gamepad.
+
+## Dati salvati
+
+| File | Contenuto |
+|---|---|
+| `~/.local/share/hotfix_friday/settings.json` | opzioni (volumi, schermo intero, velocità di mira, lingua) |
+| `~/.local/share/hotfix_friday/stats.json` | statistiche delle sfide giocate da persone |
+
+Per tornare alle impostazioni iniziali basta cancellare questi file.
 Nella sfida a 2 giocatori ci si passa il dispositivo: l'HUD evidenzia di chi è il turno.
