@@ -1,0 +1,15 @@
+# Godot 3
+.import/
+*.import.tmp
+export.cfg
+.mono/
+data_*/
+
+# Build output
+build/
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
