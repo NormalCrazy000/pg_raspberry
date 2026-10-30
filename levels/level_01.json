@@ -1,0 +1,12 @@
+{
+	"name": "Primo tiro",
+	"balls": 10,
+	"targets": 15,
+	"pegs": [
+		{"pattern": "arc", "center": [400, 400], "radius": 290, "start": 235, "end": 305, "count": 9},
+		{"pattern": "grid", "rect": [110, 200, 580, 100], "rows": 3, "cols": 10, "staggered": true},
+		{"pattern": "line", "shape": "rect", "from": [60, 350], "to": [220, 410], "count": 5},
+		{"pattern": "line", "shape": "rect", "from": [740, 350], "to": [580, 410], "count": 5},
+		{"pattern": "arc", "center": [400, 390], "radius": 40, "start": 0, "end": 315, "count": 8}
+	]
+}

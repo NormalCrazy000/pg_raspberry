@@ -3,31 +3,26 @@
 Gioco 2D originale del genere "peg shooter": si lancia una palla dall'alto e la si fa rimbalzare su un campo di pioli.
 Open source, pensato per Linux desktop e per **Raspberry Pi 3** (versione portatile).
 
-> **Stato:** Fase 0, prototipo tecnico per misurare le prestazioni. Vedi [ROADMAP.md](ROADMAP.md).
+> **Stato:** Fase 1, prototipo giocabile con un livello e grafica provvisoria. Vedi [ROADMAP.md](ROADMAP.md).
 
 ## Requisiti
 
 - [Godot 3.6.3](https://godotengine.org/download/3.x/) (non Godot 4: il Pi 3 supporta solo OpenGL ES 2.0)
 - Export template di Godot 3.6.3 (servono solo per creare le build)
 
-## Avvio
+## Avvio rapido
 
 ```bash
-godot3 --path .             # avvia il gioco
-godot3 --path . --editor    # apre l'editor
+godot3 --path .             # Linux, dal sorgente
+tools/export.sh arm64       # build per Raspberry Pi (anche: x86_64, arm32, oppure tutte senza argomenti)
 ```
 
-Comandi del prototipo: mouse/touch per mirare e lanciare, frecce/stick per mirare, spazio/A per lanciare,
-`R` per ripristinare i pioli, `Esc` per uscire.
+Obiettivo: eliminare tutti i pioli rossi prima di finire le palle. Se la palla cade nel cestino mobile, viene recuperata.
+Si mira con mouse, touch, frecce o stick e si lancia con click, spazio o A.
 
-## Build
-
-```bash
-tools/export.sh             # tutte le piattaforme
-tools/export.sh arm64       # solo Raspberry Pi 64 bit (anche: x86_64, arm32)
-```
-
-Gli archivi finiscono in `build/`. Per installare e provare il gioco sul Pi: [docs/raspberry-pi.md](docs/raspberry-pi.md).
+Guide:
+- [docs/comandi.md](docs/comandi.md): tutti i comandi per giocare su Linux e Raspberry Pi, dal sorgente o dalla build, opzioni e controlli
+- [docs/raspberry-pi.md](docs/raspberry-pi.md): preparazione del Pi e benchmark
 
 ## Struttura
 
@@ -35,7 +30,7 @@ Gli archivi finiscono in `build/`. Per installare e provare il gioco sul Pi: [do
 scenes/    scene Godot (.tscn)
 scripts/   script GDScript
 assets/    grafica, suoni, musica, font
-levels/    livelli
+levels/    livelli (JSON, formato descritto in scripts/game/level_loader.gd)
 tools/     script di build e benchmark
 docs/      documentazione
 ```

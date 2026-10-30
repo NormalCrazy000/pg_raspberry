@@ -71,13 +71,15 @@ Obiettivo: essere sicuri che la pipeline funzioni **prima** di scrivere il gioco
 **Uscita:** lo spike gira sul Pi 3 a frame rate accettabile. Se non è così, si rivaluta qui (prima di aver investito tempo).
 
 ### Fase 1 — Prototipo del core gameplay
-- [ ] Cannone in alto che mira (mouse / stick / touch) con linea di traiettoria iniziale.
-- [ ] Palla con fisica (gravità, rimbalzo, attrito) — valutare fisica custom vs `RigidBody2D` per avere rimbalzi prevedibili.
-- [ ] Pioli rotondi e rettangolari; colpiti = si illuminano, rimossi a fine tiro.
-- [ ] Pioli "obiettivo": il livello si vince eliminandoli tutti.
-- [ ] Numero limitato di palle; si perde quando finiscono.
-- [ ] Cestino mobile in fondo: se la palla ci cade, palla recuperata.
-- [ ] Anti-blocco: se la palla resta incastrata, i pioli toccati vengono rimossi in anticipo.
+- [x] Cannone in alto che mira (mouse / stick / touch) con anteprima della traiettoria.
+- [x] Palla con fisica (gravità, rimbalzo, attrito): per ora `RigidBody2D` con CCD; si passa a fisica custom solo se i rimbalzi risultano imprevedibili.
+- [x] Pioli rotondi e rettangolari; colpiti = si illuminano, rimossi a fine tiro.
+- [x] Pioli "obiettivo" scelti a caso a ogni partita: il livello si vince eliminandoli tutti.
+- [x] Numero limitato di palle; si perde quando finiscono.
+- [x] Cestino mobile in fondo: se la palla ci cade, palla recuperata.
+- [x] Anti-blocco: se la palla resta quasi ferma, i pioli colpiti vengono rimossi subito; dopo 3 tentativi riceve una spinta.
+- [x] Primo livello in JSON (`levels/level_01.json`) con pattern (linea, arco, griglia), anticipo del formato della Fase 4.
+- [x] Modalità `--autoplay` per test automatici e bilanciamento.
 
 **Uscita:** un livello giocabile dall'inizio alla fine, con grafica placeholder.
 
