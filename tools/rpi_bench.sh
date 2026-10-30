@@ -31,4 +31,4 @@ run --pegs=100 --balls=1 --novsync
 run --pegs=200 --balls=10 --fx --novsync
 
 echo
-echo "Risultati completi (CSV): ~/.local/share/godot/app_userdata/pg_raspberry/bench_results.csv"
+echo "Risultati completi (CSV): ~/.local/share/hotfix_friday/bench_results.csv"

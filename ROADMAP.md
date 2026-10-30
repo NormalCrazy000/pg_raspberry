@@ -1,9 +1,21 @@
-# Roadmap
+# Roadmap — Hotfix Friday
 
 Gioco 2D originale del genere "peg shooter" (palla lanciata dall'alto che rimbalza su un campo di pioli, stile pachinko/flipper),
 open source, giocabile su Linux desktop e su **Raspberry Pi 3**.
 
-> Nome di lavoro: _da definire_ (vedi Fase 3). Il nome **non** deve richiamare titoli esistenti.
+**Concept:** è venerdì pomeriggio in un ufficio di programmatori e bisogna chiudere i bug prima del rilascio.
+Si lanciano paperelle di gomma (rubber duck debugging) su un campo di righe di codice per eliminare i bug.
+Il gioco è pensato per **sfide a due giocatori** (a turni sullo stesso dispositivo, o contro la CPU) su campi generati da codice:
+niente campagna a livelli fissi.
+
+| Elemento | Nel gioco |
+|---|---|
+| Palla | paperella di gomma |
+| Pioli obiettivo | bug |
+| Pioli normali | righe di codice / post-it |
+| Pioli potere | tazze di caffè |
+| Cestino mobile | cestino della carta |
+| Personaggi | colleghi d'ufficio, ognuno con un potere |
 
 ---
 
@@ -91,30 +103,40 @@ Obiettivo: essere sicuri che la pipeline funzioni **prima** di scrivere il gioco
 - [x] Schermata di risultato con stelle (soglie di punteggio nel JSON del livello, tarate con `--autoplay=smart`).
 - [ ] Bonus per tiri particolari (tiro lungo, tanti pioli in un tiro...): rimandato, da decidere.
 
-### Fase 3 — Identità originale
-Qui il gioco diventa "nostro". Da decidere insieme:
-- [ ] **Nome** e tema (es. spazio, fondale marino, laboratorio alchemico, giardino zen, circuito elettronico...).
-- [ ] **Poteri originali** (3–5) attivati da pioli speciali — es. palla che si divide, gravità invertita per un tiro, piolo-portale, palla magnetica, bomba a tempo.
-- [ ] **Elementi di livello originali**: pioli mobili/rotanti, pioli che richiedono 2 colpi, bumper, muri che cambiano, portali.
-- [ ] Eventuale twist di design (es. modalità puzzle con un solo tiro, roguelite con potenziamenti tra un livello e l'altro, sfida giornaliera con seed).
-- [ ] Style guide visiva: palette, forme, font (font con licenza OFL).
+### Fase 3 — Identità, personaggi e poteri
+- [x] Nome: **Hotfix Friday** (verificato che non esista un gioco noto con lo stesso nome). Tema: ufficio di programmatori.
+- [x] Testi e colori a tema (paperelle, bug, caffè); grafica vera nella Fase 5.
+- [x] Pioli di tipo diverso (normale, bug, potere) e più paperelle in gioco nello stesso tiro.
+- [x] **Sistema di poteri estendibile**: un potere = uno script + una riga di registrazione (guida in `docs/poteri.md`).
+- [x] **Personaggi** (dati in JSON), ognuno con un potere, scelti nel menu:
 
-### Fase 4 — Livelli e contenuti
-- [ ] Formato livello (scene Godot `.tscn` oppure JSON) — leggibile e diffabile in git.
-- [ ] **Editor di livelli** in-game o tool Godot per piazzare pioli su griglie, archi, spirali.
-- [ ] Campagna iniziale: 15–25 livelli con curva di difficoltà, divisi in 3–5 mondi.
-- [ ] Livelli tutorial per introdurre ogni meccanica.
-- [ ] Playtest e bilanciamento (palle per livello, numero obiettivi, punteggi stelle).
+| Personaggio | Ruolo | Potere | Effetto |
+|---|---|---|---|
+| Giulia | Senior Backend | Refactoring | onda d'urto: accende i pioli attorno |
+| Marco | Junior Frontend | Fork | la paperella si divide in 3 |
+| Sara | QA Tester | Test coverage | per 2 tiri la mira mostra i rimbalzi |
+| Dario | DevOps | Hotfix | la paperella è attratta dai bug vicini |
+
+- [x] Pioli potere (2 per campo): chi li colpisce attiva il potere del proprio personaggio.
+- [x] Menu di selezione del personaggio.
+
+### Fase 4 — Modalità di gioco e campi generati
+- [ ] **Generatore di campi** da codice: combina pattern (archi, griglie, linee...) con un seme casuale; stesso seme = stesso campo.
+- [ ] **Pioli in movimento** (rotazione, scorrimento) e **portali** (la paperella entra in uno ed esce dall'altro).
+- [ ] **Sfida a due giocatori**: turni alterni sullo stesso campo, punti a chi tira, moltiplicatore condiviso; vince chi ha più punti quando i bug finiscono.
+- [ ] **Sfida contro la CPU** con 2–3 livelli di difficoltà (basata sull'autoplay "smart").
+- [ ] Menu: modalità, scelta personaggi per entrambi i giocatori, difficoltà CPU.
+- [ ] Bilanciamento con partite automatiche (equità tra personaggi, durata delle partite).
 
 ### Fase 5 — Arte e audio
 - [ ] Sprite pioli, palla, cannone, cestino, sfondi (originali o CC0).
 - [ ] Effetti: illuminazione pioli, scie, particelle leggere (nel budget del Pi 3).
 - [ ] Effetti sonori (colpo piolo con pitch crescente, lancio, cestino, vittoria) — formato OGG.
-- [ ] Musica originale o CC0/CC BY, una traccia per mondo.
+- [ ] Musica originale o CC0/CC BY.
 - [ ] `ASSETS.md` aggiornato per ogni asset aggiunto.
 
 ### Fase 6 — UI, UX e salvataggi
-- [ ] Menu principale, selezione mondo/livello, pausa, opzioni (volume, schermo intero, sensibilità).
+- [ ] Menu principale, pausa, opzioni (volume, schermo intero, sensibilità).
 - [ ] Navigazione completa con **gamepad e touch**, non solo mouse.
 - [ ] Salvataggio progressi e record in `user://` (JSON).
 - [ ] Schermata crediti con licenze.
@@ -137,5 +159,6 @@ Qui il gioco diventa "nostro". Da decidere insieme:
 ## Idee per dopo (backlog)
 - Modalità sfida giornaliera con seed condiviso.
 - Multiplayer locale a turni (stesso dispositivo).
-- Livelli creati dagli utenti caricabili da file.
+- Campi creati dagli utenti caricabili da file.
+- Modalità allenamento in singolo.
 - Porting a Godot 4 se si abbandona il Pi 3.

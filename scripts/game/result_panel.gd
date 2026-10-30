@@ -20,7 +20,7 @@ func show_result(level_won: bool, star_count: int, lines: Array) -> void:
 	won = level_won
 	stars = star_count
 	stars_shown = 0
-	title.text = "Livello completato!" if won else "Palle finite"
+	title.text = "Release completata!" if won else "Paperelle finite: release rimandata"
 	lines.append("")
 	lines.append("Tocca o premi A per ricominciare")
 	details.text = PoolStringArray(lines).join("\n")

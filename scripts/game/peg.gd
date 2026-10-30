@@ -1,13 +1,21 @@
 extends StaticBody2D
-# Piolo: si illumina quando viene colpito e viene rimosso a fine tiro.
+# Piolo: riga di codice (normale), bug (obiettivo) o tazza di caffè (potere).
+# Si illumina quando viene colpito e viene rimosso a fine tiro.
 
-const COLOR_NORMAL := Color(0.3, 0.6, 1.0)
-const COLOR_TARGET := Color(1.0, 0.35, 0.45)
+const KIND_NORMAL := "normal"
+const KIND_TARGET := "target"
+const KIND_POWER := "power"
+const COLORS := {
+	KIND_NORMAL: Color(0.3, 0.6, 1.0),
+	KIND_TARGET: Color(1.0, 0.35, 0.45),
+	KIND_POWER: Color(0.3, 0.9, 0.55),
+}
 const LIT_BOOST := 0.55 # quanto si schiarisce il colore quando è colpito
 const ROUND_RADIUS := 9.0
 const RECT_SIZE := Vector2(30, 10)
 const POP_TIME := 0.12
 
+var kind := KIND_NORMAL
 var is_target := false
 var lit := false
 var popping := false
@@ -15,8 +23,9 @@ var sprite: Sprite
 var collision: CollisionShape2D
 
 
-func setup(shape_kind: String, target: bool, textures: Dictionary, material: PhysicsMaterial) -> void:
-	is_target = target
+func setup(shape_kind: String, peg_kind: String, textures: Dictionary, material: PhysicsMaterial) -> void:
+	kind = peg_kind
+	is_target = kind == KIND_TARGET
 	physics_material_override = material
 	collision = CollisionShape2D.new()
 	sprite = Sprite.new()
@@ -37,7 +46,7 @@ func setup(shape_kind: String, target: bool, textures: Dictionary, material: Phy
 
 
 func hit() -> bool:
-	if lit:
+	if lit or popping:
 		return false
 	lit = true
 	_update_color()
@@ -56,5 +65,5 @@ func pop() -> void:
 
 
 func _update_color() -> void:
-	var base := COLOR_TARGET if is_target else COLOR_NORMAL
+	var base: Color = COLORS[kind]
 	sprite.modulate = base.linear_interpolate(Color.white, LIT_BOOST) if lit else base

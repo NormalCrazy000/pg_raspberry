@@ -2,6 +2,7 @@
 	"name": "Primo tiro",
 	"balls": 10,
 	"targets": 15,
+	"powers": 2,
 	"stars": [30000, 50000, 75000],
 	"pegs": [
 		{"pattern": "arc", "center": [400, 400], "radius": 290, "start": 235, "end": 305, "count": 9},

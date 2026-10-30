@@ -1,0 +1,38 @@
+[
+	{
+		"id": "giulia",
+		"name": "Giulia",
+		"role": "Senior Backend",
+		"power": "shockwave",
+		"power_name": "Refactoring",
+		"description": "Riscrive tutto: un'onda d'urto accende i pioli attorno al caffè.",
+		"color": "#e8a33d"
+	},
+	{
+		"id": "marco",
+		"name": "Marco",
+		"role": "Junior Frontend",
+		"power": "multiball",
+		"power_name": "Fork",
+		"description": "Apre tre thread: la paperella si divide in tre.",
+		"color": "#4fb3e8"
+	},
+	{
+		"id": "sara",
+		"name": "Sara",
+		"role": "QA Tester",
+		"power": "long_aim",
+		"power_name": "Test coverage",
+		"description": "Prevede tutto: per 2 tiri la mira mostra i rimbalzi.",
+		"color": "#b07be0"
+	},
+	{
+		"id": "dario",
+		"name": "Dario",
+		"role": "DevOps",
+		"power": "magnet",
+		"power_name": "Hotfix",
+		"description": "Va dritto al problema: la paperella è attratta dai bug vicini.",
+		"color": "#5fd08a"
+	}
+]

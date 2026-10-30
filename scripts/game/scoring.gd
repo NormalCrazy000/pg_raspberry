@@ -2,8 +2,7 @@ extends Reference
 # Punteggio: punti per piolo, moltiplicatore legato agli obiettivi eliminati,
 # palle extra per i tiri ad alto punteggio, bonus palle rimaste e stelle.
 
-const POINTS_NORMAL := 100
-const POINTS_TARGET := 1000
+const POINTS := {"normal": 100, "target": 1000, "power": 500}
 # [frazione di obiettivi eliminati, moltiplicatore]
 const MULTIPLIER_STEPS := [[0.0, 1], [0.33, 2], [0.66, 3], [0.85, 5]]
 # Ogni soglia superata in un solo tiro vale una palla extra.
@@ -33,10 +32,10 @@ func start_shot() -> void:
 	shot = 0
 
 
-# Registra un piolo colpito e restituisce i punti guadagnati.
-func peg_hit(is_target: bool) -> int:
-	var points: int = (POINTS_TARGET if is_target else POINTS_NORMAL) * multiplier()
-	if is_target:
+# Registra un piolo colpito ("normal", "target" o "power") e restituisce i punti guadagnati.
+func peg_hit(kind: String) -> int:
+	var points: int = POINTS[kind] * multiplier()
+	if kind == "target":
 		targets_hit += 1
 	total += points
 	shot += points

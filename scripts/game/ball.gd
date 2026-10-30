@@ -1,7 +1,7 @@
 extends RigidBody2D
-# Palla: notifica i pioli toccati e misura da quanto tempo è quasi ferma.
+# Paperella: segnala ciò che tocca e misura da quanto tempo è quasi ferma.
 
-signal peg_hit(peg)
+signal touched(body, ball)
 
 const RADIUS := 7.0
 const SLOW_SPEED := 40.0
@@ -37,5 +37,4 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_body_entered(body: Node) -> void:
-	if body.has_method("hit") and body.hit():
-		emit_signal("peg_hit", body)
+	emit_signal("touched", body, self)

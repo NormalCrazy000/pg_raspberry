@@ -1,26 +1,28 @@
 extends Node2D
-# Partita: tiri, punteggio, fine tiro, vittoria e sconfitta.
+# Partita: tiri, punteggio, poteri, fine tiro, vittoria e sconfitta.
 #
 # Opzioni da riga di comando (per test e bilanciamento):
 #   --level=res://levels/level_01.json   livello da caricare
+#   --character=ID                      personaggio (id in data/characters.json)
 #   --autoplay                          tira da solo a caso, stampa il risultato ed esce
-#   --autoplay=smart                    come sopra, ma mira agli obiettivi rimasti
-#   --seed=N                            seme per i pioli obiettivo e i tiri automatici
-#   --screenshot=FILE.png               salva uno screenshot dopo --screenshot-delay=S secondi (default 2);
-#                                       con --autoplay si esce dopo lo screenshot invece che a fine partita
+#   --autoplay=smart                    come sopra, ma mira ai bug rimasti
+#   --seed=N                            seme per bug, caffè e tiri automatici
+# Altre opzioni globali (--screenshot, --debug-power) in scripts/session.gd.
 
 enum State { AIMING, BALL_IN_PLAY, CLEARING, BONUS, WON, LOST }
 
 const Textures := preload("res://scripts/common/textures.gd")
 const LevelLoader := preload("res://scripts/game/level_loader.gd")
 const Scoring := preload("res://scripts/game/scoring.gd")
+const Characters := preload("res://scripts/game/characters.gd")
+const PowerRegistry := preload("res://scripts/powers/registry.gd")
 const Peg := preload("res://scripts/game/peg.gd")
 const Ball := preload("res://scripts/game/ball.gd")
 
 const DEFAULT_LEVEL := "res://levels/level_01.json"
-const FIELD_BOTTOM := 500.0 # sotto questa y la palla è persa
+const FIELD_BOTTOM := 500.0 # sotto questa y la paperella è persa
 const STUCK_TIME := 1.0 # secondi quasi ferma prima di togliere i pioli colpiti
-const NUDGE_AFTER := 3 # interventi anti-blocco prima di dare una spinta alla palla
+const NUDGE_AFTER := 3 # interventi anti-blocco prima di dare una spinta alla paperella
 const BALL_TIMEOUT := 30.0
 const POP_INTERVAL := 0.05
 const RESTART_DELAY := 0.6
@@ -32,20 +34,23 @@ const COLOR_TARGET_POINTS := Color(1.0, 0.6, 0.65)
 const COLOR_BONUS := Color(1.0, 0.85, 0.3)
 
 var state: int = State.AIMING
+var balls := [] # paperelle in gioco nel tiro corrente
 var balls_left := 0
 var targets_left := 0
 var shots := 0
 var extra_balls_won := 0
 var bonus_balls := 0
-var ball: RigidBody2D
+var powers_used := 0
 var stuck_count := 0
+var recovered_this_shot := false
 var result_time := 0.0
 var scoring: Scoring
 var star_thresholds := []
+var character := {}
+var power: Reference
 var autoplay := ""
 var level_path := DEFAULT_LEVEL
-var screenshot_path := ""
-var screenshot_delay := 2.0
+var debug_hit_pending := false
 var rng := RandomNumberGenerator.new()
 var textures := {}
 var flash_tween: SceneTreeTween
@@ -59,6 +64,7 @@ onready var balls_label = $HUD/BallsLabel
 onready var score_label = $HUD/ScoreLabel
 onready var multiplier_label = $HUD/MultiplierLabel
 onready var targets_label = $HUD/TargetsLabel
+onready var character_label = $HUD/CharacterLabel
 onready var message = $HUD/Message
 onready var result_panel = $HUD/ResultPanel
 onready var bounce_material: PhysicsMaterial = $Walls.physics_material_override
@@ -67,15 +73,20 @@ onready var bounce_material: PhysicsMaterial = $Walls.physics_material_override
 func _ready() -> void:
 	rng.randomize()
 	_parse_args()
-	if screenshot_path:
-		_take_screenshot()
 	textures = {
 		"disc": Textures.make_disc(32),
 		"rect": Textures.make_rounded_rect(Peg.RECT_SIZE, 4.0),
+		"duck": Textures.make_duck(32),
 	}
+	character = Characters.find(Session.characters[0])
+	if character.empty():
+		character = Characters.load_all()[0]
+	power = PowerRegistry.create(character.power, self)
 	_load_level(level_path)
 	launcher.connect("fire", self, "_on_launcher_fire")
 	bucket.connect("ball_caught", self, "_on_ball_caught")
+	if Session.debug_power:
+		power.activate(null, null)
 	_set_state(State.AIMING)
 
 
@@ -93,20 +104,8 @@ func _parse_args() -> void:
 			rng.seed = int(arg.split("=")[1])
 		elif arg.begins_with("--level="):
 			level_path = arg.split("=")[1]
-		elif arg.begins_with("--screenshot="):
-			screenshot_path = arg.split("=")[1]
-		elif arg.begins_with("--screenshot-delay="):
-			screenshot_delay = float(arg.split("=")[1])
-
-
-func _take_screenshot() -> void:
-	yield(get_tree().create_timer(screenshot_delay), "timeout")
-	var img := get_viewport().get_texture().get_data()
-	img.flip_y()
-	img.save_png(screenshot_path)
-	print("Screenshot: %s" % screenshot_path)
-	if autoplay:
-		get_tree().quit()
+		elif arg.begins_with("--character="):
+			Session.characters[0] = arg.split("=")[1]
 
 
 func _load_level(path: String) -> void:
@@ -115,15 +114,21 @@ func _load_level(path: String) -> void:
 		return
 	balls_left = level.balls
 	star_thresholds = level.stars
+	# Bug e caffè vengono scelti a caso tra i pioli del livello.
 	var order := range(level.pegs.size())
 	_shuffle(order)
-	var target_ids := order.slice(0, level.targets - 1) if level.targets > 0 else []
+	var kinds := {}
+	for n in order.size():
+		if n < level.targets:
+			kinds[order[n]] = Peg.KIND_TARGET
+		elif n < level.targets + level.powers:
+			kinds[order[n]] = Peg.KIND_POWER
 	for i in level.pegs.size():
 		var data: Dictionary = level.pegs[i]
 		var peg := Peg.new()
 		peg.position = data.position
 		peg.rotation = data.rotation
-		peg.setup(data.shape, i in target_ids, textures, bounce_material)
+		peg.setup(data.shape, kinds.get(i, Peg.KIND_NORMAL), textures, bounce_material)
 		pegs_root.add_child(peg)
 		if peg.is_target:
 			targets_left += 1
@@ -143,8 +148,51 @@ func _shuffle(array: Array) -> void:
 func _set_state(new_state: int) -> void:
 	state = new_state
 	launcher.enabled = state == State.AIMING
+	if state == State.AIMING:
+		launcher.preview_bounces = power.preview_bounces()
 	if state == State.WON or state == State.LOST:
 		_show_result()
+	_update_hud()
+
+
+# --- API usata dai poteri (vedi scripts/powers/power.gd) ---
+
+func spawn_ball(at: Vector2, velocity: Vector2) -> RigidBody2D:
+	var ball := Ball.new()
+	ball.setup(textures.duck, bounce_material)
+	ball.position = at
+	ball.linear_velocity = velocity
+	ball.connect("touched", self, "_on_ball_touched")
+	# Differito: i poteri possono creare paperelle durante una collisione, quando la fisica è bloccata.
+	balls_root.call_deferred("add_child", ball)
+	balls.append(ball)
+	return ball
+
+
+func hit_peg(peg: Node, ball: RigidBody2D) -> void:
+	if not peg.hit():
+		return
+	var multiplier_before := scoring.multiplier()
+	var points := scoring.peg_hit(peg.kind)
+	_float_text(peg.position, Scoring.format(points), COLOR_TARGET_POINTS if peg.is_target else COLOR_POINTS)
+	if peg.is_target:
+		targets_left -= 1
+		if targets_left == 0:
+			_start_slowmo()
+		elif scoring.multiplier() > multiplier_before:
+			_flash("Moltiplicatore x%d!" % scoring.multiplier())
+	if peg.kind == Peg.KIND_POWER or debug_hit_pending:
+		debug_hit_pending = false
+		_flash("%s: %s!" % [character.name, character.power_name.to_upper()])
+		powers_used += 1
+		power.activate(ball, peg)
+	_update_hud()
+
+
+func add_effect(node: Node) -> void:
+	effects_root.add_child(node)
+
+# ---
 
 
 func _on_launcher_fire(direction: Vector2) -> void:
@@ -153,28 +201,17 @@ func _on_launcher_fire(direction: Vector2) -> void:
 	balls_left -= 1
 	shots += 1
 	stuck_count = 0
+	recovered_this_shot = false
+	debug_hit_pending = Session.debug_power
 	scoring.start_shot()
-	ball = Ball.new()
-	ball.setup(textures.disc, bounce_material)
-	ball.position = launcher.position + direction * 30.0
-	ball.linear_velocity = direction * launcher.launch_speed
-	ball.connect("peg_hit", self, "_on_peg_hit")
-	balls_root.add_child(ball)
-	_update_hud()
+	power.on_shot_start()
+	spawn_ball(launcher.position + direction * launcher.MUZZLE, direction * launcher.launch_speed)
 	_set_state(State.BALL_IN_PLAY)
 
 
-func _on_peg_hit(peg: Node) -> void:
-	var multiplier_before := scoring.multiplier()
-	var points := scoring.peg_hit(peg.is_target)
-	_float_text(peg.position, Scoring.format(points), COLOR_TARGET_POINTS if peg.is_target else COLOR_POINTS)
-	if peg.is_target:
-		targets_left -= 1
-		if targets_left == 0:
-			_start_slowmo()
-		elif scoring.multiplier() > multiplier_before:
-			_flash("Moltiplicatore x%d!" % scoring.multiplier())
-	_update_hud()
+func _on_ball_touched(body: Node, ball: RigidBody2D) -> void:
+	if body.has_method("hit"):
+		hit_peg(body, ball)
 
 
 func _start_slowmo() -> void:
@@ -183,34 +220,45 @@ func _start_slowmo() -> void:
 	Engine.time_scale = 1.0
 
 
-func _on_ball_caught(caught: Node) -> void:
-	if caught != ball or state != State.BALL_IN_PLAY:
+func _on_ball_caught(ball: Node) -> void:
+	if not ball in balls or state != State.BALL_IN_PLAY:
 		return
-	balls_left += 1
-	_flash("Palla recuperata!")
-	_end_shot()
+	if not recovered_this_shot:
+		# Al massimo una paperella recuperata per tiro, anche con Fork.
+		recovered_this_shot = true
+		balls_left += 1
+		_flash("Paperella recuperata!")
+	_remove_ball(ball)
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if state != State.BALL_IN_PLAY:
 		return
-	if ball.position.y > FIELD_BOTTOM or ball.age > BALL_TIMEOUT:
+	for ball in balls.duplicate():
+		power.on_ball_physics(ball, delta)
+		if ball.position.y > FIELD_BOTTOM or ball.age > BALL_TIMEOUT:
+			_remove_ball(ball)
+		elif ball.slow_time > STUCK_TIME:
+			# Paperella incastrata: si tolgono subito i pioli già colpiti.
+			ball.slow_time = 0.0
+			stuck_count += 1
+			for peg in pegs_root.get_children():
+				if peg.lit:
+					peg.pop()
+			if stuck_count >= NUDGE_AFTER:
+				ball.apply_central_impulse(Vector2(rng.randf_range(-80, 80), -120))
+
+
+func _remove_ball(ball: RigidBody2D) -> void:
+	balls.erase(ball)
+	ball.queue_free()
+	if balls.empty() and state == State.BALL_IN_PLAY:
 		_end_shot()
-	elif ball.slow_time > STUCK_TIME:
-		# Palla incastrata: si tolgono subito i pioli già colpiti.
-		ball.slow_time = 0.0
-		stuck_count += 1
-		for peg in pegs_root.get_children():
-			if peg.lit:
-				peg.pop()
-		if stuck_count >= NUDGE_AFTER:
-			ball.apply_central_impulse(Vector2(rng.randf_range(-80, 80), -120))
 
 
 func _end_shot() -> void:
 	Engine.time_scale = 1.0
-	ball.queue_free()
-	ball = null
+	power.on_shot_end()
 	_set_state(State.CLEARING)
 	_clear_lit_pegs()
 
@@ -224,8 +272,7 @@ func _clear_lit_pegs() -> void:
 	if extra > 0:
 		balls_left += extra
 		extra_balls_won += extra
-		_flash("Palla extra!" if extra == 1 else "%d palle extra!" % extra)
-		_update_hud()
+		_flash("Paperella extra!" if extra == 1 else "%d paperelle extra!" % extra)
 	if targets_left <= 0:
 		_ball_bonus()
 	elif balls_left <= 0:
@@ -234,7 +281,7 @@ func _clear_lit_pegs() -> void:
 		_set_state(State.AIMING)
 
 
-# Fine livello: ogni palla rimasta diventa punti, una alla volta.
+# Fine partita: ogni paperella rimasta diventa punti, una alla volta.
 func _ball_bonus() -> void:
 	_set_state(State.BONUS)
 	bonus_balls = balls_left
@@ -258,7 +305,7 @@ func _random_angle() -> float:
 	return rng.randf_range(-launcher.MAX_AIM_ANGLE, launcher.MAX_AIM_ANGLE)
 
 
-# Autoplay "smart": sceglie un obiettivo a caso e cerca l'angolo la cui parabola
+# Autoplay "smart": sceglie un bug a caso e cerca l'angolo la cui parabola
 # ci passa più vicino (ignorando i pioli in mezzo), con un po' di imprecisione.
 func _smart_angle() -> float:
 	var targets := []
@@ -291,7 +338,7 @@ func _smart_angle() -> float:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		get_tree().quit()
+		get_tree().change_scene("res://scenes/menu/character_select.tscn")
 	elif event is InputEventKey and event.pressed and event.scancode == KEY_R:
 		get_tree().reload_current_scene()
 	elif state in [State.WON, State.LOST] and _is_confirm(event):
@@ -300,18 +347,20 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _is_confirm(event: InputEvent) -> bool:
-	if event is InputEventScreenTouch:
-		return not event.pressed
 	if event is InputEventMouseButton:
-		return event.pressed and event.button_index == BUTTON_LEFT
+		return not event.pressed and event.button_index == BUTTON_LEFT
 	return event.is_action_pressed("ui_accept")
 
 
 func _update_hud() -> void:
-	balls_label.text = "Palle: %d" % balls_left
+	if not scoring:
+		return
+	balls_label.text = "Paperelle: %d" % balls_left
 	score_label.text = Scoring.format(scoring.total)
 	multiplier_label.text = "x%d" % scoring.multiplier()
-	targets_label.text = "Obiettivi: %d" % targets_left
+	targets_label.text = "Bug: %d" % targets_left
+	var status: String = power.status_text()
+	character_label.text = "%s · %s%s" % [character.name, character.power_name, " (%s)" % status if status else ""]
 
 
 func _show_result() -> void:
@@ -323,14 +372,14 @@ func _show_result() -> void:
 	var stars: int = scoring.stars(star_thresholds) if won else 0
 	var lines := ["Punteggio: %s" % Scoring.format(scoring.total)]
 	if won:
-		lines.append("di cui bonus palle: %d × %s" % [bonus_balls, Scoring.format(Scoring.BALL_BONUS)])
+		lines.append("di cui bonus paperelle: %d × %s" % [bonus_balls, Scoring.format(Scoring.BALL_BONUS)])
 	else:
-		lines.append("Obiettivi rimasti: %d" % targets_left)
+		lines.append("Bug rimasti: %d" % targets_left)
 	result_panel.show_result(won, stars, lines)
 	if autoplay:
-		print("AUTOPLAY %s | tiri %d | punteggio %d | stelle %d | obiettivi rimasti %d | palle extra %d" % [
-			"vinto" if won else "perso", shots, scoring.total, stars, targets_left, extra_balls_won])
-		if not screenshot_path:
+		print("AUTOPLAY %s | tiri %d | punteggio %d | stelle %d | obiettivi rimasti %d | palle extra %d | personaggio %s | poteri %d" % [
+			"vinto" if won else "perso", shots, scoring.total, stars, targets_left, extra_balls_won, character.id, powers_used])
+		if not Session.screenshot_path:
 			get_tree().quit()
 
 
@@ -340,7 +389,7 @@ func _flash(text: String) -> void:
 	if flash_tween and flash_tween.is_valid():
 		flash_tween.kill()
 	flash_tween = create_tween()
-	flash_tween.tween_interval(0.6)
+	flash_tween.tween_interval(0.8)
 	flash_tween.tween_property(message, "modulate:a", 0.0, 0.4)
 
 

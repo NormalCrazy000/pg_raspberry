@@ -42,7 +42,7 @@ DISPLAY=:0 ./pg_raspberry.arm64
 ```
 
 Lo script stampa i risultati e li aggiunge a
-`~/.local/share/godot/app_userdata/pg_raspberry/bench_results.csv`.
+`~/.local/share/hotfix_friday/bench_results.csv`.
 
 Lancio manuale di una singola configurazione:
 ```bash

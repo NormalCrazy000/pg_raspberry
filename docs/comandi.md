@@ -31,7 +31,7 @@ _Editor → Manage Export Templates → Download_.
 Dalla cartella del repo:
 
 ```bash
-godot3 --path .                 # gioca
+godot3 --path .                 # gioca (parte dal menu dei personaggi)
 godot3 --path . --editor        # apre l'editor
 godot3 --path . --bench         # benchmark delle prestazioni
 ```
@@ -112,11 +112,13 @@ Valgono sia con `godot3 --path .` sia con l'eseguibile esportato.
 
 | Opzione | Effetto |
 |---|---|
+| `--character=ID` | salta il menu e gioca con quel personaggio (`giulia`, `marco`, `sara`, `dario`) |
+| `--debug-power` | il potere si attiva a inizio partita e al primo piolo di ogni tiro (per provarlo) |
 | `--level=res://levels/level_01.json` | carica un livello specifico |
 | `--autoplay` | partita automatica con tiri casuali, stampa il risultato ed esce |
 | `--autoplay=smart` | come sopra, ma mira agli obiettivi (simula un giocatore, utile per tarare i livelli) |
-| `--seed=N` | rende ripetibili obiettivi e tiri automatici |
-| `--screenshot=FILE.png` | salva uno screenshot dopo `--screenshot-delay=S` secondi (default 2); con `--autoplay` esce dopo lo screenshot |
+| `--seed=N` | rende ripetibili bug, caffè e tiri automatici |
+| `--screenshot=FILE.png` | salva uno screenshot dopo `--screenshot-delay=S` secondi (default 2) ed esce |
 | `--novsync` | disattiva il vsync (con `--fixed-fps 60` la partita va più veloce del tempo reale) |
 | `--bench` | benchmark: opzioni in [raspberry-pi.md](raspberry-pi.md#3-benchmark) |
 | `--fullscreen` | schermo intero (opzione standard di Godot) |
@@ -138,6 +140,8 @@ seq 1 60 | xargs -P 8 -I{} godot3-headless --path . --fixed-fps 60 --autoplay=sm
 | Azione | Mouse | Touch | Tastiera / gamepad |
 |---|---|---|---|
 | Mirare | muovi il mouse | trascina | frecce / stick / d-pad |
-| Lanciare | click | rilascia il dito | spazio / A |
+| Lanciare | rilascia il click | rilascia il dito | spazio / A |
 | Ricominciare | | | `R` |
-| Uscire | | | `Esc` |
+| Tornare al menu / uscire | | | `Esc` |
+
+Nel menu: frecce/stick per scegliere il personaggio, Invio/A/click per confermare.

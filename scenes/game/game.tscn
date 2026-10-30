@@ -75,7 +75,15 @@ margin_left = 10.0
 margin_top = 8.0
 margin_right = 200.0
 margin_bottom = 30.0
-text = "Palle: 0"
+text = "Paperelle: 0"
+
+[node name="CharacterLabel" type="Label" parent="HUD"]
+margin_left = 10.0
+margin_top = 26.0
+margin_right = 360.0
+margin_bottom = 44.0
+modulate = Color( 0.75, 0.8, 0.9, 1 )
+text = ""
 
 [node name="ScoreLabel" type="Label" parent="HUD"]
 anchor_left = 0.5
@@ -103,7 +111,7 @@ margin_left = -200.0
 margin_top = 8.0
 margin_right = -10.0
 margin_bottom = 30.0
-text = "Obiettivi: 0"
+text = "Bug: 0"
 align = 2
 
 [node name="Message" type="Label" parent="HUD"]
