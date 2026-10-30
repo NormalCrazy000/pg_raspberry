@@ -108,31 +108,39 @@ Se `~/.local/bin` non è nel `PATH`, apri un nuovo terminale o lancia direttamen
 
 ## Opzioni da riga di comando
 
-Valgono sia con `godot3 --path .` sia con l'eseguibile esportato.
+Valgono sia con `godot3 --path .` sia con l'eseguibile esportato. Senza opzioni il gioco parte dal menu principale.
 
 | Opzione | Effetto |
 |---|---|
-| `--character=ID` | salta il menu e gioca con quel personaggio (`giulia`, `marco`, `sara`, `dario`) |
-| `--debug-power` | il potere si attiva a inizio partita e al primo piolo di ogni tiro (per provarlo) |
-| `--level=res://levels/level_01.json` | carica un livello specifico |
-| `--autoplay` | partita automatica con tiri casuali, stampa il risultato ed esce |
-| `--autoplay=smart` | come sopra, ma mira agli obiettivi (simula un giocatore, utile per tarare i livelli) |
-| `--seed=N` | rende ripetibili bug, caffè e tiri automatici |
+| `--cpu=easy\|normal\|hard` | salta il menu: sfida contro la CPU (il giocatore 2) |
+| `--p1=ID`, `--p2=ID` | personaggi dei due giocatori (`giulia`, `marco`, `sara`, `dario`); `--character=ID` equivale a `--p1` |
+| `--seed=N` | campo e tiri della CPU riproducibili (il numero del campo è mostrato a fine sfida) |
+| `--level=res://levels/level_01.json` | campo fisso da file JSON invece che generato |
+| `--debug-power` | il potere si attiva a inizio sfida e al primo piolo di ogni tiro (per provarlo) |
+| `--autoplay[=random\|easy\|normal\|hard]` | entrambi i giocatori sono CPU (default `normal`); stampa il risultato ed esce. Con due valori separati da virgola (es. `hard,easy`) uno per giocatore |
 | `--screenshot=FILE.png` | salva uno screenshot dopo `--screenshot-delay=S` secondi (default 2) ed esce |
 | `--novsync` | disattiva il vsync (con `--fixed-fps 60` la partita va più veloce del tempo reale) |
 | `--bench` | benchmark: opzioni in [raspberry-pi.md](raspberry-pi.md#3-benchmark) |
 | `--fullscreen` | schermo intero (opzione standard di Godot) |
 
+Esempi:
+
+```bash
+godot3 --path . --cpu=hard --p1=sara              # tu con Sara contro la CPU difficile
+godot3 --path . --cpu=normal --seed=44            # sempre lo stesso campo
+godot3 --path . --p1=marco --cpu=easy --debug-power
+```
+
 Test veloce senza finestra (solo dal sorgente su Linux desktop):
 
 ```bash
-godot3-headless --path . --fixed-fps 60 --autoplay=smart --seed=1
+godot3-headless --path . --fixed-fps 60 --autoplay=normal --seed=1
 ```
 
-Statistiche su molte partite (vittorie, punteggi, stelle), utili per bilanciare un livello:
+Statistiche su molte sfide (vincitore, punteggi, poteri, portali), utili per il bilanciamento:
 
 ```bash
-seq 1 60 | xargs -P 8 -I{} godot3-headless --path . --fixed-fps 60 --autoplay=smart --seed={} 2>/dev/null | grep AUTOPLAY
+seq 1 100 | xargs -P 8 -I{} godot3-headless --path . --fixed-fps 60 --autoplay=hard,normal --p1=sara --p2=sara --seed={} 2>/dev/null | grep AUTOPLAY
 ```
 
 ## Controlli
@@ -141,7 +149,9 @@ seq 1 60 | xargs -P 8 -I{} godot3-headless --path . --fixed-fps 60 --autoplay=sm
 |---|---|---|---|
 | Mirare | muovi il mouse | trascina | frecce / stick / d-pad |
 | Lanciare | rilascia il click | rilascia il dito | spazio / A |
-| Ricominciare | | | `R` |
-| Tornare al menu / uscire | | | `Esc` |
+| Nuovo campo (a fine sfida) | click | tocco | Invio / A |
+| Rivincita sullo stesso campo (a fine sfida) | | | `R` |
+| Tornare al menu | | | `Esc` |
 
-Nel menu: frecce/stick per scegliere il personaggio, Invio/A/click per confermare.
+Nei menu: frecce/stick per scegliere, Invio/A/click per confermare, Esc per tornare indietro.
+Nella sfida a 2 giocatori ci si passa il dispositivo: l'HUD evidenzia di chi è il turno.

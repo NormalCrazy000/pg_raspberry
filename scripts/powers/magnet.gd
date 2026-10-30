@@ -1,14 +1,23 @@
 extends "res://scripts/powers/power.gd"
-# Hotfix (Dario): per il resto del tiro le paperelle sono attratte dai bug vicini.
+# Hotfix (Dario): le paperelle sono attratte dai bug vicini, per il resto del tiro e per il tiro successivo.
 
-const RANGE := 160.0
-const STRENGTH := 700.0 # accelerazione in px/s² (la gravità è 900)
+const RANGE := 200.0
+const STRENGTH := 900.0 # accelerazione in px/s² (la gravità è 900)
+const EXTRA_SHOTS := 1
 
 var active := false
+var shots_left := 0
 
 
 func activate(_ball: RigidBody2D, _peg: Node2D) -> void:
 	active = true
+	shots_left += EXTRA_SHOTS
+
+
+func on_shot_start() -> void:
+	if shots_left > 0:
+		shots_left -= 1
+		active = true
 
 
 func on_ball_physics(ball: RigidBody2D, delta: float) -> void:
@@ -16,14 +25,14 @@ func on_ball_physics(ball: RigidBody2D, delta: float) -> void:
 		return
 	var nearest: Node2D = null
 	var nearest_distance := RANGE
-	for peg in game.pegs_root.get_children():
+	for peg in game.get_pegs():
 		if peg.is_target and not peg.lit and not peg.popping:
-			var distance: float = peg.position.distance_to(ball.position)
+			var distance: float = peg.global_position.distance_to(ball.position)
 			if distance < nearest_distance:
 				nearest = peg
 				nearest_distance = distance
 	if nearest:
-		ball.apply_central_impulse((nearest.position - ball.position).normalized() * STRENGTH * delta * ball.mass)
+		ball.apply_central_impulse((nearest.global_position - ball.position).normalized() * STRENGTH * delta * ball.mass)
 
 
 func on_shot_end() -> void:
@@ -31,4 +40,8 @@ func on_shot_end() -> void:
 
 
 func status_text() -> String:
-	return "magnete attivo" if active else ""
+	if active:
+		return "magnete attivo"
+	if shots_left > 0:
+		return "magnete al prossimo tiro"
+	return ""

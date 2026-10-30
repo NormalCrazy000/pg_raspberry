@@ -2,9 +2,9 @@ extends Node
 # Sceglie la scena iniziale e applica le opzioni globali (--novsync disattiva il vsync):
 #   --bench                        benchmark
 #   --autoplay[=...] o --character  direttamente in partita
-#   altrimenti                      menu di scelta del personaggio
+#   altrimenti                      menu principale
 
-const MENU_SCENE := "res://scenes/menu/character_select.tscn"
+const MENU_SCENE := "res://scenes/menu/main_menu.tscn"
 const GAME_SCENE := "res://scenes/game/game.tscn"
 const BENCH_SCENE := "res://scenes/spike/peg_benchmark.tscn"
 
@@ -18,6 +18,7 @@ func _ready() -> void:
 		scene = BENCH_SCENE
 	else:
 		for arg in args:
-			if arg.begins_with("--autoplay") or arg.begins_with("--character="):
+			if arg.begins_with("--autoplay") or arg.begins_with("--character=") or arg.begins_with("--p1=") \
+					or arg.begins_with("--cpu="):
 				scene = GAME_SCENE
 	get_tree().call_deferred("change_scene", scene)

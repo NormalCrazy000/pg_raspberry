@@ -32,7 +32,7 @@
 		"role": "DevOps",
 		"power": "magnet",
 		"power_name": "Hotfix",
-		"description": "Va dritto al problema: la paperella è attratta dai bug vicini.",
+		"description": "Va dritto al problema: per due tiri la paperella è attratta dai bug vicini.",
 		"color": "#5fd08a"
 	}
 ]

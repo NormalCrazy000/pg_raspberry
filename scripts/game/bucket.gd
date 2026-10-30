@@ -10,20 +10,23 @@ export var min_x := 70.0
 export var max_x := 730.0
 
 var direction := 1.0
+var x := 0.0 # posizione tenuta qui: rileggere `position` dal corpo fisico non è affidabile
 
 
 func _ready() -> void:
+	x = position.x
 	$Catch.connect("body_entered", self, "_on_catch_body_entered")
 
 
 func _physics_process(delta: float) -> void:
-	position.x += direction * speed * delta
-	if position.x >= max_x:
-		position.x = max_x
+	x += direction * speed * delta
+	if x >= max_x:
+		x = max_x
 		direction = -1.0
-	elif position.x <= min_x:
-		position.x = min_x
+	elif x <= min_x:
+		x = min_x
 		direction = 1.0
+	position.x = x
 
 
 func _on_catch_body_entered(body: Node) -> void:

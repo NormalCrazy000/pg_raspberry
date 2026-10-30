@@ -24,6 +24,7 @@ var collision: CollisionShape2D
 
 
 func setup(shape_kind: String, peg_kind: String, textures: Dictionary, material: PhysicsMaterial) -> void:
+	add_to_group("pegs")
 	kind = peg_kind
 	is_target = kind == KIND_TARGET
 	physics_material_override = material

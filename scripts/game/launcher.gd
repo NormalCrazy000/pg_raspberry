@@ -8,11 +8,12 @@ const MAX_AIM_ANGLE := deg2rad(85.0)
 const AIM_SPEED := 1.6 # rad/s con tastiera o gamepad
 const PREVIEW_DOTS := 12
 const PREVIEW_STEP := 0.04 # secondi tra un punto e l'altro
-const BALL_RADIUS := 7.0
+const Trajectory := preload("res://scripts/game/trajectory.gd")
+
 const MUZZLE := 30.0 # distanza dal centro a cui nasce la paperella
-const BOUNCE := 0.55
 const PATH_STEPS := 240
 const PATH_DOT_EVERY := 3
+const PATH_REFRESH_FRAMES := 4 # i pioli possono muoversi: il percorso si ricalcola ogni tanto
 
 export var launch_speed := 600.0
 
@@ -21,6 +22,7 @@ var enabled := true setget set_enabled
 var preview_bounces := 0 setget set_preview_bounces
 var path := PoolVector2Array()
 var path_dirty := true
+var frames := 0
 
 
 func set_aim_angle(value: float) -> void:
@@ -76,7 +78,11 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	# Il percorso con rimbalzi usa le query di fisica: si calcola qui e solo se la mira è cambiata.
+	# Il percorso con rimbalzi usa le query di fisica: si calcola qui, quando la mira cambia
+	# e ogni PATH_REFRESH_FRAMES frame per seguire i pioli in movimento.
+	frames += 1
+	if frames % PATH_REFRESH_FRAMES == 0:
+		path_dirty = true
 	if path_dirty and enabled and preview_bounces > 0:
 		path_dirty = false
 		_compute_path()
@@ -88,43 +94,14 @@ func _fire() -> void:
 	emit_signal("fire", direction())
 
 
-# Simula la paperella con gravità e rimbalzi sui pioli fino a `preview_bounces` rimbalzi.
 func _compute_path() -> void:
+	var result := Trajectory.simulate(get_world_2d().direct_space_state, global_position + direction() * MUZZLE,
+			direction() * launch_speed, preview_bounces, PATH_STEPS, 500.0)
 	path = PoolVector2Array()
-	var space := get_world_2d().direct_space_state
-	var shape := CircleShape2D.new()
-	shape.radius = BALL_RADIUS
-	var query := Physics2DShapeQueryParameters.new()
-	query.set_shape(shape)
-	var gravity := Vector2(0, ProjectSettings.get_setting("physics/2d/default_gravity"))
-	var dt := 1.0 / 60.0
-	var pos := global_position + direction() * MUZZLE
-	var velocity := direction() * launch_speed
-	var bounces := 0
-	for step in PATH_STEPS:
-		velocity += gravity * dt
-		var motion := velocity * dt
-		query.transform = Transform2D(0.0, pos)
-		query.motion = motion
-		var cast := space.cast_motion(query)
-		if cast.size() == 2 and cast[1] < 1.0:
-			pos += motion * cast[0]
-			query.transform = Transform2D(0.0, pos + motion * (cast[1] - cast[0]))
-			query.motion = Vector2.ZERO
-			var info := space.get_rest_info(query)
-			if info.empty():
-				break
-			velocity = velocity.bounce(info.normal) * BOUNCE
-			path.append(to_local(pos))
-			bounces += 1
-			if bounces > preview_bounces:
-				break
-		else:
-			pos += motion
-		if step % PATH_DOT_EVERY == 0:
-			path.append(to_local(pos))
-		if pos.y > 500.0:
-			break
+	var points: PoolVector2Array = result.points
+	for i in points.size():
+		if i % PATH_DOT_EVERY == 0:
+			path.append(to_local(points[i]))
 
 
 func _draw() -> void:

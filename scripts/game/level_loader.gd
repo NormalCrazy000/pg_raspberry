@@ -32,6 +32,8 @@ static func load_level(path: String) -> Dictionary:
 		"powers": int(data.get("powers", 2)),
 		"stars": data.get("stars", []),
 		"pegs": pegs,
+		"groups": [],
+		"portals": [],
 	}
 
 
@@ -76,7 +78,7 @@ static func _expand(item: Dictionary) -> Array:
 
 
 static func _peg(shape: String, position: Vector2, rotation: float) -> Dictionary:
-	return {"shape": shape, "position": position, "rotation": rotation}
+	return {"shape": shape, "position": position, "rotation": rotation, "group": -1}
 
 
 static func _vec(a: Array) -> Vector2:

@@ -9,9 +9,9 @@ func activate(ball: RigidBody2D, peg: Node2D) -> void:
 	if not peg:
 		return
 	var ring := Ring.new()
-	ring.position = peg.position
+	ring.position = peg.global_position
 	ring.max_radius = RADIUS
 	game.add_effect(ring)
-	for other in game.pegs_root.get_children():
-		if other != peg and other.position.distance_to(peg.position) <= RADIUS:
+	for other in game.get_pegs():
+		if other != peg and other.global_position.distance_to(peg.global_position) <= RADIUS:
 			game.hit_peg(other, ball)

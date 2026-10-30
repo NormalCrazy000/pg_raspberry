@@ -7,7 +7,7 @@ Ogni personaggio ha un potere. Il potere si attiva quando il giocatore colpisce 
 | Giulia | Senior Backend | Refactoring | onda d'urto: accende i pioli entro 110 px dal caffè | `scripts/powers/shockwave.gd` |
 | Marco | Junior Frontend | Fork | la paperella si divide in tre | `scripts/powers/multiball.gd` |
 | Sara | QA Tester | Test coverage | per 2 tiri la mira mostra fino a 3 rimbalzi | `scripts/powers/long_aim.gd` |
-| Dario | DevOps | Hotfix | per il resto del tiro la paperella è attratta dai bug entro 160 px | `scripts/powers/magnet.gd` |
+| Dario | DevOps | Hotfix | per il resto del tiro e per il tiro successivo la paperella è attratta dai bug entro 200 px | `scripts/powers/magnet.gd` |
 
 ## Aggiungere un potere
 
@@ -68,7 +68,10 @@ Tutti opzionali; li trovi documentati in `scripts/powers/power.gd`.
 | `preview_bounces()` | quanti rimbalzi mostrare nella mira (0 = solo parabola) |
 | `status_text()` | testo nell'HUD accanto al nome del personaggio |
 
-Dalla partita il potere può usare `game.balls`, `game.pegs_root`, `game.spawn_ball()`, `game.hit_peg()` e `game.add_effect()`.
+Dalla partita il potere può usare `game.balls`, `game.get_pegs()`, `game.spawn_ball()`, `game.hit_peg()` e `game.add_effect()`.
+Alcuni pioli si muovono: usa sempre `global_position`.
+
+Nella sfida a due ogni giocatore ha la sua istanza del potere: `on_shot_start`, `on_ball_physics` e `on_shot_end` vengono chiamati solo durante i tiri di quel giocatore.
 
 ## Provare un potere
 

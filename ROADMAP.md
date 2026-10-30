@@ -121,12 +121,12 @@ Obiettivo: essere sicuri che la pipeline funzioni **prima** di scrivere il gioco
 - [x] Menu di selezione del personaggio.
 
 ### Fase 4 — Modalità di gioco e campi generati
-- [ ] **Generatore di campi** da codice: combina pattern (archi, griglie, linee...) con un seme casuale; stesso seme = stesso campo.
-- [ ] **Pioli in movimento** (rotazione, scorrimento) e **portali** (la paperella entra in uno ed esce dall'altro).
-- [ ] **Sfida a due giocatori**: turni alterni sullo stesso campo, punti a chi tira, moltiplicatore condiviso; vince chi ha più punti quando i bug finiscono.
-- [ ] **Sfida contro la CPU** con 2–3 livelli di difficoltà (basata sull'autoplay "smart").
-- [ ] Menu: modalità, scelta personaggi per entrambi i giocatori, difficoltà CPU.
-- [ ] Bilanciamento con partite automatiche (equità tra personaggi, durata delle partite).
+- [x] **Generatore di campi** (`scripts/game/field_generator.gd`): archi, griglie, rampe, anelli, file mobili piazzati senza sovrapporsi, simmetrici nell'80% dei casi; stesso seme = stesso campo.
+- [x] **Pioli in movimento** (anelli che ruotano, file che scorrono) e **portali** (in circa 2 campi su 3).
+- [x] **Sfida a due giocatori**: turni alterni sullo stesso campo, 8 paperelle a testa, punti a chi tira, moltiplicatore condiviso; vince chi ha più punti quando i bug finiscono o le paperelle sono esaurite.
+- [x] **Sfida contro la CPU** con 3 difficoltà (facile, normale, difficile). La difficile calcola la mira esatta su ogni bug e simula i rimbalzi.
+- [x] Menu principale, scelta personaggi per entrambi i giocatori (CPU con personaggio casuale), rivincita sullo stesso campo o nuovo campo.
+- [x] Bilanciamento con partite automatiche: vantaggio di chi inizia ~52%; Giulia, Marco e Dario tra 49% e 51% di vittorie dopo aver rafforzato Hotfix (Sara non è misurabile: la CPU non sfrutta la mira estesa); difficoltà difficile > normale > facile (~62% negli scontri diretti).
 
 ### Fase 5 — Arte e audio
 - [ ] Sprite pioli, palla, cannone, cestino, sfondi (originali o CC0).

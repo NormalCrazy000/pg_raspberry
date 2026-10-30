@@ -8,6 +8,8 @@ const SLOW_SPEED := 40.0
 
 var age := 0.0
 var slow_time := 0.0
+var portal_cooldown := 0.0
+var teleport_target = null # Vector2 oppure null
 
 
 func setup(texture: Texture, material: PhysicsMaterial) -> void:
@@ -28,8 +30,20 @@ func setup(texture: Texture, material: PhysicsMaterial) -> void:
 	connect("body_entered", self, "_on_body_entered")
 
 
+# I corpi rigidi si spostano in modo affidabile solo dentro _integrate_forces.
+func teleport(to: Vector2) -> void:
+	teleport_target = to
+
+
+func _integrate_forces(state: Physics2DDirectBodyState) -> void:
+	if teleport_target != null:
+		state.transform = Transform2D(state.transform.get_rotation(), teleport_target)
+		teleport_target = null
+
+
 func _physics_process(delta: float) -> void:
 	age += delta
+	portal_cooldown = max(0.0, portal_cooldown - delta)
 	if linear_velocity.length() < SLOW_SPEED:
 		slow_time += delta
 	else:

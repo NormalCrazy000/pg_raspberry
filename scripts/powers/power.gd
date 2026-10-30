@@ -9,7 +9,7 @@ extends Reference
 #
 # Dalla partita (`game`) i poteri possono usare:
 #   game.balls                        paperelle in gioco
-#   game.pegs_root.get_children()     pioli del campo
+#   game.get_pegs()                   pioli del campo (usa global_position: alcuni si muovono)
 #   game.spawn_ball(position, velocity)
 #   game.hit_peg(peg, ball)           accende un piolo e assegna i punti
 #   game.add_effect(node)             aggiunge un effetto visivo al campo
@@ -26,7 +26,7 @@ func activate(_ball: RigidBody2D, _peg: Node2D) -> void:
 	pass
 
 
-# Inizio di un tiro di questo giocatore.
+# Inizio di un tiro di questo giocatore (ogni giocatore ha la sua istanza del potere).
 func on_shot_start() -> void:
 	pass
 
