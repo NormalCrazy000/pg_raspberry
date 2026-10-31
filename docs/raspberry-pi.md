@@ -56,6 +56,7 @@ In Opzioni → Qualità grafica:
 | Alta | aloni sui pioli colpiti, particelle, scia della paperella |
 | Bassa | senza questi effetti: circa il 40% di draw call in meno |
 
+Anche Alta regge i 60 FPS sul Pi 3B+, ma in automatico si usa Bassa perché consuma e scalda meno.
 Per una prova senza cambiare le opzioni: `./hotfix-friday.arm64 --graphics=high` (oppure `low`).
 
 ## 3. Benchmark

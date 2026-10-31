@@ -5,8 +5,8 @@ Gioco 2D originale del genere "peg shooter": si lanciano paperelle di gomma su u
 Ogni personaggio ha un potere che si attiva colpendo una tazza di caffè.
 Open source, pensato per Linux desktop e per **Raspberry Pi 3** (versione portatile).
 
-> **Versione 0.1.2.** Gioco completo per Linux e Raspberry Pi; prestazioni sul Pi 3 ancora da verificare.
-> Novità in [CHANGELOG.md](CHANGELOG.md), piano di sviluppo in [ROADMAP.md](ROADMAP.md).
+> **Versione 0.1.2.** Gioco completo per Linux e Raspberry Pi (60 FPS stabili sul Pi 3B+).
+> Novità in [CHANGELOG.md](CHANGELOG.md), scelte di progetto in [docs/architettura.md](docs/architettura.md).
 
 | | | |
 |---|---|---|
@@ -44,9 +44,11 @@ tools/export.sh arm64       # build per Raspberry Pi (anche: x86_64, arm32, oppu
 
 Sfida a turni, a due giocatori sullo stesso dispositivo o contro la CPU: si tira una paperella a testa sullo stesso campo,
 i punti vanno a chi tira e vince chi ne ha di più quando i bug (pioli rossi) sono finiti. Ogni campo è generato da codice.
+In **Allenamento** si gioca da soli per prendere fino a 3 stelle e battere il proprio record.
 Si mira con mouse, touch, frecce o stick e si lancia rilasciando il click/dito, oppure con spazio o A.
 
 Guide:
+- [docs/architettura.md](docs/architettura.md): concept, modalità, perché Godot 3.6 e vincoli dovuti al Raspberry Pi
 - [docs/comandi.md](docs/comandi.md): tutti i comandi per giocare su Linux e Raspberry Pi, dal sorgente o dalla build, opzioni e controlli
 - [docs/raspberry-pi.md](docs/raspberry-pi.md): preparazione del Pi e benchmark
 - [docs/poteri.md](docs/poteri.md): personaggi, poteri e come aggiungerne di nuovi
@@ -78,5 +80,8 @@ Copyright © 2026 normalcrazy.
 - **Grafica, suoni e musica originali:** [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.it):
   stesse regole, chi li modifica deve condividerli con la stessa licenza.
 - Componenti di terzi con le loro licenze (Godot Engine MIT, font JetBrains Mono OFL): dettagli in [ASSETS.md](ASSETS.md).
+
+Se in futuro arrivassero funzioni online (classifica globale, multiplayer in rete) il codice passerebbe ad AGPL-3.0:
+per ora resta GPL-3.0.
 
 Le versioni fino alla 0.1.1 sono state pubblicate con licenza MIT (codice) e CC BY 4.0 (asset) e restano disponibili con quelle licenze.
