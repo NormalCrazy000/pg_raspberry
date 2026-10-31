@@ -51,6 +51,7 @@ Si mira con mouse, touch, frecce o stick e si lancia rilasciando il click/dito, 
 
 Guide:
 - [docs/architettura.md](docs/architettura.md): concept, modalità, perché Godot 3.6 e vincoli dovuti al Raspberry Pi
+- [docs/roadmap-smartphone.md](docs/roadmap-smartphone.md): piano per Android e multigiocatore su due dispositivi (non ancora implementato)
 - [docs/comandi.md](docs/comandi.md): tutti i comandi per giocare su Linux e Raspberry Pi, dal sorgente o dalla build, opzioni e controlli
 - [docs/raspberry-pi.md](docs/raspberry-pi.md): preparazione del Pi e benchmark
 - [docs/poteri.md](docs/poteri.md): personaggi, poteri e come aggiungerne di nuovi

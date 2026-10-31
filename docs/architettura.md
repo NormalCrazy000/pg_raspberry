@@ -1,7 +1,8 @@
 # Architettura e scelte di progetto
 
 Perché il gioco è fatto così: concept, modalità, engine e vincoli dovuti al Raspberry Pi.
-Le novità di ogni versione sono in [CHANGELOG.md](../CHANGELOG.md).
+Le novità di ogni versione sono in [CHANGELOG.md](../CHANGELOG.md); il piano per Android e il multigiocatore
+su due dispositivi è in [roadmap-smartphone.md](roadmap-smartphone.md).
 
 ## Concept
 
