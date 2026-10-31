@@ -2,7 +2,7 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
-## [Non pubblicato]
+## [0.2.2] - 2026-10-31
 
 ### Grafica
 - Sfondi con **codice vero**, tenue ma leggibile: uno per linguaggio (Python, Java, C, JavaScript, Rust, Go, HTML, SQL, Bash),
