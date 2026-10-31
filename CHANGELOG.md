@@ -2,7 +2,7 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
-## [Non pubblicato]
+## [0.2.1] - 2026-10-31
 
 ### Gioco
 - Il cestino che si muove è il **garbage collector**: targhetta "GC" sul fronte e messaggio "gc(): paperella recuperata!".
