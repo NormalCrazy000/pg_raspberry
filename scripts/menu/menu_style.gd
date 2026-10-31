@@ -1,12 +1,14 @@
 extends Reference
 # Elementi comuni dei menu: sfondo e suoni dei pulsanti.
 
-const BACKGROUND := preload("res://assets/sprites/background.svg")
+const Backgrounds := preload("res://scripts/common/backgrounds.gd")
+const MENU_DIM := Color(0.65, 0.65, 0.65)
 
 
 static func add_background(menu: Control) -> void:
 	var background := TextureRect.new()
-	background.texture = BACKGROUND
+	background.texture = Backgrounds.for_menus()
+	background.modulate = MENU_DIM # più scuro che in partita: sopra ci sono titolo e testi
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	menu.add_child(background)
 	menu.move_child(background, 0)

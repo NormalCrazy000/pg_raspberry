@@ -12,7 +12,7 @@ Regole:
 | File | Autore | Fonte | Licenza |
 |---|---|---|---|
 | `assets/sprites/*.svg`, `assets/sprites/characters/*.svg` | progetto Hotfix Friday | disegnati a mano per questo gioco | CC BY-SA 4.0 |
-| `assets/sprites/background.svg` | progetto Hotfix Friday | generato da `tools/assets/make_background.py` | CC BY-SA 4.0 |
+| `assets/sprites/backgrounds/*.png` | progetto Hotfix Friday | generati da `tools/assets/make_background.py` (codice originale, font JetBrains Mono) | CC BY-SA 4.0 |
 | `assets/audio/*.wav`, `assets/audio/music.ogg` | progetto Hotfix Friday | sintetizzati da `tools/assets/make_audio.py` (nessun campione esterno) | CC BY-SA 4.0 |
 | `assets/fonts/JetBrainsMono-Regular.ttf`, `assets/fonts/JetBrainsMono-Bold.ttf` | The JetBrains Mono Project Authors | [github.com/JetBrains/JetBrainsMono](https://github.com/JetBrains/JetBrainsMono) v2.304 | SIL OFL 1.1 (`assets/fonts/OFL.txt`) |
 

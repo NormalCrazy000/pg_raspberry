@@ -38,6 +38,8 @@ Il gioco è misurato sul Pi 3B+ (60 FPS stabili); sul Pi 2 non è ancora stato p
 - Grafica: in "Automatica" il Raspberry Pi usa la qualità **Bassa**. Anche Alta regge i 60 FPS sul Pi 3B+,
   ma Bassa consuma e scalda meno. Si può sempre cambiare da Opzioni → Qualità grafica ([raspberry-pi.md](raspberry-pi.md#qualità-grafica)).
 - Vsync spento in automatico sul Pi, con limite a 60 FPS ([raspberry-pi.md](raspberry-pi.md#vsync)).
+- Sfondi: codice vero disegnato una volta sola in PNG da `tools/assets/make_background.py`, non testo disegnato in gioco:
+  ogni sfondo è un'unica immagine e se ne carica una sola alla volta.
 - Input: mouse, **touch** e **gamepad** ovunque, per giocare con il Pi portatile senza tastiera.
 
 ## Scelte escluse

@@ -2,6 +2,14 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
+## [Non pubblicato]
+
+### Grafica
+- Sfondi con **codice vero**, tenue ma leggibile: uno per linguaggio (Python, Java, C, JavaScript, Rust, Go, HTML, SQL, Bash),
+  con codice originale a tema venerdì, bug e paperelle. In partita lo sfondo dipende dal campo (stesso campo, stesso sfondo);
+  nei menu è scelto a caso all'avvio e un po' più scuro.
+- `tools/assets/make_background.py` genera i PNG con il font del gioco (serve Pillow): nessun costo in più sul Pi, è sempre una sola immagine.
+
 ## [0.2.1] - 2026-10-31
 
 ### Gioco

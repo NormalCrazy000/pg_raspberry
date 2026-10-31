@@ -19,6 +19,7 @@ extends Node2D
 enum State { AIMING, BALL_IN_PLAY, CLEARING, BONUS, FINISHED }
 
 const Textures := preload("res://scripts/common/textures.gd")
+const Backgrounds := preload("res://scripts/common/backgrounds.gd")
 const LevelLoader := preload("res://scripts/game/level_loader.gd")
 const FieldGenerator := preload("res://scripts/game/field_generator.gd")
 const Scoring := preload("res://scripts/game/scoring.gd")
@@ -39,7 +40,6 @@ const SPRITES := {
 	"rect_power": preload("res://assets/sprites/code_coffee.svg"),
 	"duck": preload("res://assets/sprites/duck.svg"),
 }
-const BACKGROUND := preload("res://assets/sprites/background.svg")
 
 const MENU_SCENE := "res://scenes/menu/main_menu.tscn"
 const FIELD_BOTTOM := 500.0 # sotto questa y la paperella è persa
@@ -170,7 +170,7 @@ func _parse_args() -> void:
 
 func _build_background() -> void:
 	var background := Sprite.new()
-	background.texture = BACKGROUND
+	background.texture = Backgrounds.for_seed(field_seed)
 	background.centered = false
 	add_child(background)
 	move_child(background, 0)

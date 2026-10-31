@@ -17,6 +17,7 @@ var text_screen := "how_to" # how_to, stats o credits
 var screenshot_path := ""
 var screenshot_delay := 2.0
 var debug_power := false
+var menu_background := -1 # sfondo dei menu (indice in scripts/common/backgrounds.gd), -1 = da scegliere
 
 
 func _ready() -> void:
