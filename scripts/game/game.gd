@@ -1,6 +1,7 @@
 extends Node2D
 # Sfida a turni: due giocatori (persone o CPU) tirano a turno sullo stesso campo.
-# I punti vanno a chi tira, il moltiplicatore è condiviso. La sfida finisce quando
+# I punti vanno a chi tira, il moltiplicatore è condiviso. Un tiro che non elimina nessun bug
+# dimezza il punteggio totale di chi l'ha fatto. La sfida finisce quando
 # i bug sono tutti eliminati o nessuno ha più paperelle: vince chi ha più punti.
 # In allenamento c'è un solo giocatore: alla fine prende da 0 a 3 stelle in base al punteggio.
 #
@@ -57,6 +58,8 @@ const PORTAL_COLORS := [Color(0.7, 0.4, 1.0), Color(0.3, 0.85, 0.95)]
 const COLOR_POINTS := Color(1, 1, 1)
 const COLOR_TARGET_POINTS := Color(1.0, 0.6, 0.65)
 const COLOR_BONUS := Color(1.0, 0.85, 0.3)
+const COLOR_PENALTY := Color(1.0, 0.35, 0.35)
+const PENALTY_PAUSE := 0.9 # secondi per leggere il messaggio prima del cambio turno
 const BURSTS := 8 # sistemi di particelle riutilizzati (budget contenuto per il Pi)
 const SPIKE_MIN := 0.05 # s: un frame più lungo di così si nota come un blocco...
 const SPIKE_FACTOR := 2.5 # ...se dura anche almeno 2,5 volte un frame tipico
@@ -85,6 +88,7 @@ var stars := [] # soglie di punteggio per 1, 2 e 3 stelle (allenamento)
 var rng := RandomNumberGenerator.new()
 var textures := {}
 var shot_hits := 0
+var shot_targets := 0 # bug eliminati nel tiro corrente (anche dai poteri)
 var shot_bug_positions := [] # bug colpiti nel tiro corrente (per il bonus "tiro lungo")
 var shot_bonuses := [] # bonus già assegnati nel tiro corrente
 var bursts := []
@@ -356,6 +360,7 @@ func hit_peg(peg: Node, ball: RigidBody2D, direct := true) -> void:
 	_check_shot_bonuses(peg, ball if direct else null)
 	if peg.is_target:
 		targets_left -= 1
+		shot_targets += 1
 		if targets_left == 0:
 			_start_slowmo()
 		elif scoring.multiplier() > multiplier_before:
@@ -414,6 +419,7 @@ func _fire(direction: Vector2) -> void:
 	stuck_count = 0
 	recovered_this_shot = false
 	shot_hits = 0
+	shot_targets = 0
 	shot_bug_positions.clear()
 	shot_bonuses.clear()
 	debug_hit_pending = Session.debug_power
@@ -542,6 +548,9 @@ func _clear_lit_pegs() -> void:
 			peg.pop()
 			yield(get_tree().create_timer(POP_INTERVAL, false), "timeout")
 	var player = _player()
+	if shot_targets == 0:
+		_halve_score(player)
+		yield(get_tree().create_timer(PENALTY_PAUSE, false), "timeout")
 	var extra := scoring.extra_balls_for_shot()
 	if extra > 0:
 		player.balls_left += extra
@@ -554,6 +563,19 @@ func _clear_lit_pegs() -> void:
 		_finish()
 	else:
 		_next_turn()
+
+
+# Tiro senza bug: il punteggio totale del giocatore si dimezza.
+func _halve_score(player) -> void:
+	var lost: int = player.score - player.score / 2
+	player.score -= lost
+	player.penalties += 1
+	hud.flash(tr("FLASH_NO_BUG") % Scoring.format(lost))
+	if lost > 0:
+		_float_text(launcher.position + Vector2(0, 40), "-" + Scoring.format(lost), COLOR_PENALTY)
+	Audio.play("bucket", 0.6)
+	mark_perf("penalità")
+	_update_hud()
 
 
 func _total_balls_left() -> int:
@@ -627,8 +649,8 @@ func _finish() -> void:
 	if measure:
 		_print_measure()
 	if autoplay:
-		print("AUTOPLAY vincitore %s | tiri %d | G1 %s %d poteri %d | G2 %s %d poteri %d | bonus %d | bug rimasti %d | campo %d | %s | portali usati %d" % [
-			"pari" if tie else "G%d" % (best + 1), shots,
+		print("AUTOPLAY vincitore %s | tiri %d | dimezzati %d | G1 %s %d poteri %d | G2 %s %d poteri %d | bonus %d | bug rimasti %d | campo %d | %s | portali usati %d" % [
+			"pari" if tie else "G%d" % (best + 1), shots, players[0].penalties + players[1].penalties,
 			players[0].character.id, players[0].score, players[0].powers_used,
 			players[1].character.id, players[1].score, players[1].powers_used, players[0].bonuses + players[1].bonuses,
 			targets_left, field_seed, field_info, portal_uses])
@@ -671,8 +693,8 @@ func _finish_training() -> void:
 	if measure:
 		_print_measure()
 	if autoplay:
-		print("AUTOPLAY allenamento %s %d stelle %d | tiri %d | poteri %d | bonus %d | bug rimasti %d | campo %d | %s" % [
-			player.character.id, player.score, earned, shots, player.powers_used, player.bonuses,
+		print("AUTOPLAY allenamento %s %d stelle %d | tiri %d | dimezzati %d | poteri %d | bonus %d | bug rimasti %d | campo %d | %s" % [
+			player.character.id, player.score, earned, shots, player.penalties, player.powers_used, player.bonuses,
 			targets_left, field_seed, field_info])
 		if not Session.screenshot_path:
 			get_tree().quit()

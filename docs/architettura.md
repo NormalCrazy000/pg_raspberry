@@ -16,6 +16,9 @@ Il genere è il "peg shooter": una palla lanciata dall'alto rimbalza su un campo
 - **Allenamento** in singolo: stesse regole della sfida, alla fine da 0 a 3 stelle in base al punteggio e record personale.
   Le soglie sui campi generati (`STARS` in `scripts/game/field_generator.gd`) vengono da allenamenti automatici della CPU.
 
+In tutte le modalità un tiro che non elimina nessun bug (né con la paperella né con un potere)
+dimezza il punteggio totale di chi l'ha fatto.
+
 I campi sono **generati da codice** a partire da un seme (stesso seme = stesso campo): non c'è una campagna a livelli fissi.
 I campi JSON in `levels/` (opzione `--level`) servono solo per lo sviluppo.
 Ogni personaggio ha un potere che si attiva colpendo una tazza di caffè: il sistema è estendibile ([poteri.md](poteri.md)).

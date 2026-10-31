@@ -25,6 +25,7 @@ FLASH_RECOVERED,gc(): paperella recuperata!,gc(): duck reclaimed!
 FLASH_EXTRA_ONE,Paperella extra per %s!,Extra duck for %s!
 FLASH_EXTRA_MANY,%d paperelle extra per %s!,%d extra ducks for %s!
 FLASH_TURN,Tocca a %s,%s's turn
+FLASH_NO_BUG,Nessun bug: punteggio dimezzato (-%s),No bugs: score halved (-%s)
 RESULT_TIE,Pareggio!,It's a draw!
 RESULT_WINNER,Vince %s!,%s wins!
 RESULT_BONUS,(bonus %d × %s),(bonus %d × %s)
@@ -62,6 +63,7 @@ HOW_TO_BODY,"Si gioca a turni: ognuno lancia una paperella alla volta sullo stes
 
 • Mira con mouse, dito, frecce o stick; lancia rilasciando, oppure con spazio/A.
 • I bug (rossi) valgono 1.000 punti e fanno salire il moltiplicatore, che vale per entrambi.
+• Un tiro che non elimina nessun bug dimezza il tuo punteggio totale!
 • Le puntine valgono 100 punti. Le tazze di caffè valgono 500 e attivano il potere del tuo personaggio.
 • I pioli colpiti spariscono a fine tiro.
 • Se la paperella cade nel garbage collector (il cestino GC che si muove), la recuperi. Un tiro da 10.000 punti o più regala una paperella extra.
@@ -74,6 +76,7 @@ In Allenamento giochi da solo sullo stesso tipo di campo: alla fine prendi da 1 
 
 • Aim with mouse, finger, arrows or stick; release to throw, or press space/A.
 • Bugs (red) are worth 1,000 points and raise the multiplier, which counts for both players.
+• A shot that fixes no bugs halves your total score!
 • Pins are worth 100 points. Coffee cups are worth 500 and trigger your character's power.
 • Hit pegs disappear at the end of the shot.
 • If the duck falls into the garbage collector (the moving GC bin), you get it back. A shot worth 10,000 points or more gives an extra duck.

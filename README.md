@@ -43,7 +43,8 @@ tools/export.sh arm64       # build per Raspberry Pi (anche: x86_64, arm32, oppu
 ```
 
 Sfida a turni, a due giocatori sullo stesso dispositivo o contro la CPU: si tira una paperella a testa sullo stesso campo,
-i punti vanno a chi tira e vince chi ne ha di più quando i bug (pioli rossi) sono finiti. Ogni campo è generato da codice.
+i punti vanno a chi tira e vince chi ne ha di più quando i bug (pioli rossi) sono finiti.
+Attenzione: un tiro che non elimina nessun bug dimezza il tuo punteggio. Ogni campo è generato da codice.
 In **Allenamento** si gioca da soli per prendere fino a 3 stelle e battere il proprio record.
 Si mira con mouse, touch, frecce o stick e si lancia rilasciando il click/dito, oppure con spazio o A.
 

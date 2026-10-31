@@ -11,6 +11,7 @@ var extra_balls_won := 0
 var bonus_balls := 0
 var powers_used := 0
 var bonuses := 0
+var penalties := 0 # tiri senza bug (punteggio dimezzato)
 var solo := false # allenamento: unico giocatore, senza "G1"
 
 

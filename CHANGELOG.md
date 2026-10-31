@@ -2,6 +2,13 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
+## [Non pubblicato]
+
+### Gioco
+- **Tiro senza bug = punteggio dimezzato**: se un tiro non elimina nessun bug (vale anche se lo elimina un potere),
+  il punteggio totale di chi ha tirato si dimezza. Vale in tutte le modalità; spiegato in "Come si gioca".
+- Allenamento: soglie delle stelle ricalcolate per la nuova regola (15.000, 35.000 e 100.000 punti).
+
 ## [0.2.2] - 2026-10-31
 
 ### Grafica
@@ -20,7 +27,7 @@ Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), 
 
 ### Gioco
 - Modalità **Allenamento**: una partita da soli con le regole della sfida; alla fine da 0 a 3 stelle
-  (30.000, 60.000 e 100.000 punti sui campi generati) e il record personale.
+  (30.000, 60.000 e 100.000 punti sui campi generati, poi ricalcolate) e il record personale.
 - Statistiche: sezione Allenamento (partite, record, partite da 3 stelle).
 - Opzione `--training` da riga di comando; `tools/smoke_test.sh` prova anche l'allenamento.
 - Menu principale un po' più compatto per far posto al nuovo pulsante.
