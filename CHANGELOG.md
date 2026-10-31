@@ -2,6 +2,14 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
+## [Non pubblicato]
+
+### Gioco
+- Modalità **Allenamento**: una partita da soli con le regole della sfida; alla fine da 0 a 3 stelle
+  (30.000, 60.000 e 100.000 punti sui campi generati) e il record personale.
+- Statistiche: sezione Allenamento (partite, record, partite da 3 stelle).
+- Opzione `--training` da riga di comando; `tools/smoke_test.sh` prova anche l'allenamento.
+
 ## [0.1.2] - 2026-10-30
 
 ### Raspberry Pi (dal primo benchmark su Pi 3B+)

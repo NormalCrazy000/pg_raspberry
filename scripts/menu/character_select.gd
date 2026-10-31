@@ -1,6 +1,7 @@
 extends Control
 # Scelta del personaggio: una scheda per ogni personaggio in data/characters.json.
 # In sfida a due sceglie prima il giocatore 1, poi il giocatore 2; contro la CPU il suo personaggio è casuale.
+# In allenamento si sceglie solo il proprio.
 
 const Characters := preload("res://scripts/game/characters.gd")
 const MenuStyle := preload("res://scripts/menu/menu_style.gd")

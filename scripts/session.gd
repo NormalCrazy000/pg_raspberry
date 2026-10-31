@@ -5,6 +5,7 @@ extends Node
 
 const MODE_TWO_PLAYERS := "2p"
 const MODE_CPU := "cpu"
+const MODE_TRAINING := "training" # un solo giocatore, a punteggio
 
 var mode := MODE_CPU
 var cpu_difficulty := "normal" # easy, normal, hard

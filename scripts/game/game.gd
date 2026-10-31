@@ -2,11 +2,13 @@ extends Node2D
 # Sfida a turni: due giocatori (persone o CPU) tirano a turno sullo stesso campo.
 # I punti vanno a chi tira, il moltiplicatore è condiviso. La sfida finisce quando
 # i bug sono tutti eliminati o nessuno ha più paperelle: vince chi ha più punti.
+# In allenamento c'è un solo giocatore: alla fine prende da 0 a 3 stelle in base al punteggio.
 #
 # Le impostazioni arrivano dal menu (Session); da riga di comando si possono forzare:
 #   --autoplay[=random|easy|normal|hard]   entrambi i giocatori sono CPU (default normal), stampa il risultato ed esce;
 #                                          con due valori separati da virgola (es. hard,easy) uno per giocatore
 #   --cpu=easy|normal|hard                 il giocatore 2 è la CPU
+#   --training                             allenamento in singolo (con --autoplay il giocatore è la CPU)
 #   --p1=ID (oppure --character=ID), --p2=ID   personaggi (id in data/characters.json)
 #   --seed=N                               campo e tiri della CPU riproducibili
 #   --level=res://levels/level_01.json     campo fisso da JSON invece che generato
@@ -78,6 +80,8 @@ var field_seed := 0
 var field_info := ""
 var autoplay := ""
 var level_path := ""
+var training := false
+var stars := [] # soglie di punteggio per 1, 2 e 3 stelle (allenamento)
 var rng := RandomNumberGenerator.new()
 var textures := {}
 var shot_hits := 0
@@ -106,6 +110,7 @@ func _ready() -> void:
 	rng.randomize()
 	field_seed = Session.field_seed
 	_parse_args()
+	training = Session.mode == Session.MODE_TRAINING
 	if field_seed == 0:
 		field_seed = rng.randi_range(1, 999999)
 	low_graphics = Settings.low_graphics()
@@ -119,6 +124,9 @@ func _ready() -> void:
 		_build_bursts()
 	Audio.play_music()
 	var level: Dictionary = LevelLoader.load_level(level_path) if level_path else FieldGenerator.generate(field_seed)
+	stars = level.get("stars", [])
+	if stars.size() != 3:
+		stars = FieldGenerator.STARS
 	_create_players(level.balls)
 	_build_field(level)
 	launcher.connect("fire", self, "_on_launcher_fire")
@@ -142,6 +150,8 @@ func _parse_args() -> void:
 			autoplay = "normal"
 		elif arg.begins_with("--autoplay="):
 			autoplay = "normal" if value == "smart" else value
+		elif arg == "--training":
+			Session.mode = Session.MODE_TRAINING
 		elif arg.begins_with("--cpu="):
 			Session.mode = Session.MODE_CPU
 			Session.cpu_difficulty = value
@@ -194,7 +204,7 @@ func _burst(at: Vector2, color: Color) -> void:
 
 
 func _create_players(balls_each: int) -> void:
-	for i in 2:
+	for i in 1 if training else 2:
 		var player := Player.new()
 		player.index = i
 		player.character = Characters.find(Session.characters[i])
@@ -585,6 +595,9 @@ func _finish() -> void:
 	current = -1
 	_set_state(State.FINISHED)
 	result_time = OS.get_ticks_msec() / 1000.0
+	if training:
+		_finish_training()
+		return
 	var best := -1
 	var tie := false
 	for i in players.size():
@@ -618,6 +631,48 @@ func _finish() -> void:
 			players[0].character.id, players[0].score, players[0].powers_used,
 			players[1].character.id, players[1].score, players[1].powers_used, players[0].bonuses + players[1].bonuses,
 			targets_left, field_seed, field_info, portal_uses])
+		if not Session.screenshot_path:
+			get_tree().quit()
+
+
+# Fine dell'allenamento: punteggio, stelle e record personale.
+func _finish_training() -> void:
+	var player = players[0]
+	var earned := 0
+	for threshold in stars:
+		if player.score >= int(threshold):
+			earned += 1
+	var lines := [tr("RESULT_SCORE") % Scoring.format(player.score)]
+	if player.bonus_balls > 0:
+		lines[0] += "  " + tr("RESULT_BONUS") % [player.bonus_balls, Scoring.format(Scoring.BALL_BONUS)]
+	# Il font non ha la stella: piene ● e vuote ○.
+	var dots := ""
+	for i in 3:
+		dots += "●" if i < earned else "○"
+	var star_line: String = tr("RESULT_STARS") % dots
+	if earned < 3:
+		star_line += "  " + tr("RESULT_NEXT_STAR") % Scoring.format(int(stars[earned]))
+	lines.append(star_line)
+	if targets_left > 0:
+		lines.append(tr("RESULT_OPEN_BUGS") % targets_left)
+	if not autoplay:
+		var previous: int = Stats.training_best()
+		Stats.record_training(player, earned, scoring.targets_hit)
+		if player.score > previous:
+			lines.append(tr("RESULT_NEW_RECORD"))
+		else:
+			lines.append(tr("RESULT_RECORD") % Scoring.format(previous))
+	lines.append("")
+	lines.append(tr("RESULT_FIELD") % field_seed)
+	mark_perf("fine sfida")
+	hud.show_result(tr("RESULT_TRAINING_DONE") if targets_left <= 0 else tr("RESULT_TRAINING_OVER"), lines, true)
+	Audio.play("win")
+	if measure:
+		_print_measure()
+	if autoplay:
+		print("AUTOPLAY allenamento %s %d stelle %d | tiri %d | poteri %d | bonus %d | bug rimasti %d | campo %d | %s" % [
+			player.character.id, player.score, earned, shots, player.powers_used, player.bonuses,
+			targets_left, field_seed, field_info])
 		if not Session.screenshot_path:
 			get_tree().quit()
 

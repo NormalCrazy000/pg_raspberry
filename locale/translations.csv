@@ -48,7 +48,7 @@ OPT_FULLSCREEN,Schermo intero,Fullscreen
 OPT_AIM_SPEED,Velocità di mira (tastiera e gamepad),Aim speed (keyboard and gamepad)
 OPT_LANGUAGE,Lingua,Language
 STATS_TITLE,Statistiche,Statistics
-STATS_NONE,Nessuna sfida giocata finora.,No matches played yet.
+STATS_NONE,Nessuna partita giocata finora.,No games played yet.
 STATS_MATCHES,Sfide giocate: %d,Matches played: %d
 STATS_BUGS,Bug eliminati: %d,Bugs fixed: %d
 STATS_BEST,Miglior punteggio: %s (%s),Best score: %s (%s)
@@ -68,7 +68,9 @@ HOW_TO_BODY,"Si gioca a turni: ognuno lancia una paperella alla volta sullo stes
 • Bonus: ""Tiro lungo"" se colpisci due bug molto lontani nello stesso tiro, ""Combo"" se una paperella tocca 10 pioli o più.
 • Quando i bug finiscono, ogni paperella rimasta vale 10.000 punti.
 
-Vince chi ha più punti alla fine della sfida.","Players take turns: each throws one duck at a time on the same field.
+Vince chi ha più punti alla fine della sfida.
+
+In Allenamento giochi da solo sullo stesso tipo di campo: alla fine prendi da 1 a 3 stelle in base al punteggio e provi a battere il tuo record.","Players take turns: each throws one duck at a time on the same field.
 
 • Aim with mouse, finger, arrows or stick; release to throw, or press space/A.
 • Bugs (red) are worth 1,000 points and raise the multiplier, which counts for both players.
@@ -78,7 +80,9 @@ Vince chi ha più punti alla fine della sfida.","Players take turns: each throws
 • Bonuses: ""Long shot"" for hitting two distant bugs in the same shot, ""Combo"" when one duck touches 10 or more pegs.
 • When the bugs are gone, every remaining duck is worth 10,000 points.
 
-The player with the most points at the end wins."
+The player with the most points at the end wins.
+
+In Training you play alone on the same kind of field: at the end you get 1 to 3 stars based on your score and try to beat your personal best."
 CREDITS_TITLE,Crediti,Credits
 CREDITS_BODY,"Hotfix Friday
 Un gioco open source per Linux e Raspberry Pi.
@@ -124,3 +128,14 @@ OPT_VSYNC,Sincronia verticale (V-Sync),Vertical sync (V-Sync)
 VSYNC_AUTO,Automatica,Automatic
 VSYNC_ON,Attiva,On
 VSYNC_OFF,Spenta,Off
+MENU_TRAINING,Allenamento,Training
+RESULT_TRAINING_DONE,Tutti i bug eliminati!,All bugs fixed!
+RESULT_TRAINING_OVER,Allenamento finito,Training over
+RESULT_SCORE,Punteggio: %s,Score: %s
+RESULT_STARS,Stelle: %s,Stars: %s
+RESULT_NEXT_STAR,(prossima a %s),(next at %s)
+RESULT_NEW_RECORD,Nuovo record personale!,New personal best!
+RESULT_RECORD,Record personale: %s,Personal best: %s
+RESULT_SAME_FIELD,Stesso campo,Same field
+STATS_TRAINING_HEADER,Allenamento,Training
+STATS_TRAINING_LINE,"%d partite, record %s (%s), %d con 3 stelle","%d games, best %s (%s), %d with 3 stars"

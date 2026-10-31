@@ -69,7 +69,7 @@ func _add_button(parent: Control, text: String, method: String) -> Button:
 
 func _stats_text() -> String:
 	var data: Dictionary = Stats.data
-	if data.matches == 0:
+	if data.matches == 0 and data.training.played == 0:
 		return tr("STATS_NONE")
 	var lines := [tr("STATS_MATCHES") % data.matches, tr("STATS_BUGS") % data.bugs_fixed]
 	if data.best.score > 0:
@@ -81,6 +81,11 @@ func _stats_text() -> String:
 			var entry: Dictionary = data.top[i]
 			var mode: String = tr("MODE_2P") if entry.mode == "2p" else tr("MODE_CPU") % tr("CPU_" + entry.mode.to_upper())
 			lines.append("  %2d. %8s  %-7s %-16s %s" % [i + 1, Scoring.format(int(entry.score)), entry.character, mode, entry.date])
+	if data.training.played > 0:
+		lines.append("")
+		lines.append(tr("STATS_TRAINING_HEADER"))
+		var t: Dictionary = data.training
+		lines.append("  " + tr("STATS_TRAINING_LINE") % [t.played, Scoring.format(int(t.best)), t.character, t.three_stars])
 	lines.append("")
 	lines.append(tr("STATS_CPU_HEADER"))
 	for level in ["easy", "normal", "hard"]:

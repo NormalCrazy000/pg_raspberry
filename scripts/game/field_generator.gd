@@ -25,6 +25,9 @@ const DEFAULTS := {
 	"targets": 20,
 	"powers": 2,
 }
+# Soglie di punteggio per 1, 2 e 3 stelle in allenamento sui campi generati. Con 40 allenamenti automatici
+# per livello la CPU normale fa in media 48.000 punti, la difficile 62.000 (102.000 nel 10% migliore).
+const STARS := [30000, 60000, 100000]
 
 var rng := RandomNumberGenerator.new()
 var pegs := []

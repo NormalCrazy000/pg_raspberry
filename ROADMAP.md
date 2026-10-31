@@ -14,7 +14,7 @@ niente campagna a livelli fissi.
 
 ## Prossimi passi — 0.2.0
 
-- [ ] **Modalità allenamento** in singolo: una partita da soli con le stesse regole della sfida (palle limitate, bug da eliminare);
+- [x] **Modalità allenamento** in singolo: una partita da soli con le stesse regole della sfida (palle limitate, bug da eliminare);
   alla fine il punteggio con le stelle e il record personale.
 - [ ] **Campi creati dagli utenti**, scritti a mano in JSON con il formato già usato da `levels/level_01.json`
   (archi, griglie, linee):

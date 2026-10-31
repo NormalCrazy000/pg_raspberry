@@ -69,13 +69,14 @@ func flash(text: String) -> void:
 	flash_tween.tween_property(message, "modulate:a", 0.0, 0.4)
 
 
-func show_result(title: String, lines: Array) -> void:
+# `training`: un solo giocatore, "rivincita" diventa "stesso campo".
+func show_result(title: String, lines: Array, training := false) -> void:
 	if flash_tween and flash_tween.is_valid():
 		flash_tween.kill()
 	message.modulate.a = 0.0
 	pause_button.visible = false
 	result_box.open(title, lines, [
-		["new", tr("RESULT_NEW_FIELD")], ["rematch", tr("RESULT_REMATCH")], ["menu", tr("RESULT_MENU")]])
+		["new", tr("RESULT_NEW_FIELD")], ["rematch", tr("RESULT_SAME_FIELD") if training else tr("RESULT_REMATCH")], ["menu", tr("RESULT_MENU")]])
 
 
 func show_pause() -> void:

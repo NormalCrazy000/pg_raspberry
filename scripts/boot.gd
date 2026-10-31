@@ -1,7 +1,7 @@
 extends Node
 # Sceglie la scena iniziale (il vsync, anche --novsync, è gestito da Settings):
 #   --bench                        benchmark
-#   --autoplay[=...] o --character  direttamente in partita
+#   --autoplay[=...], --character, --cpu, --training  direttamente in partita
 #   altrimenti                      menu principale
 
 const MENU_SCENE := "res://scenes/menu/main_menu.tscn"
@@ -23,7 +23,7 @@ func _ready() -> void:
 	else:
 		for arg in args:
 			if arg.begins_with("--autoplay") or arg.begins_with("--character=") or arg.begins_with("--p1=") \
-					or arg.begins_with("--cpu="):
+					or arg.begins_with("--cpu=") or arg == "--training":
 				scene = GAME_SCENE
 	_warm_up_fonts()
 	# Due frame per far disegnare i caratteri, poi si parte.
@@ -38,7 +38,7 @@ func _warm_up_fonts() -> void:
 	var chars := ""
 	for code in range(32, 127):
 		chars += char(code)
-	chars += "àèéìòùÀÈÉÌÒÙ×·»«•©’…"
+	chars += "àèéìòùÀÈÉÌÒÙ×·»«•©’…●○"
 	for font in FONTS:
 		var label := Label.new()
 		label.add_font_override("font", font)

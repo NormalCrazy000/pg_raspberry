@@ -29,6 +29,8 @@ func _ensure_defaults() -> void:
 		data.characters = {}
 	if not data.has("top"):
 		data.top = [] # migliori punteggi: {score, character, mode, date}
+	if not data.has("training"):
+		data.training = {"played": 0, "best": 0, "character": "", "three_stars": 0}
 
 
 # Registra una sfida conclusa. `winner` è l'indice del vincitore, -1 in caso di pareggio.
@@ -52,6 +54,22 @@ func record_match(players: Array, winner: int, bugs_fixed: int, cpu_difficulty: 
 			var result := "draw" if winner < 0 else ("won" if winner == i else "lost")
 			data.cpu[cpu_difficulty][result] += 1
 	JsonFile.save_dict(PATH, data)
+
+
+# Registra un allenamento concluso: ha un record a parte, non conta tra le sfide né nei migliori punteggi.
+func record_training(player, stars: int, bugs_fixed: int) -> void:
+	data.training.played += 1
+	data.bugs_fixed += bugs_fixed
+	if stars == 3:
+		data.training.three_stars += 1
+	if player.score > data.training.best:
+		data.training.best = player.score
+		data.training.character = player.character.name
+	JsonFile.save_dict(PATH, data)
+
+
+func training_best() -> int:
+	return int(data.training.best)
 
 
 func _add_top_score(player, cpu_difficulty: String) -> void:

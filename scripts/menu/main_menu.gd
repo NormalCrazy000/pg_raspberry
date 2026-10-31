@@ -45,6 +45,7 @@ func _show_page(name: String) -> void:
 		subtitle.text = tr("MENU_SUBTITLE")
 		_add_button(tr("MENU_TWO_PLAYERS"), "_start", [Session.MODE_TWO_PLAYERS, ""])
 		_add_button(tr("MENU_VS_CPU"), "_go_page", ["cpu"])
+		_add_button(tr("MENU_TRAINING"), "_start", [Session.MODE_TRAINING, ""])
 		_add_button(tr("MENU_HOW_TO"), "_open_text", ["how_to"])
 		_add_button(tr("MENU_STATS"), "_open_text", ["stats"])
 		_add_button(tr("MENU_OPTIONS"), "_open_scene", [OPTIONS_SCENE])
