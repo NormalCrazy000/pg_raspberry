@@ -11,7 +11,10 @@ var extra_balls_won := 0
 var bonus_balls := 0
 var powers_used := 0
 var bonuses := 0
+var solo := false # allenamento: unico giocatore, senza "G1"
 
 
 func label() -> String:
+	if solo and not cpu:
+		return character.name
 	return "%s (%s)" % [character.name, "CPU" if cpu else tr("PLAYER_SHORT") % (index + 1)]

@@ -207,6 +207,7 @@ func _create_players(balls_each: int) -> void:
 	for i in 1 if training else 2:
 		var player := Player.new()
 		player.index = i
+		player.solo = training
 		player.character = Characters.find(Session.characters[i])
 		if player.character.empty():
 			player.character = Characters.load_all()[i]
