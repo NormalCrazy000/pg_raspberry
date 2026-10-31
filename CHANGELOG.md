@@ -2,6 +2,20 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
+## [Non pubblicato]
+
+### Gioco
+- Modalità **Torneo**: da 4 a 8 persone (4, 6 o 8) a eliminazione diretta, ognuna con nome e personaggio.
+  - Nome scritto con una tastiera a schermo (gamepad e touch) o con la tastiera vera.
+  - Tabellone sorteggiato; con 6 partecipanti due passano il primo turno.
+  - Pareggio: passa chi ha eliminato più bug, poi sorteggio.
+  - Salvato dopo ogni partita: dal menu Torneo si riprende anche dopo aver spento il Pi.
+- Le partite del torneo contano nelle statistiche come sfide a 2.
+- Menu principale ancora un po' più compatto per far posto al pulsante Torneo.
+
+### Strumenti
+- `--tournament` (con `--autoplay`) e `tools/test_bracket.gd`; `tools/smoke_test.sh` prova anche il torneo.
+
 ## [0.2.3] - 2026-10-31
 
 ### Gioco

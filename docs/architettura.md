@@ -15,6 +15,10 @@ Il genere è il "peg shooter": una palla lanciata dall'alto rimbalza su un campo
 - **Contro la CPU** (facile, normale, difficile).
 - **Allenamento** in singolo: stesse regole della sfida, alla fine da 0 a 3 stelle in base al punteggio e record personale.
   Le soglie sui campi generati (`STARS` in `scripts/game/field_generator.gd`) vengono da allenamenti automatici della CPU.
+- **Torneo** a eliminazione diretta tra 4, 6 o 8 persone (niente CPU), ognuna con nome e personaggio. Tabellone sorteggiato;
+  con 6 partecipanti due passano il primo turno, uno per metà tabellone. Pareggio: passa chi ha eliminato più bug, poi sorteggio.
+  Il torneo è salvato in `user://tournament.json` dopo ogni partita; uscire a metà partita non registra nulla.
+  Logica del tabellone in `scripts/tournament/bracket.gd` (provata da `tools/test_bracket.gd`), schermate in `scripts/menu/tournament.gd`.
 
 In tutte le modalità un tiro che non elimina nessun bug (né con la paperella né con un potere)
 dimezza il punteggio totale di chi l'ha fatto.

@@ -28,10 +28,10 @@ align = 1
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -140.0
-margin_top = 138.0
+margin_top = 136.0
 margin_right = 140.0
 margin_bottom = 430.0
-custom_constants/separation = 4
+custom_constants/separation = 3
 
 [node name="Hint" type="Label" parent="."]
 modulate = Color( 0.55, 0.6, 0.7, 1 )

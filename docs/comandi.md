@@ -137,6 +137,7 @@ Valgono sia con `godot3 --path .` sia con l'eseguibile esportato. Senza opzioni 
 |---|---|
 | `--cpu=easy\|normal\|hard` | salta il menu: sfida contro la CPU (il giocatore 2) |
 | `--training` | salta il menu: allenamento in singolo (con `--autoplay` gioca la CPU) |
+| `--tournament` | con `--autoplay`: torneo di prova da 4 CPU, solo in memoria (il torneo salvato non viene toccato) |
 | `--p1=ID`, `--p2=ID` | personaggi dei due giocatori (`giulia`, `marco`, `sara`, `dario`); `--character=ID` equivale a `--p1` |
 | `--seed=N` | campo e tiri della CPU riproducibili (il numero del campo è mostrato a fine sfida) |
 | `--level=res://levels/level_01.json` | campo fisso da file JSON invece che generato |

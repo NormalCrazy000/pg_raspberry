@@ -46,6 +46,7 @@ Sfida a turni, a due giocatori sullo stesso dispositivo o contro la CPU: si tira
 i punti vanno a chi tira e vince chi ne ha di più quando i bug (pioli rossi) sono finiti.
 Attenzione: un tiro che non elimina nessun bug dimezza il tuo punteggio. Ogni campo è generato da codice.
 In **Allenamento** si gioca da soli per prendere fino a 3 stelle e battere il proprio record.
+Nel **Torneo** da 4 a 8 persone si sfidano a eliminazione diretta; il torneo si salva e si riprende dopo ogni partita.
 Si mira con mouse, touch, frecce o stick e si lancia rilasciando il click/dito, oppure con spazio o A.
 
 Guide:

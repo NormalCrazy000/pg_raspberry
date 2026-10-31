@@ -5,6 +5,7 @@ const MenuStyle := preload("res://scripts/menu/menu_style.gd")
 const CHARACTER_SCENE := "res://scenes/menu/character_select.tscn"
 const OPTIONS_SCENE := "res://scenes/menu/options.tscn"
 const TEXT_SCENE := "res://scenes/menu/text_screen.tscn"
+const TOURNAMENT_SCENE := "res://scenes/menu/tournament.tscn"
 
 var page := "main"
 
@@ -46,6 +47,7 @@ func _show_page(name: String) -> void:
 		_add_button(tr("MENU_TWO_PLAYERS"), "_start", [Session.MODE_TWO_PLAYERS, ""])
 		_add_button(tr("MENU_VS_CPU"), "_go_page", ["cpu"])
 		_add_button(tr("MENU_TRAINING"), "_start", [Session.MODE_TRAINING, ""])
+		_add_button(tr("MENU_TOURNAMENT"), "_open_scene", [TOURNAMENT_SCENE])
 		_add_button(tr("MENU_HOW_TO"), "_open_text", ["how_to"])
 		_add_button(tr("MENU_STATS"), "_open_text", ["stats"])
 		_add_button(tr("MENU_OPTIONS"), "_open_scene", [OPTIONS_SCENE])
@@ -62,7 +64,7 @@ func _go_page(name: String) -> void:
 func _add_button(text: String, method: String, binds: Array) -> void:
 	var button := Button.new()
 	button.text = text
-	button.rect_min_size = Vector2(280, 32)
+	button.rect_min_size = Vector2(280, 30)
 	button.connect("pressed", self, method, binds)
 	MenuStyle.add_sounds(button)
 	buttons.add_child(button)

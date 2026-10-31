@@ -1,7 +1,8 @@
 extends Control
 # Scelta del personaggio: una scheda per ogni personaggio in data/characters.json.
 # In sfida a due sceglie prima il giocatore 1, poi il giocatore 2; contro la CPU il suo personaggio è casuale.
-# In allenamento si sceglie solo il proprio.
+# In allenamento si sceglie solo il proprio. Nell'iscrizione al torneo sceglie l'ultimo partecipante iscritto
+# e poi si torna alla schermata del torneo.
 
 const Characters := preload("res://scripts/game/characters.gd")
 const MenuStyle := preload("res://scripts/menu/menu_style.gd")
@@ -10,6 +11,7 @@ const FONT_SMALL := preload("res://assets/fonts/font_small.tres")
 const PORTRAITS_DIR := "res://assets/sprites/characters/%s.svg"
 const GAME_SCENE := "res://scenes/game/game.tscn"
 const MENU_SCENE := "res://scenes/menu/main_menu.tscn"
+const TOURNAMENT_SCENE := "res://scenes/menu/tournament.tscn"
 const CARD_SIZE := Vector2(180, 250)
 
 onready var cards = $Cards
@@ -19,7 +21,10 @@ onready var subtitle = $Subtitle
 func _ready() -> void:
 	MenuStyle.add_background(self)
 	Audio.play_music()
-	subtitle.text = tr("CHOOSE_CHARACTER") % (Session.selecting_player + 1)
+	if _registering():
+		subtitle.text = tr("TOURNAMENT_CHOOSE_CHARACTER") % Session.tournament_entries[-1].name
+	else:
+		subtitle.text = tr("CHOOSE_CHARACTER") % (Session.selecting_player + 1)
 	$Hint.text = tr("HINT_MENU")
 	for character in Characters.load_all():
 		cards.add_child(_make_card(character))
@@ -72,7 +77,15 @@ func _card_label(text: String, top: float, height: float) -> Label:
 	return label
 
 
+func _registering() -> bool:
+	return Session.mode == Session.MODE_TOURNAMENT and not Session.tournament_entries.empty()
+
+
 func _on_card_pressed(id: String) -> void:
+	if _registering():
+		Session.tournament_entries[-1].character = id
+		get_tree().change_scene(TOURNAMENT_SCENE)
+		return
 	Session.characters[Session.selecting_player] = id
 	if Session.mode == Session.MODE_TWO_PLAYERS and Session.selecting_player == 0:
 		Session.selecting_player = 1
@@ -89,4 +102,9 @@ func _on_card_pressed(id: String) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause"):
 		get_tree().set_input_as_handled()
-		get_tree().change_scene(MENU_SCENE)
+		if _registering():
+			# Si torna a scrivere il nome dello stesso partecipante.
+			Session.tournament_entries.pop_back()
+			get_tree().change_scene(TOURNAMENT_SCENE)
+		else:
+			get_tree().change_scene(MENU_SCENE)

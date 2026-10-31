@@ -4,12 +4,14 @@ extends Node2D
 # dimezza il punteggio totale di chi l'ha fatto. La sfida finisce quando
 # i bug sono tutti eliminati o nessuno ha più paperelle: vince chi ha più punti.
 # In allenamento c'è un solo giocatore: alla fine prende da 0 a 3 stelle in base al punteggio.
+# Nel torneo è una sfida a 2 tra due partecipanti (scripts/tournament/): il risultato va nel tabellone.
 #
 # Le impostazioni arrivano dal menu (Session); da riga di comando si possono forzare:
 #   --autoplay[=random|easy|normal|hard]   entrambi i giocatori sono CPU (default normal), stampa il risultato ed esce;
 #                                          con due valori separati da virgola (es. hard,easy) uno per giocatore
 #   --cpu=easy|normal|hard                 il giocatore 2 è la CPU
 #   --training                             allenamento in singolo (con --autoplay il giocatore è la CPU)
+#   --tournament                           con --autoplay: torneo di prova da 4 CPU in memoria, una partita dopo l'altra
 #   --p1=ID (oppure --character=ID), --p2=ID   personaggi (id in data/characters.json)
 #   --seed=N                               campo e tiri della CPU riproducibili
 #   --level=res://levels/level_01.json     campo fisso da JSON invece che generato
@@ -32,6 +34,7 @@ const Peg := preload("res://scripts/game/peg.gd")
 const PegGroup := preload("res://scripts/game/peg_group.gd")
 const PortalScript := preload("res://scripts/game/portal.gd")
 const Ball := preload("res://scripts/game/ball.gd")
+const Bracket := preload("res://scripts/tournament/bracket.gd")
 const SPRITES := {
 	"round_normal": preload("res://assets/sprites/tack.svg"),
 	"round_target": preload("res://assets/sprites/bug.svg"),
@@ -43,6 +46,7 @@ const SPRITES := {
 }
 
 const MENU_SCENE := "res://scenes/menu/main_menu.tscn"
+const TOURNAMENT_SCENE := "res://scenes/menu/tournament.tscn"
 const FIELD_BOTTOM := 500.0 # sotto questa y la paperella è persa
 const STUCK_TIME := 1.0 # secondi quasi ferma prima di togliere i pioli colpiti
 const NUDGE_AFTER := 3 # interventi anti-blocco prima di dare una spinta alla paperella
@@ -84,6 +88,8 @@ var field_info := ""
 var autoplay := ""
 var level_path := ""
 var training := false
+var tournament := false
+var tournament_test := false # --tournament
 var stars := [] # soglie di punteggio per 1, 2 e 3 stelle (allenamento)
 var rng := RandomNumberGenerator.new()
 var textures := {}
@@ -114,7 +120,13 @@ func _ready() -> void:
 	rng.randomize()
 	field_seed = Session.field_seed
 	_parse_args()
+	# Torneo di prova: si crea alla prima partita; le successive arrivano ricaricando la scena.
+	if tournament_test and autoplay and Tournament.persist:
+		Tournament.start_test()
+		Tournament.begin_next_match()
 	training = Session.mode == Session.MODE_TRAINING
+	tournament = Session.mode == Session.MODE_TOURNAMENT
+	hud.allow_restart = not tournament
 	if field_seed == 0:
 		field_seed = rng.randi_range(1, 999999)
 	low_graphics = Settings.low_graphics()
@@ -156,6 +168,8 @@ func _parse_args() -> void:
 			autoplay = "normal" if value == "smart" else value
 		elif arg == "--training":
 			Session.mode = Session.MODE_TRAINING
+		elif arg == "--tournament":
+			tournament_test = true
 		elif arg.begins_with("--cpu="):
 			Session.mode = Session.MODE_CPU
 			Session.cpu_difficulty = value
@@ -212,6 +226,8 @@ func _create_players(balls_each: int) -> void:
 		var player := Player.new()
 		player.index = i
 		player.solo = training
+		if tournament:
+			player.display_name = Session.names[i]
 		player.character = Characters.find(Session.characters[i])
 		if player.character.empty():
 			player.character = Characters.load_all()[i]
@@ -361,6 +377,7 @@ func hit_peg(peg: Node, ball: RigidBody2D, direct := true) -> void:
 	if peg.is_target:
 		targets_left -= 1
 		shot_targets += 1
+		player.bugs += 1
 		if targets_left == 0:
 			_start_slowmo()
 		elif scoring.multiplier() > multiplier_before:
@@ -621,6 +638,9 @@ func _finish() -> void:
 	if training:
 		_finish_training()
 		return
+	if tournament:
+		_finish_tournament()
+		return
 	var best := -1
 	var tie := false
 	for i in players.size():
@@ -641,7 +661,8 @@ func _finish() -> void:
 	lines.append("")
 	lines.append(tr("RESULT_FIELD") % field_seed)
 	mark_perf("fine sfida")
-	hud.show_result(title, lines)
+	hud.show_result(title, lines, [
+		["new", tr("RESULT_NEW_FIELD")], ["rematch", tr("RESULT_REMATCH")], ["menu", tr("RESULT_MENU")]])
 	Audio.play("win")
 	if not autoplay:
 		var cpu_difficulty: String = Session.cpu_difficulty if Session.mode == Session.MODE_CPU else ""
@@ -688,7 +709,8 @@ func _finish_training() -> void:
 	lines.append("")
 	lines.append(tr("RESULT_FIELD") % field_seed)
 	mark_perf("fine sfida")
-	hud.show_result(tr("RESULT_TRAINING_DONE") if targets_left <= 0 else tr("RESULT_TRAINING_OVER"), lines, true)
+	hud.show_result(tr("RESULT_TRAINING_DONE") if targets_left <= 0 else tr("RESULT_TRAINING_OVER"), lines, [
+		["new", tr("RESULT_NEW_FIELD")], ["rematch", tr("RESULT_SAME_FIELD")], ["menu", tr("RESULT_MENU")]])
 	Audio.play("win")
 	if measure:
 		_print_measure()
@@ -700,12 +722,53 @@ func _finish_training() -> void:
 			get_tree().quit()
 
 
+# Fine di una partita del torneo: vince chi ha più punti; a parità passa chi ha eliminato più bug, poi sorteggio.
+func _finish_tournament() -> void:
+	var at: Array = Tournament.current
+	var final: bool = Tournament.is_final(at)
+	var winner_index := Tournament.record_current([players[0].score, players[1].score], [players[0].bugs, players[1].bugs])
+	var decided_by: String = Tournament.match_data(at).decided_by
+	var winner_name: String = Tournament.participant(winner_index).name
+	var lines := []
+	for player in players:
+		var line: String = "%s: %s" % [player.label(), Scoring.format(player.score)]
+		if player.bonus_balls > 0:
+			line += "  " + tr("RESULT_BONUS") % [player.bonus_balls, Scoring.format(Scoring.BALL_BONUS)]
+		lines.append(line)
+	if decided_by == "bugs":
+		lines.append(tr("RESULT_TIE_BUGS") % [players[0].bugs, players[1].bugs])
+	elif decided_by == "draw":
+		lines.append(tr("RESULT_TIE_DRAW"))
+	if targets_left > 0:
+		lines.append(tr("RESULT_OPEN_BUGS") % targets_left)
+	var title: String = tr("RESULT_CHAMPION") % winner_name if final else tr("RESULT_ADVANCES") % winner_name
+	mark_perf("fine sfida")
+	hud.show_result(title, lines, [["bracket", tr("RESULT_BRACKET")]])
+	Audio.play("win")
+	if not autoplay:
+		Stats.record_match(players, 0 if players[0].score > players[1].score else (1 if players[1].score > players[0].score else -1),
+			scoring.targets_hit, "")
+		return
+	print("AUTOPLAY torneo %s | passa %s | %s %d bug %d - %s %d bug %d | deciso da %s | campo %d" % [
+		tr(Bracket.round_key(Tournament.data, at[0]) + "_ONE"), winner_name, players[0].display_name, players[0].score,
+		players[0].bugs, players[1].display_name, players[1].score, players[1].bugs, decided_by, field_seed])
+	if Tournament.next_match().empty():
+		print("AUTOPLAY campione %s" % winner_name)
+		get_tree().quit()
+	else:
+		Tournament.begin_next_match()
+		get_tree().reload_current_scene()
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") and state != State.FINISHED:
 		get_tree().set_input_as_handled()
 		hud.show_pause()
 	elif state == State.FINISHED and OS.get_ticks_msec() / 1000.0 - result_time > RESTART_DELAY:
-		if event is InputEventKey and event.pressed and event.scancode == KEY_R:
+		if tournament:
+			if event.is_action_pressed("pause"):
+				_on_menu_choice("bracket")
+		elif event is InputEventKey and event.pressed and event.scancode == KEY_R:
 			_on_menu_choice("rematch")
 		elif event.is_action_pressed("pause"):
 			_on_menu_choice("menu")
@@ -726,7 +789,10 @@ func _on_menu_choice(choice: String) -> void:
 		"restart":
 			Session.field_seed = field_seed
 			get_tree().reload_current_scene()
+		"bracket":
+			get_tree().change_scene(TOURNAMENT_SCENE)
 		"menu":
+			# Nel torneo, uscire a metà partita non registra nulla: la partita si rigioca dal tabellone.
 			get_tree().change_scene(MENU_SCENE)
 
 

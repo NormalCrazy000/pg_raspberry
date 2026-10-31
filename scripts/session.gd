@@ -6,10 +6,12 @@ extends Node
 const MODE_TWO_PLAYERS := "2p"
 const MODE_CPU := "cpu"
 const MODE_TRAINING := "training" # un solo giocatore, a punteggio
+const MODE_TOURNAMENT := "tournament" # partita di un torneo (vedi scripts/tournament/)
 
 var mode := MODE_CPU
 var cpu_difficulty := "normal" # easy, normal, hard
 var characters := ["giulia", "marco"] # uno per giocatore
+var names := ["", ""] # nomi dei giocatori nel torneo (vuoti = "G1", "G2")
 var field_seed := 0 # 0 = nuovo campo casuale
 var first_player := 0
 var selecting_player := 0 # usato dal menu dei personaggi
@@ -17,6 +19,8 @@ var text_screen := "how_to" # how_to, stats o credits
 var screenshot_path := ""
 var screenshot_delay := 2.0
 var debug_power := false
+var tournament_entries := [] # iscrizione al torneo in corso: [{name, character}, ...]
+var tournament_size := 0
 var menu_background := -1 # sfondo dei menu (indice in scripts/common/backgrounds.gd), -1 = da scegliere
 
 

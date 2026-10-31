@@ -23,6 +23,7 @@ Session="*res://scripts/session.gd"
 Audio="*res://scripts/audio.gd"
 Settings="*res://scripts/settings.gd"
 Stats="*res://scripts/stats.gd"
+Tournament="*res://scripts/tournament/tournament.gd"
 
 [display]
 

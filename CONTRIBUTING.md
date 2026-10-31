@@ -11,7 +11,7 @@ Grazie dell'interesse! Il gioco è scritto in GDScript con **Godot 3.6.3** (non 
 ## Prima di aprire una pull request
 
 ```bash
-tools/smoke_test.sh 10      # 10 sfide e 10 allenamenti automatici senza errori
+tools/smoke_test.sh 10      # 10 sfide, 10 allenamenti e un torneo automatici, più il test del tabellone
 ```
 
 GitHub Actions ripete il test ed esporta le build a ogni push e pull request.

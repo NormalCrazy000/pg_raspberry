@@ -1,7 +1,7 @@
 extends CanvasLayer
 # HUD della sfida: i due giocatori ai lati, bug rimasti e moltiplicatore ai lati del cannone,
 # messaggi a comparsa, pausa e schermata finale. Le scelte dei menu escono dal segnale `menu_choice`
-# ("resume", "restart", "new", "rematch", "menu").
+# ("resume", "restart", "new", "rematch", "bracket", "menu").
 
 signal menu_choice(id)
 
@@ -12,6 +12,7 @@ const INACTIVE_ALPHA := 0.45
 var flash_tween: SceneTreeTween
 var result_box: Control
 var pause_box: Control
+var allow_restart := true # nel torneo non si può ricominciare una partita
 
 onready var panels := [
 	[$P1Name, $P1Score, $P1Info],
@@ -69,22 +70,24 @@ func flash(text: String) -> void:
 	flash_tween.tween_property(message, "modulate:a", 0.0, 0.4)
 
 
-# `training`: un solo giocatore, "rivincita" diventa "stesso campo".
-func show_result(title: String, lines: Array, training := false) -> void:
+# `options`: pulsanti come coppie [id, testo] (vedi MenuBox.open).
+func show_result(title: String, lines: Array, options: Array) -> void:
 	if flash_tween and flash_tween.is_valid():
 		flash_tween.kill()
 	message.modulate.a = 0.0
 	pause_button.visible = false
-	result_box.open(title, lines, [
-		["new", tr("RESULT_NEW_FIELD")], ["rematch", tr("RESULT_SAME_FIELD") if training else tr("RESULT_REMATCH")], ["menu", tr("RESULT_MENU")]])
+	result_box.open(title, lines, options)
 
 
 func show_pause() -> void:
 	if pause_box.visible or result_box.visible:
 		return
 	get_tree().paused = true
-	pause_box.open(tr("PAUSE_TITLE"), [], [
-		["resume", tr("PAUSE_RESUME")], ["restart", tr("PAUSE_RESTART")], ["menu", tr("PAUSE_MENU")]])
+	var options := [["resume", tr("PAUSE_RESUME")]]
+	if allow_restart:
+		options.append(["restart", tr("PAUSE_RESTART")])
+	options.append(["menu", tr("PAUSE_MENU")])
+	pause_box.open(tr("PAUSE_TITLE"), [], options)
 
 
 func _on_result_choice(id: String) -> void:

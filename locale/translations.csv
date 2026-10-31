@@ -72,7 +72,9 @@ HOW_TO_BODY,"Si gioca a turni: ognuno lancia una paperella alla volta sullo stes
 
 Vince chi ha più punti alla fine della sfida.
 
-In Allenamento giochi da solo sullo stesso tipo di campo: alla fine prendi da 1 a 3 stelle in base al punteggio e provi a battere il tuo record.","Players take turns: each throws one duck at a time on the same field.
+In Allenamento giochi da solo sullo stesso tipo di campo: alla fine prendi da 1 a 3 stelle in base al punteggio e provi a battere il tuo record.
+
+Nel Torneo 4, 6 o 8 persone si sfidano a eliminazione diretta: chi vince passa il turno, fino alla finale. A parità di punti passa chi ha eliminato più bug. Il torneo si salva dopo ogni partita.","Players take turns: each throws one duck at a time on the same field.
 
 • Aim with mouse, finger, arrows or stick; release to throw, or press space/A.
 • Bugs (red) are worth 1,000 points and raise the multiplier, which counts for both players.
@@ -85,7 +87,9 @@ In Allenamento giochi da solo sullo stesso tipo di campo: alla fine prendi da 1 
 
 The player with the most points at the end wins.
 
-In Training you play alone on the same kind of field: at the end you get 1 to 3 stars based on your score and try to beat your personal best."
+In Training you play alone on the same kind of field: at the end you get 1 to 3 stars based on your score and try to beat your personal best.
+
+In a Tournament 4, 6 or 8 people play a knockout bracket: the winner of each match advances, up to the final. On equal points, the player who fixed more bugs advances. The tournament is saved after every match."
 CREDITS_TITLE,Crediti,Credits
 CREDITS_BODY,"Hotfix Friday
 Un gioco open source per Linux e Raspberry Pi.
@@ -142,3 +146,30 @@ RESULT_RECORD,Record personale: %s,Personal best: %s
 RESULT_SAME_FIELD,Stesso campo,Same field
 STATS_TRAINING_HEADER,Allenamento,Training
 STATS_TRAINING_LINE,"%d partite, record %s (%s), %d con 3 stelle","%d games, best %s (%s), %d with 3 stars"
+MENU_TOURNAMENT,Torneo,Tournament
+TOURNAMENT_COUNT,Quanti partecipanti?,How many players?
+TOURNAMENT_PLAYERS,%d partecipanti,%d players
+TOURNAMENT_NAME,Partecipante %d di %d: scrivi il nome,Player %d of %d: type your name
+TOURNAMENT_DEFAULT_NAME,Giocatore %d,Player %d
+TOURNAMENT_CHOOSE_CHARACTER,"%s, scegli il personaggio","%s, choose your character"
+TOURNAMENT_NEXT,%s: %s contro %s,%s: %s vs %s
+TOURNAMENT_CHAMPION,%s vince il torneo!,%s wins the tournament!
+TOURNAMENT_PLAY,Gioca,Play
+TOURNAMENT_ABANDON,Abbandona torneo,Abandon tournament
+TOURNAMENT_ABANDON_CONFIRM,"Sicuro? Premi ancora","Sure? Press again"
+TOURNAMENT_NEW,Nuovo torneo,New tournament
+KEY_SPACE,Spazio,Space
+KEY_DELETE,Cancella,Delete
+KEY_OK,OK,OK
+ROUND_QUARTER,Quarti di finale,Quarter-finals
+ROUND_SEMI,Semifinali,Semi-finals
+ROUND_FINAL,Finale,Final
+BRACKET_BYE,(passa il turno),(bye)
+RESULT_ADVANCES,%s passa il turno!,%s advances!
+RESULT_CHAMPION,%s vince il torneo!,%s wins the tournament!
+RESULT_TIE_BUGS,"Pareggio: passa chi ha eliminato più bug (%d contro %d)","Tie: the player who fixed more bugs advances (%d vs %d)"
+RESULT_TIE_DRAW,"Pareggio anche nei bug: deciso per sorteggio","Tied on bugs too: decided by a draw"
+RESULT_BRACKET,Tabellone,Bracket
+ROUND_QUARTER_ONE,Quarto di finale,Quarter-final
+ROUND_SEMI_ONE,Semifinale,Semi-final
+ROUND_FINAL_ONE,Finale,Final
