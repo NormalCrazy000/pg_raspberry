@@ -1,10 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="96" height="30" viewBox="0 0 96 30">
-  <!-- Cestino della carta a rete, visto di fronte -->
+  <!-- Cestino della carta a rete, visto di fronte: è il garbage collector che recupera le paperelle -->
   <path d="M4 2 L92 2 L86 29 L10 29 Z" fill="#2b3040"/>
   <g stroke="#7d869e" stroke-width="1.6">
     <path d="M18 3 L21 28"/><path d="M30 3 L32 28"/><path d="M42 3 L43 28"/>
     <path d="M54 3 L53 28"/><path d="M66 3 L64 28"/><path d="M78 3 L75 28"/>
     <path d="M7 12 L89 12"/><path d="M9 21 L87 21"/>
+  </g>
+  <!-- Targhetta "GC" (lettere disegnate come tracciati: l'importatore SVG di Godot non disegna il testo) -->
+  <rect x="31" y="7" width="31" height="17" rx="3" fill="#161a24" stroke="#5fd08a" stroke-width="1.2"/>
+  <g fill="none" stroke="#7ee0a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M43.5 12 A5 5 0 1 0 45 16 L41.5 16"/>
+    <path d="M56.5 12 A5 5 0 1 0 56.5 19"/>
   </g>
   <rect x="0" y="0" width="96" height="5" rx="2.5" fill="#b8c0d6"/>
   <rect x="9" y="26" width="78" height="4" rx="2" fill="#8790a8"/>

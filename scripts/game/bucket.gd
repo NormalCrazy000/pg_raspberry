@@ -1,5 +1,5 @@
 extends KinematicBody2D
-# Cestino mobile: se la palla ci cade dentro, viene recuperata.
+# Cestino mobile, il "garbage collector" (GC): se la paperella ci cade dentro, viene recuperata.
 
 signal ball_caught(ball)
 
