@@ -2,13 +2,20 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
-## [Non pubblicato]
+## [0.2.0] - 2026-10-31
 
 ### Gioco
 - Modalità **Allenamento**: una partita da soli con le regole della sfida; alla fine da 0 a 3 stelle
   (30.000, 60.000 e 100.000 punti sui campi generati) e il record personale.
 - Statistiche: sezione Allenamento (partite, record, partite da 3 stelle).
 - Opzione `--training` da riga di comando; `tools/smoke_test.sh` prova anche l'allenamento.
+- Menu principale un po' più compatto per far posto al nuovo pulsante.
+
+### Documentazione
+- `ROADMAP.md` rimosso: concept, modalità, scelta di Godot 3.6 (compatibilità con Raspberry Pi 2 e 3) e vincoli del Pi
+  sono in `docs/architettura.md`.
+- In "Automatica" il Raspberry Pi resta su grafica Bassa (anche Alta regge i 60 FPS sul Pi 3B+, ma Bassa consuma e scalda meno).
+- Nota sul passaggio ad AGPL-3.0 solo in caso di funzioni online.
 
 ## [0.1.2] - 2026-10-30
 
