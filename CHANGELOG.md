@@ -2,7 +2,7 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
-## [Non pubblicato]
+## [0.2.3] - 2026-10-31
 
 ### Gioco
 - **Tiro senza bug = punteggio dimezzato**: se un tiro non elimina nessun bug (vale anche se lo elimina un potere),
