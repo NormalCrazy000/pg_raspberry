@@ -2,7 +2,7 @@
 
 Formato ispirato a [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/), versioni secondo [Semantic Versioning](https://semver.org/lang/it/).
 
-## [Non pubblicato]
+## [0.3.0] - 2026-10-31
 
 ### Gioco
 - Modalità **Torneo**: da 4 a 8 persone (4, 6 o 8) a eliminazione diretta, ognuna con nome e personaggio.
