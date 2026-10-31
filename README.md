@@ -31,7 +31,7 @@ cd hotfix-friday-linux-x86_64
 
 ## Requisiti
 
-- [Godot 3.6.3](https://godotengine.org/download/3.x/) (non Godot 4: il Pi 3 supporta solo OpenGL ES 2.0)
+- [Godot 3.6.3](https://godotengine.org/download/3.x/) (non Godot 4: i Raspberry Pi 2 e 3 supportano solo OpenGL ES 2.0)
 - Export template di Godot 3.6.3 (servono solo per creare le build)
 
 ## Dal sorgente

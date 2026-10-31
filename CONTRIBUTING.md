@@ -1,6 +1,6 @@
 # Contribuire a Hotfix Friday
 
-Grazie dell'interesse! Il gioco è scritto in GDScript con **Godot 3.6.3** (non Godot 4: deve girare sul Raspberry Pi 3).
+Grazie dell'interesse! Il gioco è scritto in GDScript con **Godot 3.6.3** (non Godot 4: deve restare compatibile con i Raspberry Pi 2 e 3).
 
 ## Preparare l'ambiente
 
